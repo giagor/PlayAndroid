@@ -18,7 +18,7 @@
             android:id="@+id/iv_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/home_black"/>
+            android:src="@drawable/home_green"/>
         
         <TextView
             android:id="@+id/tv_home"
@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:text="@string/home"
+            android:textColor="#00FA9A"
             android:textStyle="bold"/>
         
     </LinearLayout>
@@ -49,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:text="@string/frame"
+            android:textColor="#00FA9A"
             android:textStyle="bold"/>
 
     </LinearLayout>
@@ -73,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:text="@string/project"
+            android:textColor="#00FA9A"
             android:textStyle="bold"/>
 
     </LinearLayout>
