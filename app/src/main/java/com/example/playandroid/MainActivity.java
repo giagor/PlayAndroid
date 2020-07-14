@@ -13,6 +13,8 @@ import okhttp3.Response;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
