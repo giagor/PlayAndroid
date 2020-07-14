@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">PlayAndroid</string>
     <string name="home">首页</string>
+    <string name="frame">体系</string>
+    <string name="project">项目</string>
 </resources>
