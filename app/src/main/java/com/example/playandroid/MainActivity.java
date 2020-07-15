@@ -2,7 +2,11 @@ package com.example.playandroid;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -22,6 +26,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.playandroid.acticle.ArticleFragment;
+
+import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -45,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mTv_home;
     private TextView mTv_frame;
     private TextView mTv_project;
+    
+    /**
+     * 碎片
+     * */
+    private Fragment mArticleFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         
         initView();
         initEvent();
+        
+        initFragment(ARTICLE);
     }
     
     private void initView(){
@@ -84,6 +99,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mLl_project.setOnClickListener(this);
     }
     
+    private void initFragment(int index){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        hideFragment(transaction);
+        switch(index){
+            case ARTICLE:
+                if(mArticleFragment == null){
+                    mArticleFragment = new ArticleFragment();
+                    transaction.add(R.id.fragment_layout,mArticleFragment);
+                }else{
+                    transaction.show(mArticleFragment);
+                }
+                break;
+            default:
+                break;
+        }
+        
+        transaction.commit();
+    }
+    
+    private void hideFragment(FragmentTransaction transaction){
+        if(mArticleFragment != null){
+            transaction.hide(mArticleFragment);
+        }
+    }
     
     @Override
     public void onClick(View v) {

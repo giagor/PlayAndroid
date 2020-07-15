@@ -1,5 +1,7 @@
 package com.example.playandroid.util.network;
 
+import com.example.playandroid.util.ThreadPool;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -12,48 +14,54 @@ public class Call {
         this.mRequest = request;
     }
     
-    public void enqueue(Callback callback){
-        InputStream inputStream;
-        ByteArrayOutputStream byteArrayOutputStream;
-        HttpURLConnection connection = null;
-        
-        try{
-            URL url = new URL(mRequest.getUrl());
-            connection = (HttpURLConnection) url.openConnection();
-            
-            connection.setRequestMethod("GET");
-            connection.setDoOutput(false);
-            connection.setDoInput(true);
-            connection.setReadTimeout(8000);
-            connection.setConnectTimeout(8000);
-            connection.connect();
+    public void enqueue(final Callback callback){
+        ThreadPool.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                InputStream inputStream;
+                ByteArrayOutputStream byteArrayOutputStream;
+                HttpURLConnection connection = null;
 
-            //获取响应状态
-            int responseCode = connection.getResponseCode();
-            
-            if(HttpURLConnection.HTTP_OK == responseCode){
-                inputStream = connection.getInputStream();
-                byteArrayOutputStream = new ByteArrayOutputStream();
-                int readLength;
-                byte[] bytes = new byte[1024];//用于存放每次读取的数据
-                while((readLength = inputStream.read(bytes)) != -1){
-                    byteArrayOutputStream.write(bytes,0,readLength);
+                try{
+                    URL url = new URL(mRequest.getUrl());
+                    connection = (HttpURLConnection) url.openConnection();
+
+                    connection.setRequestMethod("GET");
+                    connection.setDoOutput(false);
+                    connection.setDoInput(true);
+                    connection.setReadTimeout(8000);
+                    connection.setConnectTimeout(8000);
+                    connection.connect();
+
+                    //获取响应状态
+                    int responseCode = connection.getResponseCode();
+
+                    if(HttpURLConnection.HTTP_OK == responseCode){
+                        inputStream = connection.getInputStream();
+                        byteArrayOutputStream = new ByteArrayOutputStream();
+                        int readLength;
+                        byte[] bytes = new byte[1024];//用于存放每次读取的数据
+                        while((readLength = inputStream.read(bytes)) != -1){
+                            byteArrayOutputStream.write(bytes,0,readLength);
+                        }
+                        String response = byteArrayOutputStream.toString();
+
+                        callback.onResponse(response);
+                    }else{
+                        callback.onFailure(null);
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    callback.onFailure(e);
+                }finally {
+                    if(connection != null){
+                        connection.disconnect();
+                    }
                 }
-                String response = byteArrayOutputStream.toString();
-                
-                callback.onResponse(response);
-            }else{
-                callback.onFailure(null);
             }
-            
-        }catch (Exception e){
-            e.printStackTrace();
-            callback.onFailure(e);
-        }finally {
-            if(connection != null){
-                connection.disconnect();
-            }
-        }
+        });
+        
     }
     
 }
