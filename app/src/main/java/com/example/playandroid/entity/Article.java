@@ -1,15 +1,15 @@
 package com.example.playandroid.entity;
 
-public class article {
+public class Article {
     private long id;
     private String title;
     private String author;
     private String link;
 
-    public article() {
+    public Article() {
     }
 
-    public article(long id, String title, String author, String link) {
+    public Article(long id, String title, String author, String link) {
         this.id = id;
         this.title = title;
         this.author = author;

@@ -21,8 +21,9 @@ public class Request {
     public static class Builder{
         private String sUrl;
         
-        public void url(String url){
+        public Builder url(String url){
             this.sUrl = url;
+            return this;
         }        
         
         public Request build(){

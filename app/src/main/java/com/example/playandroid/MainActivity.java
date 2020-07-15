@@ -15,6 +15,8 @@ import android.app.Notification;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
+import android.os.MessageQueue;
 import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
