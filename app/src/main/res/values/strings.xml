@@ -3,4 +3,5 @@
     <string name="home">首页</string>
     <string name="frame">体系</string>
     <string name="project">项目</string>
+    <string name="author">作者:</string>
 </resources>

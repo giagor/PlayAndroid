@@ -9,7 +9,7 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class ArticleFragment extends Fragment implements ArticleContract.OnView {
+public class ArticleFragment extends Fragment implements ArticleContract.OnView{
     private ArticleContract.Presenter mArticlePresenter;
 
     @Override
