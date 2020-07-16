@@ -28,6 +28,7 @@ import static com.example.playandroid.util.Constants.ArticleDetailConstant.URL;
 
 /**
  * 展示文章详情的活动，主要使用WebView.
+ * 内存泄漏问题还没解决.
  */
 public class ArticleDetailActivity extends AppCompatActivity {
 
@@ -119,7 +120,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
         }
         return true;
     }
-
+    
     /**
      * 启动该活动.
      */
@@ -128,5 +129,14 @@ public class ArticleDetailActivity extends AppCompatActivity {
         intent.putExtra(TITLE, title);
         intent.putExtra(URL, url);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(mWebView != null){
+            mWebView.removeAllViews();
+            mWebView.destroy();
+        }
+        super.onDestroy();
     }
 }
