@@ -175,6 +175,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void showArticleDetail(String title,String url) {
-        ArticleDetailActivity.actionStart(this,title,url);
+        ArticleDetailActivity.actionStart(MainActivity.this,title,url);
     }
 }

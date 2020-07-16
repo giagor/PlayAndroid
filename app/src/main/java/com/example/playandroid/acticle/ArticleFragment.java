@@ -1,5 +1,6 @@
 package com.example.playandroid.acticle;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,13 +26,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.example.playandroid.util.Constants.ArticleConstant.SUCCESS;
 
 public class ArticleFragment extends Fragment implements ArticleContract.OnView, 
-        UIHandler.HandlerListener {
+        UIHandler.HandlerListener,ArticleAdapter.OnItemClickListener {
     private ArticleContract.Presenter mArticlePresenter;
     private RecyclerView mRecyclerView;
     private View mView;
     private Handler mHandler;
     private List<Article> mArticles;
     
+    /**
+     * 碎片和活动通信的接口引用.
+     * */
+    private OnArticleListener mCallback;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mCallback = (OnArticleListener) context;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, 
@@ -55,7 +67,6 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     }
     
     private void initEvent(){
-          
     }
     
     @Override
@@ -92,13 +103,19 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                 RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
                 mRecyclerView.setLayoutManager(manager);
                 ArticleAdapter adapter = new ArticleAdapter(mArticles);
+                adapter.setListener(this);
                 mRecyclerView.setAdapter(adapter);
                 break;
             default:
                 break;
         }
     }
-    
+
+    @Override
+    public void onClick(Article article) {
+        mCallback.showArticleDetail(article.getTitle(),article.getLink());
+    }
+
     /**
      * 回调接口，主活动实现，用于打开文章的主界面.
      * */

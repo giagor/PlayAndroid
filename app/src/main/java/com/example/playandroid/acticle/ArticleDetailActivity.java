@@ -92,7 +92,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
      * 启动该活动.
      */
     public static void actionStart(Context context, String title, String url) {
-        Intent intent = new Intent();
+        Intent intent = new Intent(context,ArticleDetailActivity.class);
         intent.putExtra(TITLE, title);
         intent.putExtra(URL, url);
         context.startActivity(intent);
