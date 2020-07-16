@@ -52,5 +52,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         return mArticles.size();
     }
 
+    public interface onItemClickListener{
+        
+    }
    
 }

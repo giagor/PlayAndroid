@@ -1,4 +1,4 @@
-package com.example.playandroid;
+package com.example.playandroid.main;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,16 +23,22 @@ import android.os.Message;
 import android.os.MessageQueue;
 import android.util.LruCache;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.playandroid.R;
+import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.acticle.ArticleFragment;
 
 import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        ArticleFragment.OnArticleListener {
+    private Toolbar mToolbar;
+    
     /**
      * 底部导航栏的3个LinearLayout
      */
@@ -63,23 +69,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        
+        initView();
+        setActionBar();
+        initEvent();
+        initFragment(ARTICLE);
+    }
+    
+    /**
+     * 设置顶部标题栏的信息.
+     * */
+    private void setActionBar(){
+        setSupportActionBar(mToolbar);
         //ToolBar左侧显示出导航栏
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.navi_white);
         }
-        
-        initView();
-        initEvent();
-        
-        initFragment(ARTICLE);
     }
     
     private void initView(){
+        mToolbar = findViewById(R.id.toolbar);
+        
         mLl_home = findViewById(R.id.ll_home);
         mLl_frame = findViewById(R.id.ll_frame);
         mLl_project = findViewById(R.id.ll_project);
@@ -159,5 +171,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTv_home.setText("");
         mTv_frame.setText("");
         mTv_project.setText("");
+    }
+
+    @Override
+    public void showArticleDetail(String title,String url) {
+        ArticleDetailActivity.actionStart(this,title,url);
     }
 }

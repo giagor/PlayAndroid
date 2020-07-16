@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,6 +40,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         
         initData();
         
+        
         return mView;
     }
 
@@ -51,7 +53,11 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         
         mRecyclerView = mView.findViewById(R.id.recycler_view);
     }
-
+    
+    private void initEvent(){
+          
+    }
+    
     @Override
     public void onResume() {
         super.onResume();
@@ -91,5 +97,12 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
             default:
                 break;
         }
+    }
+    
+    /**
+     * 回调接口，主活动实现，用于打开文章的主界面.
+     * */
+    public interface OnArticleListener{
+        void showArticleDetail(String title,String url);
     }
 }
