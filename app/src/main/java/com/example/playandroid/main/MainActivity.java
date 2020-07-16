@@ -22,6 +22,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
 import android.util.LruCache;
+import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -171,6 +172,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTv_home.setText("");
         mTv_frame.setText("");
         mTv_project.setText("");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar,menu);
+        return true;
     }
 
     @Override
