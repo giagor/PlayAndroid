@@ -79,6 +79,9 @@ public class ArticleDetailActivity extends AppCompatActivity {
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
+                if(mProgressBar.getVisibility() == View.GONE){
+                    mProgressBar.setVisibility(View.VISIBLE);
+                }
                 mProgressBar.setProgress(newProgress);
                 if (newProgress >= 100) {
                     mProgressBar.setVisibility(View.GONE);
@@ -86,13 +89,17 @@ public class ArticleDetailActivity extends AppCompatActivity {
             }
         });
 
-        //打开另一个网页时，不调用系统浏览器，而是在该WebView界面打开
+        /**
+         * 打开另一个网页时，不调用系统浏览器，而是在该WebView界面打开.
+         * 注意这里是跳转页面时才会回调.
+         * */
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(getIntent().getStringExtra(URL));
+                view.loadUrl(request.getUrl().toString());
                 return true;
             }
+            
         });
     }
 
@@ -112,15 +119,15 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     /**
      * 用户点击标题栏的"返回键"时，销毁WebView所在的活动.
-     * */
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return true;
     }
-    
+
     /**
      * 启动该活动.
      */
@@ -133,7 +140,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if(mWebView != null){
+        if (mWebView != null) {
             mWebView.removeAllViews();
             mWebView.destroy();
         }
