@@ -1,5 +1,6 @@
 package com.example.playandroid.search;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -41,6 +42,11 @@ public class SearchActivity extends AppCompatActivity {
      * */
     private void setActionBar(){
         setSupportActionBar(mToolbar);
+        //ToolBar左侧显示出返回按钮
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
     
     /**
@@ -51,6 +57,17 @@ public class SearchActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    /**
+     * 用户点击标题栏的"返回键"时，销毁"搜索"所在的活动.
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
+    }
+    
     /**
      * 加载toolbar的menu.
      * */
