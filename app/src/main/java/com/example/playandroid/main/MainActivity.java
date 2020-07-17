@@ -1,7 +1,9 @@
 package com.example.playandroid.main;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -9,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +22,7 @@ import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.acticle.ArticleFragment;
 import com.example.playandroid.frame.FrameFragment;
 import com.example.playandroid.project.ProjectFragment;
+import com.example.playandroid.search.SearchActivity;
 
 import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
 import static com.example.playandroid.util.Constants.MainConstant.FRAME;
@@ -190,9 +194,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTv_project.setText("");
     }
 
+    /**
+     * 在toolbar加载菜单项
+     * */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar,menu);
+        return true;
+    }
+
+    /**
+     * 顶部标题栏(toolbar)的菜单项(图标)被选中时回调该方法.
+     * */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.search){
+            SearchActivity.actionStart(this);
+        }
         return true;
     }
 
