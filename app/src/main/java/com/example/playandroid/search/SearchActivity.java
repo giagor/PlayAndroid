@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,12 +57,10 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_search,menu);
-        MenuItem menuItem = menu.findItem(R.id.search);
+        MenuItem menuItem = menu.findItem(R.id.search_view);
         if(menuItem != null){
             SearchView searchView = (SearchView) menuItem.getActionView();
-            searchView.setQueryHint("热门文章");
-            searchView.setSubmitButtonEnabled(true);
-            searchView.setBackgroundColor(Color.WHITE);
+            searchView.setIconifiedByDefault(false);
         }
         return true;
     }
