@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.example.playandroid.R;
 import com.example.playandroid.adapter.ArticleAdapter;
@@ -49,7 +47,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, 
                              @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.acticle_fragment,container,false);
+        mView = inflater.inflate(R.layout.fragment_article,container,false);
         
         initData();
         

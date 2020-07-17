@@ -3,7 +3,6 @@ package com.example.playandroid.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -199,12 +198,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar,menu);
+        getMenuInflater().inflate(R.menu.toolbar_main,menu);
         return true;
     }
 
     /**
-     * 顶部标题栏(toolbar)的菜单项(图标)被选中时回调该方法.
+     * 顶部标题栏(toolbar_main)的菜单项(图标)被选中时回调该方法.
      * */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
