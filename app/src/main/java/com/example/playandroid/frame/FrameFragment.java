@@ -1,4 +1,4 @@
-package com.example.playandroid.project;
+package com.example.playandroid.frame;
 
 import android.os.Bundle;
 
@@ -10,20 +10,17 @@ import android.view.ViewGroup;
 
 import com.example.playandroid.R;
 
-/**
- * 项目界面.
- */
-public class ProjectFragment extends Fragment {
-
+public class FrameFragment extends Fragment {
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.project_fragment, container, false);
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.frame_fragment, container, false);
     }
 }

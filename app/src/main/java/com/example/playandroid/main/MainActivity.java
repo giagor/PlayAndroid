@@ -17,9 +17,11 @@ import android.widget.TextView;
 import com.example.playandroid.R;
 import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.acticle.ArticleFragment;
+import com.example.playandroid.frame.FrameFragment;
 import com.example.playandroid.project.ProjectFragment;
 
 import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
+import static com.example.playandroid.util.Constants.MainConstant.FRAME;
 import static com.example.playandroid.util.Constants.MainConstant.PROJECT;
 
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * */
     private Fragment mArticleFragment;
     private Fragment mProjectFragment;
+    private Fragment mFrameFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +117,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     transaction.show(mArticleFragment);
                 }
                 break;
+            case FRAME:
+                if(mFrameFragment == null){
+                    mFrameFragment = new FrameFragment();
+                    transaction.add(R.id.fragment_layout,mFrameFragment);
+                }else{
+                    transaction.show(mFrameFragment);
+                }
+                break;
             case PROJECT:
                 if(mProjectFragment == null){
                     mProjectFragment = new ProjectFragment();
@@ -132,6 +143,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(mArticleFragment != null){
             transaction.hide(mArticleFragment);
         }
+        if(mFrameFragment != null){
+            transaction.hide(mFrameFragment);
+        }
         if(mProjectFragment != null){
             transaction.hide(mProjectFragment);
         }
@@ -149,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ll_frame:
                 mIv_frame.setImageResource(R.drawable.frame_green);
                 mTv_frame.setText("体系");
+                initFragment(FRAME);
                 break;
             case R.id.ll_project:
                 mIv_project.setImageResource(R.drawable.project_green);
