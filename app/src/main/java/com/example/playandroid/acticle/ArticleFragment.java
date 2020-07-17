@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.example.playandroid.R;
 import com.example.playandroid.adapter.ArticleAdapter;
@@ -51,7 +52,6 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         mView = inflater.inflate(R.layout.acticle_fragment,container,false);
         
         initData();
-        
         
         return mView;
     }

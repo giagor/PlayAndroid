@@ -2,29 +2,14 @@ package com.example.playandroid.main;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
-import android.app.AlertDialog;
-import android.app.Notification;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.MessageQueue;
-import android.util.LruCache;
 import android.view.Menu;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,8 +17,11 @@ import android.widget.TextView;
 import com.example.playandroid.R;
 import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.acticle.ArticleFragment;
+import com.example.playandroid.project.ProjectFragment;
 
 import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
+import static com.example.playandroid.util.Constants.MainConstant.PROJECT;
+
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
@@ -65,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 碎片
      * */
     private Fragment mArticleFragment;
+    private Fragment mProjectFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +114,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     transaction.show(mArticleFragment);
                 }
                 break;
+            case PROJECT:
+                if(mProjectFragment == null){
+                    mProjectFragment = new ProjectFragment();
+                    transaction.add(R.id.fragment_layout,mProjectFragment);
+                }else {
+                    transaction.show(mProjectFragment);
+                }
             default:
                 break;
         }
@@ -136,6 +132,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(mArticleFragment != null){
             transaction.hide(mArticleFragment);
         }
+        if(mProjectFragment != null){
+            transaction.hide(mProjectFragment);
+        }
     }
     
     @Override
@@ -145,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ll_home:
                 mIv_home.setImageResource(R.drawable.home_green);
                 mTv_home.setText("首页");
+                initFragment(ARTICLE);
                 break;
             case R.id.ll_frame:
                 mIv_frame.setImageResource(R.drawable.frame_green);
@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ll_project:
                 mIv_project.setImageResource(R.drawable.project_green);
                 mTv_project.setText("项目");
+                initFragment(PROJECT);
                 break;
             default:
                 break;

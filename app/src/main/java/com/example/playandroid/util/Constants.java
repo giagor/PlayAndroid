@@ -11,6 +11,7 @@ public class Constants {
     public static class MainConstant {
         //碎片所对应的常量值.
         public static final int ARTICLE = 0;
+        public static final int PROJECT = 2;
     }
 
     /**
