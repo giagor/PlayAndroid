@@ -26,7 +26,7 @@ import static com.example.playandroid.util.Constants.ArticleConstant.SUCCESS;
 
 public class ArticleFragment extends Fragment implements ArticleContract.OnView, 
         UIHandler.HandlerListener,ArticleAdapter.OnItemClickListener {
-    private ArticleContract.Presenter mArticlePresenter;
+    private ArticleContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private View mView;
     private Handler mHandler;
@@ -70,14 +70,14 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     @Override
     public void onResume() {
         super.onResume();
-        if(mArticlePresenter != null){
-            mArticlePresenter.start();
+        if(mPresenter != null){
+            mPresenter.start();
         }
     }
 
     @Override
     public void setPresenter(ArticleContract.Presenter presenter) {
-        mArticlePresenter = presenter;
+        mPresenter = presenter;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.playandroid.entity;
+package com.example.playandroid.view.flowlayout;
 
 /**
  * 储存流式布局中子控件的位置信息.

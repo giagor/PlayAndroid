@@ -1,16 +1,16 @@
 package com.example.playandroid.entity;
 
 /**
- * 搜索热词.
+ * 项目实体类(一级项目)
  * */
-public class HotWord {
+public class Project {
     private long id;
     private String name;
 
-    public HotWord() {
+    public Project() {
     }
 
-    public HotWord(int id, String name) {
+    public Project(long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -19,7 +19,7 @@ public class HotWord {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

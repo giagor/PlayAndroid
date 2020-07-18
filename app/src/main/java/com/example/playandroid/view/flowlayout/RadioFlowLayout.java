@@ -1,4 +1,4 @@
-package com.example.playandroid.view;
+package com.example.playandroid.view.flowlayout;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,8 +7,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RadioGroup;
 import com.example.playandroid.R;
-import com.example.playandroid.entity.MarginModel;
-import com.example.playandroid.entity.TagModel;
 
 /**
  * 单选流式布局.

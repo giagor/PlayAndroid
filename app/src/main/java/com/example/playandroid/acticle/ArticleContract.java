@@ -12,7 +12,7 @@ public interface ArticleContract {
     }
     
     interface OnView extends BaseView<Presenter> {
-        void onSuccess(List<Article> acticles);
+        void onSuccess(List<Article> articles);
         void onFail(Exception e);
     }
 }

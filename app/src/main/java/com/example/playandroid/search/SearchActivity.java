@@ -18,8 +18,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import com.example.playandroid.R;
 import com.example.playandroid.entity.HotWord;
-import com.example.playandroid.entity.TagModel;
-import com.example.playandroid.view.RadioFlowLayout;
+import com.example.playandroid.view.flowlayout.TagModel;
+import com.example.playandroid.view.flowlayout.RadioFlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 

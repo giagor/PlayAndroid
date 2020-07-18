@@ -19,7 +19,7 @@ public class ArticlePresenter implements ArticleContract.Presenter, ArticleModel
 
     @Override
     public void start() {
-        mArticleModel.getArticles(this);        
+        getArticles();    
     }
 
     @Override
