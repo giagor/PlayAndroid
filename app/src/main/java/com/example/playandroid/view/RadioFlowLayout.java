@@ -77,13 +77,13 @@ public class RadioFlowLayout extends RadioGroup{
                 int childWidth = child.getMeasuredWidth();
                 
                 if(childWidth + mItemSpace + lineWidth + getPaddingLeft() + getPaddingRight() > sizeWidth){
-                    //换行之后
+                    //要换行
                     lineIndex ++;
                     marginLeft = 0;
                     lineWidth = childWidth;
                     marginTop += (mItemHeight + mDividerHeight);
                 }else{
-                    //还是在原先的一行
+                    //不换行
                     lineWidth += childWidth + mItemSpace *(i>0?1:0);
                     marginLeft = lineWidth - childWidth;
                 }
