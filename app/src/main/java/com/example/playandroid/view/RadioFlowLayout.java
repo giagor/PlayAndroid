@@ -4,10 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
-
 import com.example.playandroid.R;
 import com.example.playandroid.entity.MarginModel;
 import com.example.playandroid.entity.TagModel;
@@ -15,21 +13,21 @@ import com.example.playandroid.entity.TagModel;
 /**
  * 单选流式布局.
  * */
-public class RadioFlowLayout extends RadioGroup {
+public class RadioFlowLayout extends RadioGroup{
     /**
      * item项的高.
      * */
-    private float itemHeight;
+    private float mItemHeight;
 
     /**
      * item的列与列间的间隔.
      * */
-    private float itemSpace;
+    private float mItemSpace;
     
     /**
      * item的行与行间的间隔.
      * */
-    private float dividerHeight;
+    private float mDividerHeight;
     
     public RadioFlowLayout(Context context) {
         super(context);
@@ -40,14 +38,14 @@ public class RadioFlowLayout extends RadioGroup {
 
         //获取xml布局中的属性值
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.flowlayout);
-        itemHeight = typedArray.getDimension(R.styleable.flowlayout_itemHeight,0);
-        itemSpace = typedArray.getDimension(R.styleable.flowlayout_itemSpace,0);
-        dividerHeight = typedArray.getDimension(R.styleable.flowlayout_dividerHeight,0);
+        mItemHeight = typedArray.getDimension(R.styleable.flowlayout_itemHeight,0);
+        mItemSpace = typedArray.getDimension(R.styleable.flowlayout_itemSpace,0);
+        mDividerHeight = typedArray.getDimension(R.styleable.flowlayout_dividerHeight,0);
         typedArray.recycle();
     }
     
     public float getItemHeight(){
-        return itemHeight;
+        return mItemHeight;
     }
 
     @SuppressLint("DrawAllocation")
@@ -59,8 +57,6 @@ public class RadioFlowLayout extends RadioGroup {
         int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
         int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
         
-        //总宽度
-        int width = 0;
         //总高度
         int height = 0;
         //item所处行数
@@ -81,22 +77,22 @@ public class RadioFlowLayout extends RadioGroup {
                 measureChild(child,widthMeasureSpec,heightMeasureSpec);
                 int childWidth = child.getMeasuredWidth();
                 
-                if(childWidth + itemSpace + lineWidth + getPaddingLeft() + getPaddingRight() > sizeWidth){
+                if(childWidth + mItemSpace + lineWidth + getPaddingLeft() + getPaddingRight() > sizeWidth){
                     //换行之后
                     lineIndex ++;
                     marginLeft = 0;
                     lineWidth = childWidth;
-                    marginTop += (itemHeight + dividerHeight);
+                    marginTop += (mItemHeight + mDividerHeight);
                 }else{
                     //还是在原先的一行
-                    lineWidth += childWidth + itemSpace*(i>0?1:0);
+                    lineWidth += childWidth + mItemSpace *(i>0?1:0);
                     marginLeft = lineWidth - childWidth;
                 }
                 
                 int left = marginLeft + getPaddingLeft();
                 int right = marginLeft + childWidth + getPaddingRight();
                 int top = marginTop + getPaddingTop();
-                int bottom = (int) (marginTop + itemHeight + getPaddingTop());
+                int bottom = (int) (marginTop + mItemHeight + getPaddingTop());
 
                 TagModel tagModel;
                 Object object = child.getTag();
@@ -111,10 +107,9 @@ public class RadioFlowLayout extends RadioGroup {
                 tagModel.setMarginModel(marginModel);
                 child.setTag(tagModel);
             }
-            height = (int) (itemHeight*(lineIndex+1) + dividerHeight*lineIndex +getPaddingTop()+getPaddingBottom());
+            height = (int) (mItemHeight *(lineIndex+1) + mDividerHeight *lineIndex +getPaddingTop()+getPaddingBottom());
         }
-        setMeasuredDimension(modeWidth == MeasureSpec.EXACTLY ? sizeWidth:width,
-                modeHeight==MeasureSpec.EXACTLY ? sizeHeight:height);
+        setMeasuredDimension(sizeWidth, modeHeight==MeasureSpec.EXACTLY ? sizeHeight:height);
     }
 
     @Override
@@ -132,4 +127,5 @@ public class RadioFlowLayout extends RadioGroup {
             }
         }
     }
+    
 }

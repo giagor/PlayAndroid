@@ -29,36 +29,36 @@ import com.example.playandroid.view.RadioFlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity{
     private SearchView mSearchView;
     private Toolbar mToolbar;
     private RadioFlowLayout mRadioFlowLayout;
-    
+
     private List<HotWord> mHotWords = new ArrayList<>();
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        
+
         initView();
         setActionBar();
         initData();
-        
-        for(int i = 0;i<mHotWords.size();i++){
-            mRadioFlowLayout.addView(this.createChildView(mHotWords.get(i),R.layout.radiobutton));
+
+        for (int i = 0; i < mHotWords.size(); i++) {
+            mRadioFlowLayout.addView(this.createChildView(mHotWords.get(i), R.layout.radiobutton));
         }
     }
 
 
-    private void initView(){
+    private void initView() {
         mToolbar = findViewById(R.id.toolbar);
         mRadioFlowLayout = findViewById(R.id.radioFlowLayout);
     }
-    
-    private <T extends TextView> View createChildView(HotWord hotWord,int layoutId){
+
+    private <T extends TextView> View createChildView(HotWord hotWord, int layoutId) {
         LayoutInflater inflater = LayoutInflater.from(this);
-        T view = (T) inflater.inflate(layoutId,null);
+        T view = (T) inflater.inflate(layoutId, null);
         RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
@@ -71,20 +71,20 @@ public class SearchActivity extends AppCompatActivity {
         view.setText(hotWord.getName());
         return view;
     }
-    
-    private void initData(){
-        String [] words = {"捷豹","施华洛世奇","雷朋","Emporio Armani","海伦凯勒",
-                "精工","HORIEN海俪恩","CHARMANT","COACH蔻驰","李维斯","新百伦"};
-        for(int i = 0;i<words.length;i++){
-            HotWord hotWord = new HotWord(i,words[i]);
+
+    private void initData() {
+        String[] words = {"捷豹", "施华洛世奇", "雷朋", "Emporio Armani", "海伦凯勒",
+                "精工", "HORIEN海俪恩", "CHARMANT", "COACH蔻驰", "李维斯", "新百伦"};
+        for (int i = 0; i < words.length; i++) {
+            HotWord hotWord = new HotWord(i, words[i]);
             mHotWords.add(hotWord);
         }
-    }   
-    
+    }
+
     /**
      * 设置顶部标题栏的信息.
-     * */
-    private void setActionBar(){
+     */
+    private void setActionBar() {
         setSupportActionBar(mToolbar);
         //ToolBar左侧显示出返回按钮
         ActionBar actionBar = getSupportActionBar();
@@ -92,12 +92,12 @@ public class SearchActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-    
+
     /**
      * 启动该活动.
-     * */
-    public static void actionStart(Context context){
-        Intent intent = new Intent(context,SearchActivity.class);
+     */
+    public static void actionStart(Context context) {
+        Intent intent = new Intent(context, SearchActivity.class);
         context.startActivity(intent);
     }
 
@@ -111,15 +111,15 @@ public class SearchActivity extends AppCompatActivity {
         }
         return true;
     }
-    
+
     /**
      * 加载toolbar的menu.
-     * */
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_search,menu);
+        getMenuInflater().inflate(R.menu.toolbar_search, menu);
         MenuItem menuItem = menu.findItem(R.id.search_view);
-        if(menuItem != null){
+        if (menuItem != null) {
             SearchView searchView = (SearchView) menuItem.getActionView();
             searchView.setIconifiedByDefault(false);
         }

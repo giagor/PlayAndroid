@@ -5,4 +5,5 @@
     android:gravity="center"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
-    android:button="@null"/>
+    android:button="@null"
+    android:background="#B4EEB4"/>

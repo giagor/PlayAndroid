@@ -6,16 +6,24 @@
     android:layout_height="match_parent">
     
     <include layout="@layout/toolbar"/>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/HotWords"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"/>
 
     <com.example.playandroid.view.RadioFlowLayout
         android:id="@+id/radioFlowLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:itemHeight="40dp"
+        app:itemHeight="35dp"
         app:itemSpace="20dp"
         app:dividerHeight="10dp"
-        android:padding="20dp"
+        android:padding="15dp"
         android:visibility="visible" />
     
 </LinearLayout>
