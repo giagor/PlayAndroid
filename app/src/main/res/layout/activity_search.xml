@@ -23,7 +23,6 @@
         app:itemHeight="35dp"
         app:itemSpace="20dp"
         app:dividerHeight="10dp"
-        android:padding="15dp"
-        android:visibility="visible" />
+        android:padding="15dp"/>
     
 </LinearLayout>

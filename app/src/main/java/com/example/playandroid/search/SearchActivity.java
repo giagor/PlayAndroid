@@ -5,12 +5,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,13 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
-
 import com.example.playandroid.R;
 import com.example.playandroid.entity.HotWord;
 import com.example.playandroid.entity.TagModel;
 import com.example.playandroid.view.RadioFlowLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,16 +43,20 @@ public class SearchActivity extends AppCompatActivity{
             mRadioFlowLayout.addView(this.createChildView(mHotWords.get(i), R.layout.radiobutton));
         }
     }
-
-
+    
     private void initView() {
         mToolbar = findViewById(R.id.toolbar);
         mRadioFlowLayout = findViewById(R.id.radioFlowLayout);
     }
 
+    /**
+     * 创建子view
+     * */
     private <T extends TextView> View createChildView(HotWord hotWord, int layoutId) {
+        //为子view加载布局
         LayoutInflater inflater = LayoutInflater.from(this);
         T view = (T) inflater.inflate(layoutId, null);
+        //设置RadioButton的参数
         RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;

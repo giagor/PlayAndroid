@@ -53,7 +53,6 @@ public class RadioFlowLayout extends RadioGroup{
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         
         int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
         int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
         int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
         
@@ -89,6 +88,7 @@ public class RadioFlowLayout extends RadioGroup{
                     marginLeft = lineWidth - childWidth;
                 }
                 
+                //子view的位置信息
                 int left = marginLeft + getPaddingLeft();
                 int right = marginLeft + childWidth + getPaddingRight();
                 int top = marginTop + getPaddingTop();
@@ -96,6 +96,7 @@ public class RadioFlowLayout extends RadioGroup{
 
                 TagModel tagModel;
                 Object object = child.getTag();
+                //位置信息的封装
                 MarginModel marginModel = new MarginModel(left,top,right,bottom);
                 
                 if(object instanceof TagModel){
@@ -107,6 +108,7 @@ public class RadioFlowLayout extends RadioGroup{
                 tagModel.setMarginModel(marginModel);
                 child.setTag(tagModel);
             }
+            //通过行数等来计算流式布局的总高度
             height = (int) (mItemHeight *(lineIndex+1) + mDividerHeight *lineIndex +getPaddingTop()+getPaddingBottom());
         }
         setMeasuredDimension(sizeWidth, modeHeight==MeasureSpec.EXACTLY ? sizeHeight:height);
@@ -121,6 +123,7 @@ public class RadioFlowLayout extends RadioGroup{
                 TagModel tagModel = (TagModel) object;
                 MarginModel marginModel = tagModel.getMarginModel();
                 if(marginModel != null){
+                    //子view位置的摆放
                     view.layout(marginModel.getLeft(),marginModel.getTop(),marginModel.getRight(),
                             marginModel.getBottom());
                 }
