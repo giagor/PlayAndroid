@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 
@@ -93,13 +94,12 @@ public class RadioFlowLayout extends RadioGroup {
                 }
                 
                 int left = marginLeft + getPaddingLeft();
-                int right = marginLeft + getPaddingRight();
+                int right = marginLeft + childWidth + getPaddingRight();
                 int top = marginTop + getPaddingTop();
                 int bottom = (int) (marginTop + itemHeight + getPaddingTop());
 
                 TagModel tagModel;
                 Object object = child.getTag();
-                @SuppressLint("DrawAllocation") 
                 MarginModel marginModel = new MarginModel(left,top,right,bottom);
                 
                 if(object instanceof TagModel){
@@ -130,7 +130,6 @@ public class RadioFlowLayout extends RadioGroup {
                             marginModel.getBottom());
                 }
             }
-                    
         }
     }
 }

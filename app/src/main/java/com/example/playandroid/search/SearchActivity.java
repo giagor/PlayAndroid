@@ -11,17 +11,30 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
 import com.example.playandroid.R;
+import com.example.playandroid.entity.HotWord;
+import com.example.playandroid.entity.TagModel;
+import com.example.playandroid.view.RadioFlowLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
     private SearchView mSearchView;
     private Toolbar mToolbar;
+    private RadioFlowLayout mRadioFlowLayout;
+    
+    private List<HotWord> mHotWords = new ArrayList<>();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +43,43 @@ public class SearchActivity extends AppCompatActivity {
         
         initView();
         setActionBar();
+        initData();
+        
+        for(int i = 0;i<mHotWords.size();i++){
+            mRadioFlowLayout.addView(this.createChildView(mHotWords.get(i),R.layout.radiobutton));
+        }
     }
 
 
     private void initView(){
         mToolbar = findViewById(R.id.toolbar);
+        mRadioFlowLayout = findViewById(R.id.radioFlowLayout);
     }
+    
+    private <T extends TextView> View createChildView(HotWord hotWord,int layoutId){
+        LayoutInflater inflater = LayoutInflater.from(this);
+        T view = (T) inflater.inflate(layoutId,null);
+        RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER;
+        lp.height = (int) mRadioFlowLayout.getItemHeight();
+        view.setLayoutParams(lp);
+        //添加view的时候，将HotWord信息setTag()
+        TagModel<HotWord> tagModel = new TagModel<>();
+        tagModel.setT(hotWord);
+        view.setTag(tagModel);
+        view.setText(hotWord.getName());
+        return view;
+    }
+    
+    private void initData(){
+        String [] words = {"捷豹","施华洛世奇","雷朋","Emporio Armani","海伦凯勒",
+                "精工","HORIEN海俪恩","CHARMANT","COACH蔻驰","李维斯","新百伦"};
+        for(int i = 0;i<words.length;i++){
+            HotWord hotWord = new HotWord(i,words[i]);
+            mHotWords.add(hotWord);
+        }
+    }   
     
     /**
      * 设置顶部标题栏的信息.
