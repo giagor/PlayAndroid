@@ -31,4 +31,12 @@ public class Constants {
         public static final String TITLE = "title";
         public static final String URL = "url";
     }
+    
+    /**
+     * 项目模块对应的常量值.
+     * */
+    public static class ProjectConstant{
+        //Message对应的状态值
+        public static final int SUCCESS = 0;
+    }
 }
