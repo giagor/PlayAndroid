@@ -10,14 +10,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
 import android.os.Message;
-import android.print.PrinterId;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.playandroid.R;
 import com.example.playandroid.entity.Project;
+import com.example.playandroid.project.project_child.ProjectChildFragment;
 import com.example.playandroid.util.UIHandler;
 import com.google.android.material.tabs.TabLayout;
 
@@ -25,14 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
-import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_SET_USER_VISIBLE_HINT;
 import static com.example.playandroid.util.Constants.ProjectConstant.SUCCESS;
 
 /**
  * 项目界面.
  */
 public class ProjectFragment extends Fragment implements ProjectContract.OnView,
-        UIHandler.HandlerListener {
+        UIHandler.HandlerListener{
     private View mView;
     private ProjectContract.Presenter mPresenter;
     private Handler mHandler;
@@ -55,6 +53,11 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
     private ViewPager mViewPager;
 
     private TabLayout mTabLayout;
+    
+    /**
+     * 记录ViewPager当前选中的pager下标
+     * */
+    private int mSelectIndex = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +72,8 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.getProjects();
+        mPresenter.start();
+        
     }
 
     private void initData() {
@@ -106,10 +110,14 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
         if (msg.what == SUCCESS) {
             //创建ViewPager的各个Pager的碎片和Title
             for (int i = 0; i < mProjects.size(); i++) {
-                mFragments.add(new ProjectPagerFragment());
+                ProjectChildFragment fragment = new ProjectChildFragment();
+                fragment.setProject(mProjects.get(i));
+                mFragments.add(fragment);
                 mTitles.add(mProjects.get(i).getName());
             }
-            mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager(),BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+            mViewPager.setOffscreenPageLimit(3);
+            mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager(),
+                    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
                 @NonNull
                 @Override
                 public Fragment getItem(int position) {
@@ -131,5 +139,6 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
             mTabLayout.setupWithViewPager(mViewPager);
         }
     }
+    
 }
 
