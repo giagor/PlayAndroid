@@ -58,6 +58,11 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
      * 记录ViewPager当前选中的pager下标
      * */
     private int mSelectIndex = 1;
+    
+    /**
+     * 标记是不是第一次加载.
+     * */
+    private boolean mFirstLoad = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,8 +77,11 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.start();
         
+        if(mFirstLoad){
+            mPresenter.start();
+            mFirstLoad = false;
+        }
     }
 
     private void initData() {
