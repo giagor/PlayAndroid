@@ -13,6 +13,7 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.example.playandroid.R;
 import com.example.playandroid.entity.Project;
@@ -55,11 +56,6 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
     private TabLayout mTabLayout;
     
     /**
-     * 记录ViewPager当前选中的pager下标
-     * */
-    private int mSelectIndex = 1;
-    
-    /**
      * 标记是不是第一次加载.
      * */
     private boolean mFirstLoad = true;
@@ -70,7 +66,7 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
         mView = inflater.inflate(R.layout.fragment_project, container, false);
 
         initData();
-
+        
         return mView;
     }
 

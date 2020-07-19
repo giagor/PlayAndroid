@@ -33,6 +33,11 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     private List<Article> mArticles;
     
     /**
+     * 标记是否第一次请求数据.
+     * */
+    private boolean mFirstLoad = true;
+    
+    /**
      * 碎片和活动通信的接口引用.
      * */
     private OnArticleListener mCallback;
@@ -70,8 +75,9 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     @Override
     public void onResume() {
         super.onResume();
-        if(mPresenter != null){
+        if(mPresenter != null && mFirstLoad){
             mPresenter.start();
+            mFirstLoad = false;
         }
     }
 

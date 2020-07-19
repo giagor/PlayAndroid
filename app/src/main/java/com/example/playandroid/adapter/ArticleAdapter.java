@@ -18,12 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
     private List<Article> mArticles;
     private OnItemClickListener mListener;
-    
-    static class ViewHolder extends RecyclerView.ViewHolder{
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
         View mView;
         TextView mTitle;
         TextView mAuthor;
-        
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
@@ -40,41 +40,37 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.article_item,parent,false);
-        final ViewHolder holder = new ViewHolder(view);
-        
-        //为子项设置点击事件
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mListener != null){
-                    mListener.onClick(mArticles.get(holder.getAdapterPosition()));
-                }
-            }
-        });
-        
-        return holder;
+                .inflate(R.layout.article_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Article article = mArticles.get(position);
         holder.mTitle.setText(article.getTitle());
         holder.mAuthor.setText(article.getAuthor());
+
+        if (mListener != null) {
+            //为子项设置点击事件
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClick(mArticles.get(position));
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
         return mArticles.size();
     }
-    
-    public void setListener(OnItemClickListener listener){
+
+    public void setListener(OnItemClickListener listener) {
         mListener = listener;
     }
 
     public interface OnItemClickListener {
         void onClick(Article article);
     }
-    
-   
 }
