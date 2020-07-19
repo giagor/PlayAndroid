@@ -17,7 +17,7 @@ public class ProjectChildPresenter implements ProjectChildContract.Presenter,Pro
     }
 
     @Override
-    public void getProjectChildren(int id) {
+    public void getProjectChildren(long id) {
         mModel.getProjectChildren(this,id);
     }
 

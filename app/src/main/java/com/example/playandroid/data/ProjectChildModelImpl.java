@@ -19,7 +19,7 @@ public class ProjectChildModelImpl implements ProjectChildModel {
     private List<ProjectChild> mProjectChildren = new ArrayList<>();
     
     @Override
-    public void getProjectChildren(final OnListener onListener,int id) {
+    public void getProjectChildren(final OnListener onListener,long id) {
         Request request = new Request.Builder()
                 .url(String.format(CHILD_PROJECT_URL,1,id))
                 .build();

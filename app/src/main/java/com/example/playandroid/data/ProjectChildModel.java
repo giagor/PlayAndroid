@@ -5,7 +5,7 @@ import com.example.playandroid.entity.ProjectChild;
 import java.util.List;
 
 public interface ProjectChildModel {
-    void getProjectChildren(OnListener onListener,int id);
+    void getProjectChildren(OnListener onListener,long id);
     
     interface OnListener{
         void onSuccess(List<ProjectChild>projectChildren);

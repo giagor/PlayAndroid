@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProjectChildContract {
     interface Presenter extends BasePresenter {
-        void getProjectChildren(int id);
+        void getProjectChildren(long id);
     }
     
     interface OnView extends BaseView<Presenter> {
