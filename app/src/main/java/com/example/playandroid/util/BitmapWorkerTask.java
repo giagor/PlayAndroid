@@ -5,16 +5,23 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.widget.ImageView;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * 可以用于下载单个图片.
  */
-public class BitmapWorkerTask extends AsyncTask<String, Void, BitmapDrawable> {
+public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     /**
      * 磁盘缓存的子文件夹名字.
      */
@@ -26,6 +33,11 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, BitmapDrawable> {
     private static final long IMAGE_DIR_MAX_SIZE = 10 * 1024 * 1024;
 
     private static DiskLruCache mDiskLruCache;
+    
+    /**
+     * 加载的图片的url.
+     * */
+    private String mImageUrl;
 
     //创建磁盘缓存实例.
     static {
@@ -37,26 +49,36 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, BitmapDrawable> {
             e.printStackTrace();
         }
     }
-
-    /**
-     * 回调接口
-     */
-    private ImageCallback mImageCallback;
-
-    public BitmapWorkerTask(ImageCallback imageCallback) {
-        mImageCallback = imageCallback;
+    
+    public BitmapWorkerTask() {
     }
 
     /**
      * 后台任务，加载图片.
      */
     @Override
-    protected BitmapDrawable doInBackground(String... params) {
-//        String mImageUrl = params[0];//图片url
-//        //在后台开始下载图片
-//        Bitmap bitmap = downloadBitmap(mImageUrl);
-//        return new BitmapDrawable(ApplicationContext.getContext().getResources(),
-//                bitmap);
+    protected Bitmap doInBackground(String... params) {
+        mImageUrl = params[0];
+        FileDescriptor fileDescriptor = null;
+        FileInputStream fileInputStream = null;
+        DiskLruCache.Snapshot snapshot = null;
+        
+        try {
+            //生成url所对应的磁盘缓存的图片的key
+            String key = DiskLruCacheHelper.hashKeyForDisk(mImageUrl);
+            snapshot = mDiskLruCache.get(key);
+            if(snapshot == null){
+                //磁盘缓存中没有找到对应的图片,那么就去请求网络数据，并且写入缓存
+                
+                
+            }else{
+                //磁盘缓存中找到对应的图片
+                fileInputStream = (FileInputStream) snapshot.getInputStream(0);
+                fileDescriptor = fileInputStream.getFD();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -64,35 +86,68 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, BitmapDrawable> {
      * 回调到调用方设置图片.
      */
     @Override
-    protected void onPostExecute(BitmapDrawable drawable) {
-        mImageCallback.getDrawable(drawable);
+    protected void onPostExecute(Bitmap bitmap) {
     }
 
-    /**
-     * 加载图片的逻辑.
-     */
-    private Bitmap downloadBitmap(String imageUrl) {
-        Bitmap bitmap = null;
-        HttpURLConnection conn = null;
+    private boolean downloadUrlToStream(String imageUrl, OutputStream outputStream){
+        HttpURLConnection connection = null;
+        BufferedInputStream in = null;
+        BufferedOutputStream out = null;
         try {
             URL url = new URL(imageUrl);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(5 * 1000);
-            conn.setReadTimeout(10 * 1000);
-            bitmap = BitmapFactory.decodeStream(conn.getInputStream());
+            connection = (HttpURLConnection) url.openConnection();
+            in = new BufferedInputStream(connection.getInputStream(),8 * 1024);
+            out = new BufferedOutputStream(outputStream,8 * 1024);
+            int b;
+            while((b = in.read()) != -1){
+                out.write(b);
+            }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
+        }finally {
+            if(connection != null){
+                connection.disconnect();
+            }
+            
+            try{
+                if(out != null){
+                    out.close();
+                }
+                if(in != null){
+                    in.close();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
             }
         }
-        return bitmap;
+        return false;
     }
+//    /**
+//     * 加载图片的逻辑.
+//     */
+//    private Bitmap downloadBitmap(String imageUrl) {
+//        Bitmap bitmap = null;
+//        HttpURLConnection conn = null;
+//        try {
+//            URL url = new URL(imageUrl);
+//            conn = (HttpURLConnection) url.openConnection();
+//            conn.setConnectTimeout(5 * 1000);
+//            conn.setReadTimeout(10 * 1000);
+//            bitmap = BitmapFactory.decodeStream(conn.getInputStream());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (conn != null) {
+//                conn.disconnect();
+//            }
+//        }
+//        return bitmap;
+//    }
 
-    @FunctionalInterface
-    public interface ImageCallback {
-        void getDrawable(Drawable drawable);
-    }
+//    @FunctionalInterface
+//    public interface ImageCallback {
+//        void getDrawable(Drawable drawable);
+//    }
 
 }
