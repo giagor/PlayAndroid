@@ -19,19 +19,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     private List<Article> mArticles;
     private OnItemClickListener mListener;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        View mView;
-        TextView mTitle;
-        TextView mAuthor;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mView = itemView;
-            mTitle = itemView.findViewById(R.id.title);
-            mAuthor = itemView.findViewById(R.id.author);
-        }
-    }
-
     public ArticleAdapter(List<Article> articles) {
         mArticles = articles;
     }
@@ -70,6 +57,19 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         mListener = listener;
     }
 
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        View mView;
+        TextView mTitle;
+        TextView mAuthor;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mView = itemView;
+            mTitle = itemView.findViewById(R.id.title);
+            mAuthor = itemView.findViewById(R.id.author);
+        }
+    }
+    
     public interface OnItemClickListener {
         void onClick(Article article);
     }

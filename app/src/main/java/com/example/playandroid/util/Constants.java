@@ -19,7 +19,7 @@ public class Constants {
      * 文章模块对应的常量.
      */
     public static class ArticleConstant {
-        //Message对应的状态值
+        //网络请求对应的状态值
         public static final int SUCCESS = 0;
     }
 
@@ -36,7 +36,15 @@ public class Constants {
      * 项目模块对应的常量值.
      * */
     public static class ProjectConstant{
-        //Message对应的状态值
+        //网络请求对应的状态值
+        public static final int SUCCESS = 0;
+    }
+    
+    /**
+     * 子项目对应的常量值.
+     * */
+    public static class ProjectChildConstant{
+        //网络请求对应的状态值
         public static final int SUCCESS = 0;
     }
 }
