@@ -11,8 +11,9 @@ import android.view.ViewGroup;
 import com.example.playandroid.R;
 import com.example.playandroid.adapter.ArticleAdapter;
 import com.example.playandroid.entity.Article;
-import com.example.playandroid.util.UIHandler;
+import com.example.playandroid.util.HandlerUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +26,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.example.playandroid.util.Constants.ArticleConstant.SUCCESS;
 
 public class ArticleFragment extends Fragment implements ArticleContract.OnView, 
-        UIHandler.HandlerListener,ArticleAdapter.OnItemClickListener {
+        ArticleAdapter.OnItemClickListener {
     private ArticleContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private View mView;
-    private Handler mHandler;
+//    private Handler mHandler;
     private List<Article> mArticles;
     
     /**
@@ -62,7 +63,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     private void initData(){
         new ArticlePresenter(this);
         
-        mHandler = new UIHandler(this);
+//        mHandler = new UIHandler(this);
         
         mArticles = new ArrayList<>();
         
@@ -90,9 +91,10 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     public void onSuccess(List<Article> articles) {
         mArticles.clear();
         mArticles.addAll(articles);
-        Message msg = Message.obtain();
-        msg.what = SUCCESS;
-        mHandler.sendMessage(msg);
+//        Message msg = Message.obtain();
+//        msg.what = SUCCESS;
+//        mHandler.sendMessage(msg);
+        HandlerUtil.post(new UIRunnable(this,SUCCESS));
     }
 
     @Override
@@ -100,20 +102,20 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     }
 
-    @Override
-    public void handlerMessage(@NonNull Message msg) {
-        switch (msg.what){
-            case SUCCESS:
-                RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
-                mRecyclerView.setLayoutManager(manager);
-                ArticleAdapter adapter = new ArticleAdapter(mArticles);
-                adapter.setListener(this);
-                mRecyclerView.setAdapter(adapter);
-                break;
-            default:
-                break;
-        }
-    }
+//    @Override
+//    public void handlerMessage(@NonNull Message msg) {
+//        switch (msg.what){
+//            case SUCCESS:
+//                RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+//                mRecyclerView.setLayoutManager(manager);
+//                ArticleAdapter adapter = new ArticleAdapter(mArticles);
+//                adapter.setListener(this);
+//                mRecyclerView.setAdapter(adapter);
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 
     @Override
     public void onClick(Article article) {
@@ -125,5 +127,33 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
      * */
     public interface OnArticleListener{
         void showArticleDetail(String title,String url);
+    }
+    
+    private static class UIRunnable implements Runnable{
+
+        private WeakReference<ArticleFragment> mWeak;
+        private int mType;
+        
+        UIRunnable(ArticleFragment fragment, int type) {
+            mWeak = new WeakReference<>(fragment);
+            mType = type;
+        }
+
+        @Override
+        public void run() {
+            switch(mType){
+                case SUCCESS:
+                    if(mWeak.get() != null){
+                        RecyclerView.LayoutManager manager = new LinearLayoutManager(mWeak.get().getContext());
+                        mWeak.get().mRecyclerView.setLayoutManager(manager);
+                        ArticleAdapter adapter = new ArticleAdapter(mWeak.get().mArticles);
+                        adapter.setListener(mWeak.get());
+                        mWeak.get().mRecyclerView.setAdapter(adapter);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

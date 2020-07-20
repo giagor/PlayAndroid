@@ -18,9 +18,10 @@ import android.widget.ListView;
 import com.example.playandroid.R;
 import com.example.playandroid.entity.Project;
 import com.example.playandroid.project.project_child.ProjectChildFragment;
-import com.example.playandroid.util.UIHandler;
+import com.example.playandroid.util.HandlerUtil;
 import com.google.android.material.tabs.TabLayout;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +31,10 @@ import static com.example.playandroid.util.Constants.ProjectConstant.SUCCESS;
 /**
  * 项目界面.
  */
-public class ProjectFragment extends Fragment implements ProjectContract.OnView,
-        UIHandler.HandlerListener{
+public class ProjectFragment extends Fragment implements ProjectContract.OnView{
     private View mView;
     private ProjectContract.Presenter mPresenter;
-    private Handler mHandler;
+//    private Handler mHandler;
 
     /**
      * ViewPager的各个pager.
@@ -83,7 +83,7 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
     private void initData() {
         new ProjectPresenter(this);
 
-        mHandler = new UIHandler(this);
+//        mHandler = new UIHandler(this);
 
         mViewPager = mView.findViewById(R.id.view_pager);
         mTabLayout = mView.findViewById(R.id.tab_layout);
@@ -94,9 +94,10 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
         mProjects.clear();
         mProjects.addAll(projects);
 
-        Message message = Message.obtain();
-        message.what = SUCCESS;
-        mHandler.sendMessage(message);
+//        Message message = Message.obtain();
+//        message.what = SUCCESS;
+//        mHandler.sendMessage(message);
+        HandlerUtil.post(new UIRunnable(this,SUCCESS));
     }
 
     @Override
@@ -109,40 +110,86 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView,
         mPresenter = presenter;
     }
 
-    @Override
-    public void handlerMessage(@NonNull Message msg) {
-        if (msg.what == SUCCESS) {
-            //创建ViewPager的各个Pager的碎片和Title
-            for (int i = 0; i < mProjects.size(); i++) {
-                ProjectChildFragment fragment = new ProjectChildFragment();
-                fragment.setProject(mProjects.get(i));
-                mFragments.add(fragment);
-                mTitles.add(mProjects.get(i).getName());
+    private static class UIRunnable implements Runnable{
+
+        private WeakReference<ProjectFragment> mWeak;
+        private int mType;
+
+        UIRunnable(ProjectFragment fragment, int type) {
+            mWeak = new WeakReference<>(fragment);
+            mType = type;
+        }
+
+        @Override
+        public void run() {
+            if(mType == SUCCESS && mWeak.get() != null){
+                //创建ViewPager的各个Pager的碎片和Title
+                for (int i = 0; i < mWeak.get().mProjects.size(); i++) {
+                    ProjectChildFragment fragment = new ProjectChildFragment();
+                    fragment.setProject(mWeak.get().mProjects.get(i));
+                    mWeak.get().mFragments.add(fragment);
+                    mWeak.get().mTitles.add(mWeak.get().mProjects.get(i).getName());
+                }
+                mWeak.get().mViewPager.setOffscreenPageLimit(3);
+                mWeak.get().mViewPager.setAdapter(new FragmentStatePagerAdapter(
+                        mWeak.get().getChildFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+                    @NonNull
+                    @Override
+                    public Fragment getItem(int position) {
+                        return mWeak.get().mFragments.get(position);
+                    }
+
+                    @Override
+                    public int getCount() {
+                        return mWeak.get().mFragments.size();
+                    }
+
+                    @Nullable
+                    @Override
+                    public CharSequence getPageTitle(int position) {
+                        return mWeak.get().mTitles.get(position);
+                    }
+                });
+
+                mWeak.get().mTabLayout.setupWithViewPager(mWeak.get().mViewPager);
             }
-            mViewPager.setOffscreenPageLimit(3);
-            mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager(),
-                    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-                @NonNull
-                @Override
-                public Fragment getItem(int position) {
-                    return mFragments.get(position);
-                }
-
-                @Override
-                public int getCount() {
-                    return mFragments.size();
-                }
-
-                @Nullable
-                @Override
-                public CharSequence getPageTitle(int position) {
-                    return mTitles.get(position);
-                }
-            });
-            
-            mTabLayout.setupWithViewPager(mViewPager);
         }
     }
+    
+//    @Override
+//    public void handlerMessage(@NonNull Message msg) {
+//        if (msg.what == SUCCESS) {
+//            //创建ViewPager的各个Pager的碎片和Title
+//            for (int i = 0; i < mProjects.size(); i++) {
+//                ProjectChildFragment fragment = new ProjectChildFragment();
+//                fragment.setProject(mProjects.get(i));
+//                mFragments.add(fragment);
+//                mTitles.add(mProjects.get(i).getName());
+//            }
+//            mViewPager.setOffscreenPageLimit(3);
+//            mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager(),
+//                    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+//                @NonNull
+//                @Override
+//                public Fragment getItem(int position) {
+//                    return mFragments.get(position);
+//                }
+//
+//                @Override
+//                public int getCount() {
+//                    return mFragments.size();
+//                }
+//
+//                @Nullable
+//                @Override
+//                public CharSequence getPageTitle(int position) {
+//                    return mTitles.get(position);
+//                }
+//            });
+//            
+//            mTabLayout.setupWithViewPager(mViewPager);
+//        }
+//    }
     
 }
 
