@@ -1,55 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="200dp"
+    android:padding="1dp">
     
     <ImageView
         android:id="@+id/project_img"
         android:layout_width="120dp"
         android:layout_height="match_parent"
-        android:src="@drawable/test"/>
+        android:src="@drawable/test"
+       android:scaleType="fitXY"/>
     
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@id/project_img"
-        android:orientation="vertical">
+        android:layout_height="200dp"
+        android:layout_toEndOf="@id/project_img">
         
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textSize="15sp"/>
+            android:textSize="18sp"
+            android:layout_margin="2dp"/>
         
         <TextView
             android:id="@+id/desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="2"/>
-        
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/author"/>
-            
-            <TextView
-                android:id="@+id/author_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            
-        </LinearLayout>
+            android:maxLines="2"
+            android:layout_below="@id/title"
+            android:layout_margin="2dp"/>
 
         <LinearLayout
+            android:id="@+id/ll_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="2dp"
+            android:layout_marginTop="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,6 +53,24 @@
 
         </LinearLayout>
         
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_above="@id/ll_time">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/author"/>
+            
+            <TextView
+                android:id="@+id/author_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            
+        </LinearLayout>
+        
+    </RelativeLayout>
 
 </RelativeLayout>
