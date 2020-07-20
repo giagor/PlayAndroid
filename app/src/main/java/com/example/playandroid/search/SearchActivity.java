@@ -20,6 +20,9 @@ import com.example.playandroid.R;
 import com.example.playandroid.entity.HotWord;
 import com.example.playandroid.view.flowlayout.TagModel;
 import com.example.playandroid.view.flowlayout.RadioFlowLayout;
+import com.squareup.picasso.Picasso;
+
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
