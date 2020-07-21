@@ -34,12 +34,12 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     private static final long IMAGE_DIR_MAX_SIZE = 10 * 1024 * 1024;
 
     private static DiskLruCache mDiskLruCache;
-    
+
     /**
      * 加载的图片的url.
-     * */
+     */
     private String mImageUrl;
-    
+
     private WeakReference<ImageView> mWeak;
 
     //创建磁盘缓存实例.
@@ -52,7 +52,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             e.printStackTrace();
         }
     }
-    
+
     public BitmapWorkerTask(ImageView imageView) {
         mWeak = new WeakReference<>(imageView);
     }
@@ -64,11 +64,12 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... params) {
         mImageUrl = params[0];
         //先从内存缓存中拿图片
-        Bitmap bitmap = ImageMemoryCache.getBitmapFromMemoryCache(mImageUrl);;
-        if(bitmap != null){
+        Bitmap bitmap = ImageMemoryCache.getBitmapFromMemoryCache(mImageUrl);
+        ;
+        if (bitmap != null) {
             return bitmap;
         }
-        
+
         FileDescriptor fileDescriptor = null;
         FileInputStream fileInputStream = null;
         DiskLruCache.Snapshot snapshot;
@@ -77,15 +78,15 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             String key = DiskLruCacheHelper.hashKeyForDisk(mImageUrl);
             snapshot = mDiskLruCache.get(key);
             //通过key查找磁盘缓存
-            if(snapshot == null){
+            if (snapshot == null) {
                 //磁盘缓存中没有找到对应的图片,那么就去请求网络数据，并且写入缓存
                 DiskLruCache.Editor editor = mDiskLruCache.edit(key);
-                if(editor != null){
+                if (editor != null) {
                     OutputStream out = editor.newOutputStream(0);
-                    if(downloadUrlToStream(mImageUrl,out)){
+                    if (downloadUrlToStream(mImageUrl, out)) {
                         //写入成功
                         editor.commit();
-                    }else{
+                    } else {
                         //写入失败
                         editor.abort();
                     }
@@ -93,24 +94,24 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                 //缓存被写入后，再从缓存中拿
                 snapshot = mDiskLruCache.get(key);
             }
-            if(snapshot != null){
+            if (snapshot != null) {
                 //磁盘缓存中找到对应的文件
                 fileInputStream = (FileInputStream) snapshot.getInputStream(0);
                 fileDescriptor = fileInputStream.getFD();
             }
-           
-            if(fileDescriptor != null){
+
+            if (fileDescriptor != null) {
                 bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
             }
             //将bitmap添加到内存缓存中
-            if(bitmap != null){
-                ImageMemoryCache.addBitmapToMemory(mImageUrl,bitmap);
+            if (bitmap != null) {
+                ImageMemoryCache.addBitmapToMemory(mImageUrl, bitmap);
             }
             return bitmap;
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            if(fileDescriptor == null && fileInputStream != null){
+        } finally {
+            if (fileDescriptor == null && fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
@@ -127,40 +128,41 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         ImageView imageView = mWeak.get();
-        if(imageView != null && bitmap != null){
+        if (imageView != null && bitmap != null && mImageUrl.equals(imageView.getTag())) {
             imageView.setImageBitmap(bitmap);
         }
+        
     }
 
-    private boolean downloadUrlToStream(String imageUrl, OutputStream outputStream){
+    private boolean downloadUrlToStream(String imageUrl, OutputStream outputStream) {
         HttpURLConnection connection = null;
         BufferedInputStream in = null;
         BufferedOutputStream out = null;
         try {
             URL url = new URL(imageUrl);
             connection = (HttpURLConnection) url.openConnection();
-            in = new BufferedInputStream(connection.getInputStream(),8 * 1024);
-            out = new BufferedOutputStream(outputStream,8 * 1024);
+            in = new BufferedInputStream(connection.getInputStream(), 8 * 1024);
+            out = new BufferedOutputStream(outputStream, 8 * 1024);
             int b;
-            while((b = in.read()) != -1){
+            while ((b = in.read()) != -1) {
                 out.write(b);
             }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            if(connection != null){
+        } finally {
+            if (connection != null) {
                 connection.disconnect();
             }
-            
-            try{
-                if(out != null){
+
+            try {
+                if (out != null) {
                     out.close();
                 }
-                if(in != null){
+                if (in != null) {
                     in.close();
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

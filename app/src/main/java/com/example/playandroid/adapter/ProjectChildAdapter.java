@@ -40,6 +40,7 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
         holder.mDate.setText(projectChild.getDate());
 
         holder.mImage.setImageResource(R.drawable.empty_photo);
+        holder.mImage.setTag(projectChild.getPicUrl());
         //通过三级缓存寻找图片
         BitmapWorkerTask task = new BitmapWorkerTask(holder.mImage);
         task.execute(projectChild.getPicUrl());
