@@ -103,7 +103,14 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             }
 
             if (fileDescriptor != null) {
-                bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                //对图片进行压缩
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFileDescriptor(fileDescriptor,null,options);
+                options.inSampleSize = calculateInSampleSize(options,80,120);
+                options.inJustDecodeBounds = false;
+                bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor,null,options);
+//                bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
             }
             //将bitmap添加到内存缓存中
             if (bitmap != null) {
