@@ -1,4 +1,4 @@
-package com.example.playandroid.util;
+package com.example.playandroid.util.imageloader;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

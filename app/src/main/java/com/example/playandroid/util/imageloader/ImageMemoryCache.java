@@ -1,4 +1,4 @@
-package com.example.playandroid.util;
+package com.example.playandroid.util.imageloader;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;
@@ -28,7 +28,7 @@ public class ImageMemoryCache {
     /**
      * 向缓存中添加图片.
      * */
-    static void addBitmapToMemory(String key, Bitmap bitmap){
+    public static void addBitmapToMemory(String key, Bitmap bitmap){
         if(getBitmapFromMemoryCache(key) == null){
             sMemoryCache.put(key, bitmap);
         }

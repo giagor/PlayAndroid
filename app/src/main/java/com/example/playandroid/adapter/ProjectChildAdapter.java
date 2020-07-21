@@ -1,6 +1,5 @@
 package com.example.playandroid.adapter;
 
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,7 @@ import android.widget.TextView;
 
 import com.example.playandroid.R;
 import com.example.playandroid.entity.ProjectChild;
-import com.example.playandroid.util.BitmapWorkerTask;
-import com.example.playandroid.util.ImageMemoryCache;
+import com.example.playandroid.util.imageloader.BitmapWorkerTask;
 
 import java.util.List;
 
@@ -42,7 +40,8 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
         holder.mImage.setImageResource(R.drawable.empty_photo);
         holder.mImage.setTag(projectChild.getPicUrl());
         //通过三级缓存寻找图片
-        BitmapWorkerTask task = new BitmapWorkerTask(holder.mImage);
+        BitmapWorkerTask task = new BitmapWorkerTask();
+        task.setImageView(holder.mImage);
         task.setErrorDrawable(R.drawable.load_error);
         task.execute(projectChild.getPicUrl());
     }
@@ -68,13 +67,5 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
             mDate = itemView.findViewById(R.id.date);
         }
     }
-
-    /**
-     * 加载图片的方法.
-     * 先从内存缓存中寻找是否有匹配的图片，没有再从磁盘缓存寻找或网络下载.
-     */
-    private void loadBitmaps(ImageView imageView, String url) {
-        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-        task.execute(url);
-    }
+    
 }

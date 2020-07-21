@@ -1,13 +1,12 @@
-package com.example.playandroid.util;
+package com.example.playandroid.util.imageloader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.example.playandroid.R;
+import com.example.playandroid.util.ApplicationContext;
+import com.example.playandroid.util.DiskLruCache;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -58,7 +56,16 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
      * 标记是否设置加载失败时的图片.
      * */
     private boolean mSetErrorDrawable = false;
+    
+    /**
+     * 是否压缩图片.
+     * */
+    private boolean mResize = false;
 
+    private int reqWidth;
+    
+    private int reqHeight = 0;
+    
     //创建磁盘缓存实例.
     static {
         File file = DiskLruCacheHelper.getDiskCacheDir(ApplicationContext.getContext(), IMAGE_DIR_NAME);
@@ -70,8 +77,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         }
     }
 
-    public BitmapWorkerTask(ImageView imageView) {
-        mWeak = new WeakReference<>(imageView);
+    public BitmapWorkerTask() {
     }
 
     /**
@@ -219,6 +225,10 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     public void setErrorDrawable(int errorDrawable) {
         mErrorDrawable = errorDrawable;
         mSetErrorDrawable = true;
+    }
+    
+    public void setImageView(ImageView imageView){
+        mWeak = new WeakReference<>(imageView);
     }
 //    /**
 //     * 加载图片的逻辑.
