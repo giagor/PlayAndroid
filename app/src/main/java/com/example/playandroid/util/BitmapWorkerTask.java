@@ -43,6 +43,21 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     private String mImageUrl;
 
     private WeakReference<ImageView> mWeak;
+    
+    /**
+     * 标记网络加载图片是否失败.
+     * */
+    private boolean mNetLoadError = false;
+    
+    /**
+     * 图片加载失败时展示的图片.
+     * */
+    private int mErrorDrawable = 0;
+    
+    /**
+     * 标记是否设置加载失败时的图片.
+     * */
+    private boolean mSetErrorDrawable = false;
 
     //创建磁盘缓存实例.
     static {
@@ -86,11 +101,12 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                 if (editor != null) {
                     OutputStream out = editor.newOutputStream(0);
                     if (downloadUrlToStream(mImageUrl, out)) {
-                        //写入成功
+                        //网络请求成功，写入
                         editor.commit();
                     } else {
-                        //写入失败
+                        //网络请求失败，不写入
                         editor.abort();
+                        mNetLoadError = true;
                     }
                 }
                 //缓存被写入后，再从缓存中拿
@@ -140,6 +156,11 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         if (imageView != null && bitmap != null && mImageUrl.equals(imageView.getTag())) {
             imageView.setImageBitmap(bitmap);
         }
+        
+        if(mSetErrorDrawable && mNetLoadError && imageView != null && mImageUrl.equals(imageView.getTag()) ){
+            imageView.setImageResource(mErrorDrawable);
+        }
+        
     }
 
     private boolean downloadUrlToStream(String imageUrl, OutputStream outputStream) {
@@ -193,6 +214,11 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             inSampleSize = Math.min(heightRatio, widthRatio);
         }
         return inSampleSize;
+    }
+
+    public void setErrorDrawable(int errorDrawable) {
+        mErrorDrawable = errorDrawable;
+        mSetErrorDrawable = true;
     }
 //    /**
 //     * 加载图片的逻辑.
