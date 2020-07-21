@@ -41,31 +41,31 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     private String mImageUrl;
 
     private WeakReference<ImageView> mWeak;
-    
+
     /**
      * 标记网络加载图片是否失败.
-     * */
+     */
     private boolean mNetLoadError = false;
-    
+
     /**
      * 图片加载失败时展示的图片.
-     * */
+     */
     private int mErrorDrawable = 0;
-    
+
     /**
      * 标记是否设置加载失败时的图片.
-     * */
+     */
     private boolean mSetErrorDrawable = false;
-    
+
     /**
      * 是否压缩图片.
-     * */
+     */
     private boolean mResize = false;
 
     private int mReqWidth;
-    
+
     private int mReqHeight = 0;
-    
+
     //创建磁盘缓存实例.
     static {
         File file = DiskLruCacheHelper.getDiskCacheDir(ApplicationContext.getContext(), IMAGE_DIR_NAME);
@@ -77,7 +77,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         }
     }
 
-    public BitmapWorkerTask() {
+    BitmapWorkerTask() {
     }
 
     /**
@@ -88,7 +88,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         mImageUrl = params[0];
         //先从内存缓存中拿图片
         Bitmap bitmap = ImageMemoryCache.getBitmapFromMemoryCache(mImageUrl);
-        
+
         if (bitmap != null) {
             return bitmap;
         }
@@ -125,17 +125,17 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             }
 
             if (fileDescriptor != null) {
-                if(mResize){
+                if (mResize) {
                     //对图片进行压缩
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFileDescriptor(fileDescriptor,null,options);
-                    options.inSampleSize = calculateInSampleSize(options,mReqWidth,mReqHeight);
+                    BitmapFactory.decodeFileDescriptor(fileDescriptor, null, options);
+                    options.inSampleSize = calculateInSampleSize(options, mReqWidth, mReqHeight);
                     options.inJustDecodeBounds = false;
-                    bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor,null,options);
-                }else{
+                    bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor, null, options);
+                } else {
                     //不改变图片原来的大小
-                    bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);    
+                    bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
                 }
             }
             //将bitmap添加到内存缓存中
@@ -166,11 +166,11 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         if (imageView != null && bitmap != null && mImageUrl.equals(imageView.getTag())) {
             imageView.setImageBitmap(bitmap);
         }
-        
-        if(mSetErrorDrawable && mNetLoadError && imageView != null && mImageUrl.equals(imageView.getTag()) ){
+
+        if (mSetErrorDrawable && mNetLoadError && imageView != null && mImageUrl.equals(imageView.getTag())) {
             imageView.setImageResource(mErrorDrawable);
         }
-        
+
     }
 
     private boolean downloadUrlToStream(String imageUrl, OutputStream outputStream) {
@@ -207,69 +207,43 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         }
         return false;
     }
-    
+
     /**
      * 根据传入的options计算应该压缩的图片的比率.
+     *
      * @param reqHeight 需要的图片的高度
-     * @param reqWidth 需要的图片的宽度
+     * @param reqWidth  需要的图片的宽度
      * @return 比率
-     * */
-    private int calculateInSampleSize(BitmapFactory.Options options,int reqWidth,int reqHeight){
+     */
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         int height = options.outHeight;
         int width = options.outWidth;
         int inSampleSize = 1;
-        if(height > reqHeight || width > reqWidth){
-            int heightRatio = Math.round((float)height/(float)reqHeight);
-            int widthRatio  = Math.round((float)width/(float)reqWidth);
+        if (height > reqHeight || width > reqWidth) {
+            int heightRatio = Math.round((float) height / (float) reqHeight);
+            int widthRatio = Math.round((float) width / (float) reqWidth);
             inSampleSize = Math.min(heightRatio, widthRatio);
         }
         return inSampleSize;
     }
 
-    public void setErrorDrawable(int errorDrawable) {
+    void setErrorDrawable(int errorDrawable) {
         mErrorDrawable = errorDrawable;
         mSetErrorDrawable = true;
     }
-    
-    public void setImageView(ImageView imageView){
+
+    void setImageView(ImageView imageView) {
         mWeak = new WeakReference<>(imageView);
     }
-    
+
     /**
      * 图片裁剪.
-     * */
-    public void resize(int reqWidth,int reqHeight){
-        if(reqWidth > 0 && reqHeight > 0){
+     */
+    void resize(int reqWidth, int reqHeight) {
+        if (reqWidth > 0 && reqHeight > 0) {
             mResize = true;
             mReqWidth = reqWidth;
             mReqHeight = reqHeight;
         }
     }
-//    /**
-//     * 加载图片的逻辑.
-//     */
-//    private Bitmap downloadBitmap(String imageUrl) {
-//        Bitmap bitmap = null;
-//        HttpURLConnection conn = null;
-//        try {
-//            URL url = new URL(imageUrl);
-//            conn = (HttpURLConnection) url.openConnection();
-//            conn.setConnectTimeout(5 * 1000);
-//            conn.setReadTimeout(10 * 1000);
-//            bitmap = BitmapFactory.decodeStream(conn.getInputStream());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (conn != null) {
-//                conn.disconnect();
-//            }
-//        }
-//        return bitmap;
-//    }
-
-//    @FunctionalInterface
-//    public interface ImageCallback {
-//        void getDrawable(Drawable drawable);
-//    }
-
 }

@@ -5,10 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.playandroid.R;
 import com.example.playandroid.entity.ProjectChild;
-import com.example.playandroid.util.imageloader.BitmapWorkerTask;
+import com.example.playandroid.util.imageloader.ImageLoader;
 
 import java.util.List;
 
@@ -37,13 +36,12 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
         holder.mAuthor.setText(projectChild.getAuthor());
         holder.mDate.setText(projectChild.getDate());
 
-        holder.mImage.setImageResource(R.drawable.empty_photo);
         holder.mImage.setTag(projectChild.getPicUrl());
-        //通过三级缓存寻找图片
-        BitmapWorkerTask task = new BitmapWorkerTask();
-        task.setImageView(holder.mImage);
-        task.setErrorDrawable(R.drawable.load_error);
-        task.execute(projectChild.getPicUrl());
+        ImageLoader.get().load(projectChild.getPicUrl())
+                .placeholder(R.drawable.empty_photo)
+                .error(R.drawable.load_error)
+                .resize(80,120)
+                .into(holder.mImage);
     }
 
     @Override

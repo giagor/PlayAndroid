@@ -37,7 +37,7 @@ public class RequestCreator {
     
     private int mReqHeight = 0;
     
-    public RequestCreator(String url){
+    RequestCreator(String url){
         mUrl = url;
     }
     
@@ -89,6 +89,7 @@ public class RequestCreator {
             //设置加载出错时的图片
             task.setErrorDrawable(mErrorDrawable);
         }
+        task.setImageView(imageView);
         task.execute(mUrl);
     }
 }
