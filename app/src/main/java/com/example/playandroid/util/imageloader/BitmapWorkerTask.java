@@ -62,9 +62,9 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
      * */
     private boolean mResize = false;
 
-    private int reqWidth;
+    private int mReqWidth;
     
-    private int reqHeight = 0;
+    private int mReqHeight = 0;
     
     //创建磁盘缓存实例.
     static {
@@ -125,14 +125,18 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             }
 
             if (fileDescriptor != null) {
-                //对图片进行压缩
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFileDescriptor(fileDescriptor,null,options);
-                options.inSampleSize = calculateInSampleSize(options,80,120);
-                options.inJustDecodeBounds = false;
-                bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor,null,options);
-//                bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                if(mResize){
+                    //对图片进行压缩
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeFileDescriptor(fileDescriptor,null,options);
+                    options.inSampleSize = calculateInSampleSize(options,mReqWidth,mReqHeight);
+                    options.inJustDecodeBounds = false;
+                    bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor,null,options);
+                }else{
+                    //不改变图片原来的大小
+                    bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);    
+                }
             }
             //将bitmap添加到内存缓存中
             if (bitmap != null) {
@@ -229,6 +233,17 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     
     public void setImageView(ImageView imageView){
         mWeak = new WeakReference<>(imageView);
+    }
+    
+    /**
+     * 图片裁剪.
+     * */
+    public void resize(int reqWidth,int reqHeight){
+        if(reqWidth > 0 && reqHeight > 0){
+            mResize = true;
+            mReqWidth = reqWidth;
+            mReqHeight = reqHeight;
+        }
     }
 //    /**
 //     * 加载图片的逻辑.

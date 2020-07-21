@@ -2,8 +2,6 @@ package com.example.playandroid.util.imageloader;
 
 import android.widget.ImageView;
 
-import com.example.playandroid.util.network.Request;
-
 public class RequestCreator {
     /**
      * 保存图片的url.
@@ -19,6 +17,25 @@ public class RequestCreator {
      * 占位图资源.
      * */
     private int mPlaceholderRes = 0;
+
+    /**
+     * 标记是否设置加载失败时的图片.
+     * */
+    private boolean mSetErrorDrawable = false;
+
+    /**
+     * 图片加载失败时展示的图片.
+     * */
+    private int mErrorDrawable = 0;
+    
+    /**
+     * 是否裁剪图片的大小.
+     * */
+    private boolean mResize = false;
+    
+    private int mReqWidth = 0;
+    
+    private int mReqHeight = 0;
     
     public RequestCreator(String url){
         mUrl = url;
@@ -28,14 +45,18 @@ public class RequestCreator {
      * 放置占位图.
      * */
     public RequestCreator placeholder(int resource){
-        return null;
+        mPlaceHolder = true;
+        mPlaceholderRes = resource;
+        return this;
     }
     
     /**
      * 图片加载错误时放置的图片.
      * */
     public RequestCreator error(int resource){
-        return null;
+        mSetErrorDrawable = true;
+        mErrorDrawable = resource;
+        return this;
     }
     
     /**
@@ -44,7 +65,12 @@ public class RequestCreator {
      * @param reqHeight 裁剪后图片的高度.
      * */
     public RequestCreator resize(int reqWidth,int reqHeight){
-        return null;
+        if(reqHeight > 0 && reqWidth >0){
+            mResize = true;
+            mReqWidth = reqWidth;
+            mReqHeight = reqHeight;
+        }
+        return this;
     }
 
     /**
@@ -52,8 +78,17 @@ public class RequestCreator {
      * */
     public void into(ImageView imageView){
         if(mPlaceHolder){
+            //设置占位图
             imageView.setImageResource(mPlaceholderRes);
         }
-        
+        BitmapWorkerTask task = new BitmapWorkerTask();
+        if(mResize){
+            task.resize(mReqWidth,mReqHeight);
+        }
+        if(mSetErrorDrawable){
+            //设置加载出错时的图片
+            task.setErrorDrawable(mErrorDrawable);
+        }
+        task.execute(mUrl);
     }
 }
