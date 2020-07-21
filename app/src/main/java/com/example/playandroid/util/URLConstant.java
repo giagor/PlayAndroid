@@ -8,4 +8,6 @@ public class URLConstant {
     //获取子项目
     public static final String CHILD_PROJECT_URL = "https://www.wanandroid.com/project/list/%1$s/" +
             "json?cid=%2$s";
+    //获得搜索热词
+    public static final String HOT_WORD = "https://www.wanandroid.com//hotkey/json";
 }

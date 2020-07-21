@@ -22,7 +22,8 @@
         <activity android:name=".acticle.ArticleDetailActivity" />
         <activity
             android:name=".main.MainActivity"
-            android:label="玩安卓">
+            android:label="玩安卓"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.example.playandroid.R;
 import com.example.playandroid.adapter.ArticleAdapter;
 import com.example.playandroid.entity.Article;
+import com.example.playandroid.main.MainActivity;
 import com.example.playandroid.util.HandlerUtil;
 import com.squareup.picasso.Picasso;
 
@@ -42,12 +43,12 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     /**
      * 碎片和活动通信的接口引用.
      * */
-    private OnArticleListener mCallback;
+//    private OnArticleListener mCallback;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        mCallback = (OnArticleListener) context;
+//        mCallback = (OnArticleListener) context;
     }
 
     @Nullable
@@ -120,15 +121,17 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Override
     public void onClick(Article article) {
-        mCallback.showArticleDetail(article.getTitle(),article.getLink());
+        if(getContext() != null){
+            ((MainActivity)getContext()).showArticleDetail(article.getTitle(),article.getLink());
+        }
     }
 
-    /**
-     * 回调接口，主活动实现，用于打开文章的主界面.
-     * */
-    public interface OnArticleListener{
-        void showArticleDetail(String title,String url);
-    }
+//    /**
+//     * 回调接口，主活动实现，用于打开文章的主界面.
+//     * */
+//    public interface OnArticleListener{
+//        void showArticleDetail(String title,String url);
+//    }
     
     private static class UIRunnable implements Runnable{
 

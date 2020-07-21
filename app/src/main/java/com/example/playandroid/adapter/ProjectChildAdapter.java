@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapter.ViewHolder> {
     private List<ProjectChild> mProjectChildren;
+    private OnItemClickListener mListener;
 
     public ProjectChildAdapter(List<ProjectChild> projectChildren) {
         mProjectChildren = projectChildren;
@@ -29,13 +30,23 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         ProjectChild projectChild = mProjectChildren.get(position);
         holder.mTitle.setText(projectChild.getTitle());
         holder.mDesc.setText(projectChild.getDesc());
         holder.mAuthor.setText(projectChild.getAuthor());
         holder.mDate.setText(projectChild.getDate());
 
+        if (mListener != null) {
+            //为子项设置点击事件
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClick(mProjectChildren.get(position));
+                }
+            });
+        }
+        
         holder.mImage.setTag(projectChild.getPicUrl());
         ImageLoader.get().load(projectChild.getPicUrl())
                 .placeholder(R.drawable.empty_photo)
@@ -49,7 +60,12 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
         return mProjectChildren.size();
     }
 
+    public void setListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+    
     static class ViewHolder extends RecyclerView.ViewHolder {
+        View mView;
         ImageView mImage;
         TextView mTitle;
         TextView mDesc;
@@ -58,6 +74,7 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            mView = itemView;
             mImage = itemView.findViewById(R.id.project_img);
             mTitle = itemView.findViewById(R.id.title);
             mDesc = itemView.findViewById(R.id.desc);
@@ -65,5 +82,8 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
             mDate = itemView.findViewById(R.id.date);
         }
     }
-    
+
+    public interface OnItemClickListener {
+        void onClick(ProjectChild projectChild);
+    }
 }

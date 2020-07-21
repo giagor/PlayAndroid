@@ -30,8 +30,7 @@ import static com.example.playandroid.util.Constants.MainConstant.PROJECT;
 
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        ArticleFragment.OnArticleListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private Toolbar mToolbar;
     
     /**
@@ -214,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    @Override
+    
     public void showArticleDetail(String title,String url) {
         ArticleDetailActivity.actionStart(MainActivity.this,title,url);
     }

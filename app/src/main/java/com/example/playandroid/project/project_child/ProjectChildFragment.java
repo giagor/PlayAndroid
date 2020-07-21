@@ -2,6 +2,7 @@ package com.example.playandroid.project.project_child;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.example.playandroid.R;
 import com.example.playandroid.adapter.ProjectChildAdapter;
 import com.example.playandroid.entity.Project;
 import com.example.playandroid.entity.ProjectChild;
+import com.example.playandroid.main.MainActivity;
 import com.example.playandroid.util.HandlerUtil;
 
 import java.lang.ref.WeakReference;
@@ -26,7 +28,8 @@ import static com.example.playandroid.util.Constants.ProjectChildConstant.SUCCES
 /**
  * "项目"碎片模块嵌套的ViewPager的Pager(即这里的碎片)
  */
-public class ProjectChildFragment extends Fragment implements ProjectChildContract.OnView {
+public class ProjectChildFragment extends Fragment implements ProjectChildContract.OnView,
+        ProjectChildAdapter.OnItemClickListener {
     private View mView;
     private Project mProject;
     private ProjectChildContract.Presenter mPresenter;
@@ -37,7 +40,7 @@ public class ProjectChildFragment extends Fragment implements ProjectChildContra
      * 标记是否已经请求过了数据，是否是第一次加载.
      */
     private boolean mFirstLoad = true;
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +74,14 @@ public class ProjectChildFragment extends Fragment implements ProjectChildContra
         mRecyclerView = mView.findViewById(R.id.recycler_view);
     }
 
+    /**
+     * 用于数据的保存.
+     * */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+    
     public void setProject(Project project) {
         mProject = project;
     }
@@ -93,6 +104,13 @@ public class ProjectChildFragment extends Fragment implements ProjectChildContra
         mPresenter = presenter;
     }
 
+    @Override
+    public void onClick(ProjectChild projectChild) {
+        if(getContext() != null){
+            ((MainActivity)getContext()).showArticleDetail(projectChild.getTitle(),projectChild.getLink());
+        }
+    }
+
     private static class UIRunnable implements Runnable{
 
         private WeakReference<ProjectChildFragment> mWeak;
@@ -111,6 +129,7 @@ public class ProjectChildFragment extends Fragment implements ProjectChildContra
                         RecyclerView.LayoutManager manager = new LinearLayoutManager(mWeak.get().getContext());
                         mWeak.get().mRecyclerView.setLayoutManager(manager);
                         ProjectChildAdapter adapter = new ProjectChildAdapter(mWeak.get().mProjectChildren);
+                        adapter.setListener(mWeak.get());
                         mWeak.get().mRecyclerView.setAdapter(adapter);
                     }
                     break;

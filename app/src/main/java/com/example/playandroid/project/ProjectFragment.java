@@ -1,5 +1,6 @@
 package com.example.playandroid.project;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +61,7 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView{
      * 标记是不是第一次加载.
      * */
     private boolean mFirstLoad = true;
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
