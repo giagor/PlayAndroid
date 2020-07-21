@@ -63,10 +63,15 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... params) {
         mImageUrl = params[0];
+        //先从内存缓存中拿图片
+        Bitmap bitmap = ImageMemoryCache.getBitmapFromMemoryCache(mImageUrl);;
+        if(bitmap != null){
+            return bitmap;
+        }
+        
         FileDescriptor fileDescriptor = null;
         FileInputStream fileInputStream = null;
         DiskLruCache.Snapshot snapshot;
-        
         try {
             //生成url所对应的磁盘缓存的图片的key
             String key = DiskLruCacheHelper.hashKeyForDisk(mImageUrl);
@@ -93,8 +98,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                 fileInputStream = (FileInputStream) snapshot.getInputStream(0);
                 fileDescriptor = fileInputStream.getFD();
             }
-            //将数据解析成bitmap对象
-            Bitmap bitmap = null;
+           
             if(fileDescriptor != null){
                 bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
             }

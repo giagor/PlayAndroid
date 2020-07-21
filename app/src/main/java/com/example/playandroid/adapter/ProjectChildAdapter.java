@@ -40,7 +40,9 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
         holder.mDate.setText(projectChild.getDate());
 
         holder.mImage.setImageResource(R.drawable.empty_photo);
-        loadBitmaps(holder.mImage,projectChild.getPicUrl());
+        //通过三级缓存寻找图片
+        BitmapWorkerTask task = new BitmapWorkerTask(holder.mImage);
+        task.execute(projectChild.getPicUrl());
     }
 
     @Override
@@ -70,14 +72,7 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
      * 先从内存缓存中寻找是否有匹配的图片，没有再从磁盘缓存寻找或网络下载.
      */
     private void loadBitmaps(ImageView imageView, String url) {
-        Bitmap bitmap = ImageMemoryCache.getBitmapFromMemoryCache(url);
-        if (bitmap == null) {
-            //没有拿到图片，走另外二级缓存
-            BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-            task.execute(url);
-        } else if (imageView != null) {
-            //内存缓存中拿到图片，直接设置
-            imageView.setImageBitmap(bitmap);
-        }
+        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(url);
     }
 }
