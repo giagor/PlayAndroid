@@ -12,6 +12,7 @@ import com.example.playandroid.R;
 import com.example.playandroid.adapter.ArticleAdapter;
 import com.example.playandroid.entity.Article;
 import com.example.playandroid.util.HandlerUtil;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

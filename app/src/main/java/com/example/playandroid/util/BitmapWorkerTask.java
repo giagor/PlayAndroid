@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.example.playandroid.R;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -65,7 +67,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         mImageUrl = params[0];
         //先从内存缓存中拿图片
         Bitmap bitmap = ImageMemoryCache.getBitmapFromMemoryCache(mImageUrl);
-        ;
+        
         if (bitmap != null) {
             return bitmap;
         }
@@ -131,7 +133,6 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         if (imageView != null && bitmap != null && mImageUrl.equals(imageView.getTag())) {
             imageView.setImageBitmap(bitmap);
         }
-        
     }
 
     private boolean downloadUrlToStream(String imageUrl, OutputStream outputStream) {
@@ -167,6 +168,24 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             }
         }
         return false;
+    }
+    
+    /**
+     * 根据传入的options计算应该压缩的图片的比率.
+     * @param reqHeight 需要的图片的高度
+     * @param reqWidth 需要的图片的宽度
+     * @return 比率
+     * */
+    private int calculateInSampleSize(BitmapFactory.Options options,int reqWidth,int reqHeight){
+        int height = options.outHeight;
+        int width = options.outWidth;
+        int inSampleSize = 1;
+        if(height > reqHeight || width > reqWidth){
+            int heightRatio = Math.round((float)height/(float)reqHeight);
+            int widthRatio  = Math.round((float)width/(float)reqWidth);
+            inSampleSize = Math.min(heightRatio, widthRatio);
+        }
+        return inSampleSize;
     }
 //    /**
 //     * 加载图片的逻辑.
