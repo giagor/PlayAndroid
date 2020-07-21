@@ -14,6 +14,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,6 +39,8 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
      * 加载的图片的url.
      * */
     private String mImageUrl;
+    
+    private WeakReference<ImageView> mWeak;
 
     //创建磁盘缓存实例.
     static {
@@ -50,7 +53,8 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         }
     }
     
-    public BitmapWorkerTask() {
+    public BitmapWorkerTask(ImageView imageView) {
+        mWeak = new WeakReference<>(imageView);
     }
 
     /**
@@ -61,23 +65,54 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         mImageUrl = params[0];
         FileDescriptor fileDescriptor = null;
         FileInputStream fileInputStream = null;
-        DiskLruCache.Snapshot snapshot = null;
+        DiskLruCache.Snapshot snapshot;
         
         try {
             //生成url所对应的磁盘缓存的图片的key
             String key = DiskLruCacheHelper.hashKeyForDisk(mImageUrl);
             snapshot = mDiskLruCache.get(key);
+            //通过key查找磁盘缓存
             if(snapshot == null){
                 //磁盘缓存中没有找到对应的图片,那么就去请求网络数据，并且写入缓存
-                
-                
-            }else{
-                //磁盘缓存中找到对应的图片
+                DiskLruCache.Editor editor = mDiskLruCache.edit(key);
+                if(editor != null){
+                    OutputStream out = editor.newOutputStream(0);
+                    if(downloadUrlToStream(mImageUrl,out)){
+                        //写入成功
+                        editor.commit();
+                    }else{
+                        //写入失败
+                        editor.abort();
+                    }
+                }
+                //缓存被写入后，再从缓存中拿
+                snapshot = mDiskLruCache.get(key);
+            }
+            if(snapshot != null){
+                //磁盘缓存中找到对应的文件
                 fileInputStream = (FileInputStream) snapshot.getInputStream(0);
                 fileDescriptor = fileInputStream.getFD();
             }
+            //将数据解析成bitmap对象
+            Bitmap bitmap = null;
+            if(fileDescriptor != null){
+                bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            }
+            //将bitmap添加到内存缓存中
+            if(bitmap != null){
+                ImageMemoryCache.addBitmapToMemory(mImageUrl,bitmap);
+            }
+            return bitmap;
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            if(fileDescriptor == null && fileInputStream != null){
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return null;
     }
@@ -87,6 +122,10 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
      */
     @Override
     protected void onPostExecute(Bitmap bitmap) {
+        ImageView imageView = mWeak.get();
+        if(imageView != null && bitmap != null){
+            imageView.setImageBitmap(bitmap);
+        }
     }
 
     private boolean downloadUrlToStream(String imageUrl, OutputStream outputStream){

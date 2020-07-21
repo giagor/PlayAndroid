@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.playandroid.R;
 import com.example.playandroid.entity.ProjectChild;
+import com.example.playandroid.util.BitmapWorkerTask;
 import com.example.playandroid.util.ImageMemoryCache;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.project_list_item, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.project_child_item, null);
         return new ViewHolder(view);
     }
 
@@ -39,6 +40,7 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
         holder.mDate.setText(projectChild.getDate());
 
         holder.mImage.setImageResource(R.drawable.empty_photo);
+        loadBitmaps(holder.mImage,projectChild.getPicUrl());
     }
 
     @Override
@@ -70,8 +72,11 @@ public class ProjectChildAdapter extends RecyclerView.Adapter<ProjectChildAdapte
     private void loadBitmaps(ImageView imageView, String url) {
         Bitmap bitmap = ImageMemoryCache.getBitmapFromMemoryCache(url);
         if (bitmap == null) {
-
+            //没有拿到图片，走另外二级缓存
+            BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+            task.execute(url);
         } else if (imageView != null) {
+            //内存缓存中拿到图片，直接设置
             imageView.setImageBitmap(bitmap);
         }
     }
