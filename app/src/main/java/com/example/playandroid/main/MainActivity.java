@@ -27,6 +27,8 @@ import com.example.playandroid.project.ProjectFragment;
 import com.example.playandroid.search.SearchActivity;
 import com.example.playandroid.util.network.Request;
 
+import java.util.HashMap;
+
 import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
 import static com.example.playandroid.util.Constants.MainConstant.FRAME;
 import static com.example.playandroid.util.Constants.MainConstant.PROJECT;

@@ -31,7 +31,7 @@ public class FrameChild extends FlowLayoutBean{
     
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
 }

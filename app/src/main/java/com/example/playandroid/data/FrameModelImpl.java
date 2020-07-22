@@ -1,5 +1,7 @@
 package com.example.playandroid.data;
 
+import android.util.Log;
+
 import com.example.playandroid.entity.Frame;
 import com.example.playandroid.entity.FrameChild;
 import com.example.playandroid.util.network.Call;
@@ -52,10 +54,10 @@ public class FrameModelImpl implements FrameModel {
 
         for (int i = 0; i < data.length(); i++) {
             List<FrameChild> frameChildren = new ArrayList<>();
-            JSONObject dataChild = data.getJSONObject(i);
-            long id = dataChild.getLong("id");
-            String frameName = dataChild.getString("name");
-            JSONArray children = dataChild.getJSONArray("children");
+            JSONObject frameJson = data.getJSONObject(i);
+            long id = frameJson.getLong("id");
+            String frameName = frameJson.getString("name");
+            JSONArray children = frameJson.getJSONArray("children");
             for (int j = 0; j < children.length(); j++) {
                 JSONObject frameChildJson = children.getJSONObject(j);
                 long childId = frameChildJson.getLong("id");
