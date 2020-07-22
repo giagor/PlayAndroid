@@ -11,6 +11,8 @@ public class URLConstant {
             "json?cid=%2$s";
     //获得搜索热词
     public static final String HOT_WORD = "https://www.wanandroid.com//hotkey/json";
+    //获得一级体系
+    public static final String FRAME = "https://www.wanandroid.com/tree/json";
     
     //---------------------------------------POST----------------------------------------------
     //根据搜索关键词获取搜索内容
