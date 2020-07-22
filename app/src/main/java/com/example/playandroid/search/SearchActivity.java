@@ -40,17 +40,18 @@ import static com.example.playandroid.util.Constants.SearchConstant.HOT_WORD_SUC
 import static com.example.playandroid.util.Constants.SearchConstant.SEARCH_SUCCESS;
 
 public class SearchActivity extends AppCompatActivity implements SearchContract.OnView,
-        ArticleAdapter.OnItemClickListener {
+        ArticleAdapter.OnItemClickListener, View.OnClickListener {
     private static final String TAG = "SearchActivity";
     private Toolbar mToolbar;
     private RadioFlowLayout mRadioFlowLayout;
     private SearchContract.Presenter mPresenter;
     private List<HotWord> mHotWords = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    
+    private SearchView mSearchView;
+
     /**
      * 展示搜索内容的适配器.
-     * */
+     */
     private ArticleAdapter mAdapter;
 
     /**
@@ -94,31 +95,10 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         mSearchHintLayout = findViewById(R.id.search_hint_layout);
         mRecyclerView = findViewById(R.id.search_content);
     }
-
-    /**
-     * 创建子view
-     */
-    private <T extends TextView> View createChildView(HotWord hotWord, int layoutId) {
-        //为子view加载布局
-        LayoutInflater inflater = LayoutInflater.from(this);
-        T view = (T) inflater.inflate(layoutId, null);
-        //设置RadioButton的参数
-        RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.gravity = Gravity.CENTER;
-        lp.height = (int) mRadioFlowLayout.getItemHeight();
-        view.setLayoutParams(lp);
-        //添加view的时候，将HotWord信息setTag()
-        TagModel<HotWord> tagModel = new TagModel<>();
-        tagModel.setT(hotWord);
-        view.setTag(tagModel);
-        view.setText(hotWord.getName());
-        return view;
-    }
-
+    
     private void initData() {
         new SearchPresenter(this);
-        
+
         //为RecyclerView设置数据
         LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
@@ -167,6 +147,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         MenuItem menuItem = menu.findItem(R.id.search_view);
         if (menuItem != null) {
             final SearchView searchView = (SearchView) menuItem.getActionView();
+            mSearchView = searchView;
             searchView.setIconifiedByDefault(false);
 
             //为SearchView设置监听
@@ -190,6 +171,9 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         return true;
     }
 
+    /**
+     * 成功拿到搜索热词.
+     */
     @Override
     public void onGetHotWordsSuccess(List<HotWord> hotWords) {
         mHotWords.clear();
@@ -198,11 +182,16 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         HandlerUtil.post(new UIRunnable(this, HOT_WORD_SUCCESS));
     }
 
+    /**
+     * 没有拿到搜索热词.
+     */
     @Override
     public void onGetHotWordsFailure(Exception e) {
-
     }
 
+    /**
+     * 搜索成功.
+     */
     @Override
     public void onSearchContentSuccess(List<Article> articles) {
         mArticles.clear();
@@ -211,9 +200,11 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         HandlerUtil.post(new UIRunnable(this, SEARCH_SUCCESS));
     }
 
+    /**
+     * 搜索失败.
+     */
     @Override
     public void onSearchContentFailure(Exception e) {
-
     }
 
     @Override
@@ -223,10 +214,42 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
 
     /**
      * 当搜索内容被点击时，回调该方法打开文章详情界面.
-     * */
+     */
     @Override
     public void onClick(Article article) {
-        ArticleDetailActivity.actionStart(this,article.getTitle(),article.getLink());
+        ArticleDetailActivity.actionStart(this, article.getTitle(), article.getLink());
+    }
+
+    /**
+     * View(热词)被点击后回调.
+     */
+    @Override
+    public void onClick(View v) {
+        String keyword = ((HotWord)(((TagModel)(v.getTag())).getT())).getName();
+        mPresenter.searchContents(keyword);
+    }
+
+    /**
+     * 创建子view
+     */
+    private <T extends TextView> View createChildView(HotWord hotWord, int layoutId) {
+        //为子view加载布局
+        LayoutInflater inflater = LayoutInflater.from(this);
+        T view = (T) inflater.inflate(layoutId, null);
+        //设置RadioButton的参数
+        RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER;
+        lp.height = (int) mRadioFlowLayout.getItemHeight();
+        view.setLayoutParams(lp);
+        //添加view的时候，将HotWord信息setTag()
+        TagModel<HotWord> tagModel = new TagModel<>();
+        tagModel.setT(hotWord);
+        view.setTag(tagModel);
+        view.setText(hotWord.getName());
+        //设置点击监听
+        view.setOnClickListener(this);
+        return view;
     }
 
     private static class UIRunnable implements Runnable {
@@ -234,7 +257,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         WeakReference<SearchActivity> mWeak;
         int mType;
 
-        public UIRunnable(SearchActivity activity, int type) {
+        UIRunnable(SearchActivity activity, int type) {
             mWeak = new WeakReference<>(activity);
             mType = type;
         }
