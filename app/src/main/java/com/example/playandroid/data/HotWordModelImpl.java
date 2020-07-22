@@ -20,7 +20,9 @@ public class HotWordModelImpl implements HotWordModel {
 
     @Override
     public void getHotWords(final OnListener onListener) {
-        Request request = new Request(HOT_WORD);
+        Request request = new Request.Builder()
+                .url(HOT_WORD)
+                .build();
         HttpClient httpClient = new HttpClient();
         Call call = httpClient.newCall(request);
         call.enqueue(new Callback() {

@@ -6,28 +6,37 @@ package com.example.playandroid.util.network;
 public class Request {
     private String mUrl;
 
-    public Request(String url) {
-        this.mUrl = url;
+    private RequestBody mBody;
+    
+    public Request(Builder builder) {
+        mUrl = builder.mUrl;
+        mBody = builder.mBody;
     }
 
     public String getUrl() {
         return mUrl;
     }
 
-    public void setUrl(String url) {
-        this.mUrl = url;
+    public RequestBody getBody() {
+        return mBody;
     }
 
     public static class Builder{
-        private String sUrl;
+        private String mUrl;
+        private RequestBody mBody;
         
         public Builder url(String url){
-            this.sUrl = url;
+            this.mUrl = url;
             return this;
         }        
         
+        public Builder post(RequestBody requestBody){
+            mBody = requestBody;
+            return this;
+        }
+        
         public Request build(){
-            return new Request(sUrl);
+            return new Request(this);
         }
     }
 }

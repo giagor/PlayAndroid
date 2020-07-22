@@ -7,6 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,6 +25,7 @@ import com.example.playandroid.acticle.ArticleFragment;
 import com.example.playandroid.frame.FrameFragment;
 import com.example.playandroid.project.ProjectFragment;
 import com.example.playandroid.search.SearchActivity;
+import com.example.playandroid.util.network.Request;
 
 import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
 import static com.example.playandroid.util.Constants.MainConstant.FRAME;
