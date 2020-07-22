@@ -3,7 +3,7 @@ package com.example.playandroid.entity;
 /**
  * 搜索热词.
  * */
-public class HotWord {
+public class HotWord extends FlowLayoutBean{
     private long id;
     private String name;
 
@@ -23,6 +23,7 @@ public class HotWord {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

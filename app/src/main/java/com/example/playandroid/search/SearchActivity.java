@@ -26,6 +26,7 @@ import com.example.playandroid.R;
 import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.adapter.ArticleAdapter;
 import com.example.playandroid.entity.Article;
+import com.example.playandroid.entity.FlowLayoutBean;
 import com.example.playandroid.entity.HotWord;
 import com.example.playandroid.util.HandlerUtil;
 import com.example.playandroid.view.flowlayout.TagModel;
@@ -232,7 +233,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     /**
      * 创建子view
      */
-    private <T extends TextView> View createChildView(HotWord hotWord, int layoutId) {
+    private <T extends TextView> View createChildView(FlowLayoutBean bean, int layoutId) {
         //为子view加载布局
         LayoutInflater inflater = LayoutInflater.from(this);
         T view = (T) inflater.inflate(layoutId, null);
@@ -243,10 +244,10 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         lp.height = (int) mRadioFlowLayout.getItemHeight();
         view.setLayoutParams(lp);
         //添加view的时候，将HotWord信息setTag()
-        TagModel<HotWord> tagModel = new TagModel<>();
-        tagModel.setT(hotWord);
+        TagModel<FlowLayoutBean> tagModel = new TagModel<>();
+        tagModel.setT(bean);
         view.setTag(tagModel);
-        view.setText(hotWord.getName());
+        view.setText(bean.getName());
         //设置点击监听
         view.setOnClickListener(this);
         return view;
