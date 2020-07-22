@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,22 +17,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import com.example.playandroid.R;
 import com.example.playandroid.entity.HotWord;
+import com.example.playandroid.util.HandlerUtil;
 import com.example.playandroid.view.flowlayout.TagModel;
 import com.example.playandroid.view.flowlayout.RadioFlowLayout;
 import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity{
+import static com.example.playandroid.util.Constants.SearchConstant.HOT_WORD_SUCCESS;
+
+public class SearchActivity extends AppCompatActivity implements SearchContract.OnView {
     private SearchView mSearchView;
     private Toolbar mToolbar;
     private RadioFlowLayout mRadioFlowLayout;
+    private SearchContract.Presenter mPresenter;
 
     private List<HotWord> mHotWords = new ArrayList<>();
+
+    private boolean mFirstLoad = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +50,18 @@ public class SearchActivity extends AppCompatActivity{
         initView();
         setActionBar();
         initData();
+    }
 
-        for (int i = 0; i < mHotWords.size(); i++) {
-            mRadioFlowLayout.addView(this.createChildView(mHotWords.get(i), R.layout.radiobutton));
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mFirstLoad) {
+            mPresenter.start();
+            mFirstLoad = false;
         }
     }
-    
+
     private void initView() {
         mToolbar = findViewById(R.id.toolbar);
         mRadioFlowLayout = findViewById(R.id.radioFlowLayout);
@@ -54,7 +69,7 @@ public class SearchActivity extends AppCompatActivity{
 
     /**
      * 创建子view
-     * */
+     */
     private <T extends TextView> View createChildView(HotWord hotWord, int layoutId) {
         //为子view加载布局
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -74,12 +89,7 @@ public class SearchActivity extends AppCompatActivity{
     }
 
     private void initData() {
-        String[] words = {"捷豹", "施华洛世奇", "雷朋", "Emporio Armani", "海伦凯勒",
-                "精工", "HORIEN海俪恩", "CHARMANT", "COACH蔻驰", "李维斯", "新百伦"};
-        for (int i = 0; i < words.length; i++) {
-            HotWord hotWord = new HotWord(i, words[i]);
-            mHotWords.add(hotWord);
-        }
+        new SearchPresenter(this);
     }
 
     /**
@@ -125,6 +135,52 @@ public class SearchActivity extends AppCompatActivity{
             searchView.setIconifiedByDefault(false);
         }
         return true;
+    }
+
+    @Override
+    public void onSuccess(List<HotWord> hotWords) {
+        mHotWords.clear();
+        mHotWords.addAll(hotWords);
+
+        HandlerUtil.post(new UIRunnable(this,HOT_WORD_SUCCESS));
+    }
+
+    @Override
+    public void onFailure(Exception e) {
+
+    }
+
+    @Override
+    public void setPresenter(SearchContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    private static class UIRunnable implements Runnable {
+
+        WeakReference<SearchActivity> mWeak;
+        int mType;
+
+        public UIRunnable(SearchActivity activity, int type) {
+            mWeak = new WeakReference<>(activity);
+            mType = type;
+        }
+
+        @Override
+        public void run() {
+            switch (mType) {
+                case HOT_WORD_SUCCESS:
+                    if(mWeak.get() != null){
+                        for (int i = 0; i < mWeak.get().mHotWords.size(); i++) {
+                            HotWord hotWord = mWeak.get().mHotWords.get(i);
+                            mWeak.get().mRadioFlowLayout.addView(mWeak.get().createChildView(
+                                    hotWord, R.layout.radiobutton));
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
 

@@ -10,7 +10,7 @@ public class HotWord {
     public HotWord() {
     }
 
-    public HotWord(int id, String name) {
+    public HotWord(long id, String name) {
         this.id = id;
         this.name = name;
     }

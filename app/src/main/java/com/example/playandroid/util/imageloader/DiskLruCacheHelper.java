@@ -18,7 +18,7 @@ public class DiskLruCacheHelper {
      * @param uniqueName 缓存的子项文件夹名字
      * @return 缓存的文件夹
      * */
-    public static File getDiskCacheDir(Context context,String uniqueName){
+    static File getDiskCacheDir(Context context, String uniqueName){
         String cachePath;
         //sd卡处于正常的使用状态或者没有被移除
         if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) 
@@ -34,9 +34,10 @@ public class DiskLruCacheHelper {
     /**
      * 获取应用程序的版本号.
      * */
-    public static int getAppVersion(Context context){
+    static int getAppVersion(Context context){
         try {
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(),0);
+            return (int) info.getLongVersionCode();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -49,7 +50,7 @@ public class DiskLruCacheHelper {
      *     例如传入图片的url，编码后只会包含0-F这样的字符，符合文件的命名规则，可以用来命名文件.
      * </b>
      * */
-    public static String hashKeyForDisk(String key){
+    static String hashKeyForDisk(String key){
         String cacheKey;
         try {
             final MessageDigest digest = MessageDigest.getInstance("MD5");
