@@ -55,5 +55,7 @@ public class Constants {
         //网络请求搜索热词的状态值
         public static final int HOT_WORD_SUCCESS = 0;
         
+        //搜索成功
+        public static final int SEARCH_SUCCESS = 10;
     }
 }

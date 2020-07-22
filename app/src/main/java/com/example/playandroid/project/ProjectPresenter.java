@@ -28,12 +28,12 @@ public class ProjectPresenter implements ProjectContract.Presenter, ProjectModel
     }
 
     @Override
-    public void onSuccess(List<Project> projects) {
+    public void onGetProjectSuccess(List<Project> projects) {
         mProjectView.onSuccess(projects);
     }
 
     @Override
-    public void onFail(Exception e) {
+    public void onGetProjectFailure(Exception e) {
         mProjectView.onFail(e);
     }
 }

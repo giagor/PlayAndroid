@@ -27,12 +27,12 @@ public class ProjectChildPresenter implements ProjectChildContract.Presenter,Pro
     }
 
     @Override
-    public void onSuccess(List<ProjectChild> projectChildren) {
+    public void onGetProjectChildrenSuccess(List<ProjectChild> projectChildren) {
         mView.onSuccess(projectChildren);
     }
 
     @Override
-    public void onFailure(Exception e) {
+    public void onGetProjectChildrenFailure(Exception e) {
         mView.onFail(e);
     }
 }

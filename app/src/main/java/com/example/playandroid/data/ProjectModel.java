@@ -4,6 +4,9 @@ import com.example.playandroid.entity.Project;
 
 import java.util.List;
 
+/**
+ * 获得一级项目的数据.
+ */
 public interface ProjectModel {
     void getProjects(OnListener onListener);
 
@@ -11,11 +14,11 @@ public interface ProjectModel {
         /**
          * 成功得到项目列表.
          */
-        void onSuccess(List<Project> projects);
+        void onGetProjectSuccess(List<Project> projects);
 
         /**
          * 拿项目列表时出错.
-         * */
-        void onFail(Exception e);
+         */
+        void onGetProjectFailure(Exception e);
     }
 }

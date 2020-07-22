@@ -4,6 +4,9 @@ import com.example.playandroid.entity.Article;
 
 import java.util.List;
 
+/**
+ * 获得首页文章列表的数据.
+ */
 public interface ArticleModel {
     void getArticles(OnListener onListener);
 
@@ -11,11 +14,11 @@ public interface ArticleModel {
         /**
          * 成功得到文章列表
          */
-        void onSuccess(List<Article> articles);
+        void onGetArticlesSuccess(List<Article> articles);
 
         /**
          * 没能得到文章列表
          */
-        void onFail(Exception e);
+        void onGetArticlesFailure(Exception e);
     }
 }

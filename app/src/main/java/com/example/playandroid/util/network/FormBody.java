@@ -26,7 +26,7 @@ public class FormBody extends RequestBody {
         return sb.toString();
     }
 
-    static class Builder {
+    public static class Builder {
         /**
          * 参数key集合
          */

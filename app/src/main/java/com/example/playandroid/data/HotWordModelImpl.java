@@ -28,7 +28,7 @@ public class HotWordModelImpl implements HotWordModel {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Exception e) {
-                onListener.onFailure(e);
+                onListener.onGetHotWordsFailure(e);
             }
 
             @Override
@@ -38,7 +38,7 @@ public class HotWordModelImpl implements HotWordModel {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                onListener.onSuccess(mHotWords);
+                onListener.onGetHotWordsSuccess(mHotWords);
             }
         });
     }

@@ -28,7 +28,7 @@ public class ProjectChildModelImpl implements ProjectChildModel {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Exception e) {
-                onListener.onFailure(e);
+                onListener.onGetProjectChildrenFailure(e);
             }
 
             @Override
@@ -38,7 +38,7 @@ public class ProjectChildModelImpl implements ProjectChildModel {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                onListener.onSuccess(mProjectChildren);
+                onListener.onGetProjectChildrenSuccess(mProjectChildren);
             }
         });
     }

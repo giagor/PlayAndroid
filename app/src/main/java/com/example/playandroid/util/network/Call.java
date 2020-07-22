@@ -1,5 +1,7 @@
 package com.example.playandroid.util.network;
 
+import android.util.Log;
+
 import com.example.playandroid.util.ThreadPool;
 
 import java.io.ByteArrayOutputStream;
@@ -9,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Call {
+    private static final String TAG = "Call";
     private Request mRequest;
 
     public Call(Request request) {

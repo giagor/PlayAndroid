@@ -5,6 +5,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,33 +18,55 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.playandroid.R;
+import com.example.playandroid.acticle.ArticleDetailActivity;
+import com.example.playandroid.adapter.ArticleAdapter;
+import com.example.playandroid.entity.Article;
 import com.example.playandroid.entity.HotWord;
 import com.example.playandroid.util.HandlerUtil;
 import com.example.playandroid.view.flowlayout.TagModel;
 import com.example.playandroid.view.flowlayout.RadioFlowLayout;
-import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.GONE;
 import static com.example.playandroid.util.Constants.SearchConstant.HOT_WORD_SUCCESS;
+import static com.example.playandroid.util.Constants.SearchConstant.SEARCH_SUCCESS;
 
-public class SearchActivity extends AppCompatActivity implements SearchContract.OnView {
+public class SearchActivity extends AppCompatActivity implements SearchContract.OnView,
+        ArticleAdapter.OnItemClickListener {
     private static final String TAG = "SearchActivity";
-    private SearchView mSearchView;
     private Toolbar mToolbar;
     private RadioFlowLayout mRadioFlowLayout;
     private SearchContract.Presenter mPresenter;
-
     private List<HotWord> mHotWords = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    
+    /**
+     * 展示搜索内容的适配器.
+     * */
+    private ArticleAdapter mAdapter;
 
+    /**
+     * 搜索热词的负父布局.
+     */
+    private LinearLayout mSearchHintLayout;
+
+    /**
+     * 标志是不是第一次加载数据.
+     */
     private boolean mFirstLoad = true;
+
+    /**
+     * 搜索得到的文章列表.
+     */
+    private List<Article> mArticles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +91,8 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     private void initView() {
         mToolbar = findViewById(R.id.toolbar);
         mRadioFlowLayout = findViewById(R.id.radioFlowLayout);
+        mSearchHintLayout = findViewById(R.id.search_hint_layout);
+        mRecyclerView = findViewById(R.id.search_content);
     }
 
     /**
@@ -92,6 +118,13 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
 
     private void initData() {
         new SearchPresenter(this);
+        
+        //为RecyclerView设置数据
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(manager);
+        mAdapter = new ArticleAdapter(mArticles);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setListener(this);
     }
 
     /**
@@ -135,12 +168,14 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         if (menuItem != null) {
             SearchView searchView = (SearchView) menuItem.getActionView();
             searchView.setIconifiedByDefault(false);
-            
+
             //为SearchView设置监听
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 //当点击搜索按钮时，回调该方法.
                 @Override
                 public boolean onQueryTextSubmit(String query) {
+                    //搜索文章
+                    mPresenter.searchContents(query);
                     return false;
                 }
 
@@ -154,21 +189,42 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     }
 
     @Override
-    public void onSuccess(List<HotWord> hotWords) {
+    public void onGetHotWordsSuccess(List<HotWord> hotWords) {
         mHotWords.clear();
         mHotWords.addAll(hotWords);
 
-        HandlerUtil.post(new UIRunnable(this,HOT_WORD_SUCCESS));
+        HandlerUtil.post(new UIRunnable(this, HOT_WORD_SUCCESS));
     }
 
     @Override
-    public void onFailure(Exception e) {
+    public void onGetHotWordsFailure(Exception e) {
+
+    }
+
+    @Override
+    public void onSearchContentSuccess(List<Article> articles) {
+        mArticles.clear();
+        mArticles.addAll(articles);
+
+        HandlerUtil.post(new UIRunnable(this, SEARCH_SUCCESS));
+    }
+
+    @Override
+    public void onSearchContentFailure(Exception e) {
 
     }
 
     @Override
     public void setPresenter(SearchContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    /**
+     * 当搜索内容被点击时，回调该方法打开文章详情界面.
+     * */
+    @Override
+    public void onClick(Article article) {
+        ArticleDetailActivity.actionStart(this,article.getTitle(),article.getLink());
     }
 
     private static class UIRunnable implements Runnable {
@@ -185,12 +241,21 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         public void run() {
             switch (mType) {
                 case HOT_WORD_SUCCESS:
-                    if(mWeak.get() != null){
+                    if (mWeak.get() != null) {
                         for (int i = 0; i < mWeak.get().mHotWords.size(); i++) {
                             HotWord hotWord = mWeak.get().mHotWords.get(i);
                             mWeak.get().mRadioFlowLayout.addView(mWeak.get().createChildView(
                                     hotWord, R.layout.radiobutton));
                         }
+                    }
+                    break;
+                case SEARCH_SUCCESS:
+                    if (mWeak.get() != null) {
+                        //将搜索热词的内容隐藏
+                        mWeak.get().mSearchHintLayout.setVisibility(GONE);
+                        //展示搜索内容
+                        mWeak.get().mRecyclerView.setVisibility(View.VISIBLE);
+                        mWeak.get().mAdapter.notifyDataSetChanged();
                     }
                     break;
                 default:

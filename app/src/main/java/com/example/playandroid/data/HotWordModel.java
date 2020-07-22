@@ -11,7 +11,7 @@ public interface HotWordModel {
     void getHotWords(OnListener onListener);
     
     interface OnListener {
-        void onSuccess(List<HotWord> hotWords);
-        void onFailure(Exception e);
+        void onGetHotWordsSuccess(List<HotWord> hotWords);
+        void onGetHotWordsFailure(Exception e);
     }
 }
