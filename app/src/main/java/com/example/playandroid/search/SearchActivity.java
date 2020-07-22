@@ -229,30 +229,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         String keyword = ((HotWord)(((TagModel)(v.getTag())).getT())).getName();
         mPresenter.searchContents(keyword);
     }
-
-    /**
-     * 创建子view
-     */
-    private <T extends TextView> View createChildView(FlowLayoutBean bean, int layoutId) {
-        //为子view加载布局
-        LayoutInflater inflater = LayoutInflater.from(this);
-        T view = (T) inflater.inflate(layoutId, null);
-        //设置RadioButton的参数
-        RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.gravity = Gravity.CENTER;
-        lp.height = (int) mRadioFlowLayout.getItemHeight();
-        view.setLayoutParams(lp);
-        //添加view的时候，将HotWord信息setTag()
-        TagModel<FlowLayoutBean> tagModel = new TagModel<>();
-        tagModel.setT(bean);
-        view.setTag(tagModel);
-        view.setText(bean.getName());
-        //设置点击监听
-        view.setOnClickListener(this);
-        return view;
-    }
-
+    
     private static class UIRunnable implements Runnable {
 
         WeakReference<SearchActivity> mWeak;
@@ -270,8 +247,14 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
                     if (mWeak.get() != null) {
                         for (int i = 0; i < mWeak.get().mHotWords.size(); i++) {
                             HotWord hotWord = mWeak.get().mHotWords.get(i);
-                            mWeak.get().mRadioFlowLayout.addView(mWeak.get().createChildView(
-                                    hotWord, R.layout.radiobutton));
+                            //获得流式布局的子view
+                            View view = RadioFlowLayout.createChildView(mWeak.get(),
+                                    (int)mWeak.get().mRadioFlowLayout.getItemHeight(),
+                                    hotWord,R.layout.radiobutton);
+                            //设置点击监听
+                            view.setOnClickListener(mWeak.get());
+                            //添加子View
+                            mWeak.get().mRadioFlowLayout.addView(view);
                         }
                     }
                     break;
