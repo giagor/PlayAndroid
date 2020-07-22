@@ -166,7 +166,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         getMenuInflater().inflate(R.menu.toolbar_search, menu);
         MenuItem menuItem = menu.findItem(R.id.search_view);
         if (menuItem != null) {
-            SearchView searchView = (SearchView) menuItem.getActionView();
+            final SearchView searchView = (SearchView) menuItem.getActionView();
             searchView.setIconifiedByDefault(false);
 
             //为SearchView设置监听
@@ -176,6 +176,8 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
                 public boolean onQueryTextSubmit(String query) {
                     //搜索文章
                     mPresenter.searchContents(query);
+                    //提交后失去焦点，即收起软键盘
+                    searchView.clearFocus();
                     return false;
                 }
 
