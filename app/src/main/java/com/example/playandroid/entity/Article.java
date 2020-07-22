@@ -1,19 +1,31 @@
 package com.example.playandroid.entity;
 
+import android.print.PrinterId;
+
 public class Article {
     private long id;
     private String title;
     private String author;
     private String link;
+    private String time;
 
     public Article() {
     }
 
-    public Article(long id, String title, String author, String link) {
+    public Article(long id, String title, String author, String link,String time) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.link = link;
+        this.time = time;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public long getId() {

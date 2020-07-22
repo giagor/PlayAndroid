@@ -17,7 +17,7 @@ public class Request {
         return mUrl;
     }
 
-    public RequestBody getBody() {
+    RequestBody getBody() {
         return mBody;
     }
 

@@ -37,6 +37,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         Article article = mArticles.get(position);
         holder.mTitle.setText(article.getTitle());
         holder.mAuthor.setText(article.getAuthor());
+        holder.mTime.setText(article.getTime());
 
         if (mListener != null) {
             //为子项设置点击事件
@@ -62,12 +63,14 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         View mView;
         TextView mTitle;
         TextView mAuthor;
+        TextView mTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
             mTitle = itemView.findViewById(R.id.title);
             mAuthor = itemView.findViewById(R.id.author);
+            mTime = itemView.findViewById(R.id.time);
         }
     }
     

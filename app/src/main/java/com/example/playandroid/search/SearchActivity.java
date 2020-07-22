@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +34,7 @@ import java.util.List;
 import static com.example.playandroid.util.Constants.SearchConstant.HOT_WORD_SUCCESS;
 
 public class SearchActivity extends AppCompatActivity implements SearchContract.OnView {
+    private static final String TAG = "SearchActivity";
     private SearchView mSearchView;
     private Toolbar mToolbar;
     private RadioFlowLayout mRadioFlowLayout;
@@ -133,6 +135,20 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         if (menuItem != null) {
             SearchView searchView = (SearchView) menuItem.getActionView();
             searchView.setIconifiedByDefault(false);
+            
+            //为SearchView设置监听
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                //当点击搜索按钮时，回调该方法.
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
         }
         return true;
     }

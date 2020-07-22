@@ -4,6 +4,9 @@ import com.example.playandroid.entity.HotWord;
 
 import java.util.List;
 
+/**
+ * 获得搜索热词.
+ * */
 public interface HotWordModel {
     void getHotWords(OnListener onListener);
     

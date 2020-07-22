@@ -57,8 +57,9 @@ public class ArticleModelImpl implements ArticleModel{
             String title = articleJson.getString("title");
             String author = articleJson.getString("author");
             String link = articleJson.getString("link");
+            String time = articleJson.getString("niceDate");
             
-            Article article = new Article(id,title,author,link);
+            Article article = new Article(id,title,author,link,time);
             mArticles.add(article);
         }
     }
