@@ -87,6 +87,10 @@ public class FrameChildActivity extends AppCompatActivity {
      * 展示体系的ViewPager(子体系).
      * */
     private void showFrameChildPager(){
+        //设置预加载数量
+        mViewPager.setOffscreenPageLimit(3);
+        
+        //设置适配器
         mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager(),
                 FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull

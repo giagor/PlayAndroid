@@ -13,6 +13,8 @@ public class URLConstant {
     public static final String HOT_WORD = "https://www.wanandroid.com//hotkey/json";
     //获得一级体系
     public static final String FRAME = "https://www.wanandroid.com/tree/json";
+    //获得知识体系下的文章
+    public static final String FRAME_ARTICLE = "https://www.wanandroid.com/article/list/%1$s/json?cid=%2$s";
     
     //---------------------------------------POST----------------------------------------------
     //根据搜索关键词获取搜索内容

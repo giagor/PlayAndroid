@@ -73,5 +73,8 @@ public class Constants {
     public static class FrameChildConstant{
         //启动活动时，传入的对应的键值
         public static final String FRAME = "frame";
+        
+        //成功拿到知识体系下的文章
+        public static final int SUCCESS = 0;
     }
 }
