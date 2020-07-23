@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.example.playandroid.R;
 import com.example.playandroid.adapter.ArticleAdapter;
@@ -30,6 +32,8 @@ import static com.example.playandroid.util.Constants.ArticleConstant.SUCCESS;
 
 public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         ArticleAdapter.OnItemClickListener {
+    private static final String TAG = "ArticleFragment";
+
     private ArticleContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private View mView;
@@ -46,8 +50,9 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     /**
      * 标记是否下拉刷新.
-     * */
+     */
     private boolean mRefresh = false;
+
     /**
      * 碎片和活动通信的接口引用.
      */
@@ -68,6 +73,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         initData();
         initEvent();
 
+
         return mView;
     }
 
@@ -82,7 +88,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 //        mHandler = new UIHandler(this);
 
         //为RecyclerView设置数据
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
         mAdapter = new ArticleAdapter(mArticles);
         mAdapter.setListener(this);
@@ -97,6 +103,26 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
             public void onRefresh() {
                 mRefresh = true;
                 mPresenter.getArticles();
+            }
+        });
+
+        //为RecyclerView设置滚动监听
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            /**
+             * 滚动状态改变时回调该方法.
+             * */
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                //当滚动之后，停止滚动时
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && manager != null) {
+                    //得到最后一个完全可见的item的下标
+                    int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
+                    int totalItemCount = manager.getItemCount();
+                    if (lastVisibleItem == totalItemCount - 1) {
+                        
+                    }
+                }
             }
         });
     }
@@ -118,13 +144,13 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     /**
      * 为RecyclerView添加Footer.
-     * */
-    private void setFooterView(RecyclerView recyclerView){
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.footer_view,recyclerView,
+     */
+    private void setFooterView(RecyclerView recyclerView) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.footer_view, recyclerView,
                 false);
         mAdapter.setFooterView(view);
     }
-    
+
     @Override
     public void onSuccess(List<Article> articles) {
         mArticles.clear();
@@ -185,9 +211,9 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                 case SUCCESS:
                     if (mWeak.get() != null) {
                         mWeak.get().mAdapter.notifyDataSetChanged();
-                    
+
                         //如果是下拉刷新
-                        if(mWeak.get().mRefresh){
+                        if (mWeak.get().mRefresh) {
                             mWeak.get().mRefresh = false;
                             //关闭刷新圈圈
                             mWeak.get().mSwipeRefresh.setRefreshing(false);
