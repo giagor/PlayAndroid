@@ -97,7 +97,7 @@ public class FlowLayout extends LinearLayout {
 
                 //子view的位置信息
                 int left = marginLeft + getPaddingLeft();
-                int right = marginLeft + childWidth + getPaddingRight();
+                int right = marginLeft + childWidth + getPaddingLeft();
                 int top = marginTop + getPaddingTop();
                 int bottom = (int) (marginTop + mItemHeight + getPaddingTop());
 
