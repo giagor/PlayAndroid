@@ -249,6 +249,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
                             View view = RadioFlowLayout.createChildView(
                                     (int)mWeak.get().mRadioFlowLayout.getItemHeight(),
                                     hotWord,R.layout.radiobutton);
+                            view.setBackgroundResource(R.color.deepGreen);
                             //设置点击监听
                             view.setOnClickListener(mWeak.get());
                             //添加子View

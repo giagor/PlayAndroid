@@ -47,6 +47,8 @@ public class FrameAdapter extends RecyclerView.Adapter<FrameAdapter.ViewHolder>{
             //获得子View
             View view = RadioFlowLayout.createChildView((int) holder.mFlowLayout.getItemHeight(),
                     frameChild, R.layout.radiobutton);
+            //让子View无法被选中
+            view.setClickable(false);
             //子View的添加
             holder.mFlowLayout.addView(view);
         }
