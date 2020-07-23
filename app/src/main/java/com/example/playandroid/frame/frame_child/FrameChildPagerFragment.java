@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.playandroid.R;
+import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.adapter.ArticleAdapter;
 import com.example.playandroid.entity.Article;
 import com.example.playandroid.entity.FrameChild;
@@ -26,7 +27,8 @@ import static com.example.playandroid.util.Constants.FrameChildConstant.SUCCESS;
 /**
  * 子体系的ViewPager的碎片.
  */
-public class FrameChildPagerFragment extends Fragment implements FrameChildPagerContract.OnView {
+public class FrameChildPagerFragment extends Fragment implements FrameChildPagerContract.OnView,
+        ArticleAdapter.OnItemClickListener {
 
     private View mView;
     private FrameChild mFrameChild;
@@ -63,6 +65,7 @@ public class FrameChildPagerFragment extends Fragment implements FrameChildPager
         //为recyclerView设置适配器以及布局
         mAdapter = new ArticleAdapter(mArticles);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        mAdapter.setListener(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(manager);
     }
@@ -97,6 +100,13 @@ public class FrameChildPagerFragment extends Fragment implements FrameChildPager
     @Override
     public void setPresenter(FrameChildPagerContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void onClick(Article article) {
+        if(getContext() != null){
+            ArticleDetailActivity.actionStart(getContext(),article.getTitle(),article.getLink());
+        }
     }
 
     private static class UIRunnable implements Runnable {
