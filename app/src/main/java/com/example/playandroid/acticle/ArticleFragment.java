@@ -24,27 +24,34 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static com.example.playandroid.util.Constants.ArticleConstant.SUCCESS;
 
-public class ArticleFragment extends Fragment implements ArticleContract.OnView, 
+public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         ArticleAdapter.OnItemClickListener {
     private ArticleContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private View mView;
-//    private Handler mHandler;
-    private List<Article> mArticles;
-    
+    //    private Handler mHandler;
+    private List<Article> mArticles = new ArrayList<>();
+    private SwipeRefreshLayout mSwipeRefresh;
+    private ArticleAdapter mAdapter;
+
     /**
      * 标记是否第一次请求数据.
-     * */
+     */
     private boolean mFirstLoad = true;
-    
+
+
+    /**
+     * 标记是否下拉刷新.
+     * */
+    private boolean mRefresh = false;
     /**
      * 碎片和活动通信的接口引用.
-     * */
+     */
 //    private OnArticleListener mCallback;
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -53,32 +60,52 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, 
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_article,container,false);
-        
+        mView = inflater.inflate(R.layout.fragment_article, container, false);
+
+        initView();
         initData();
-        
+        initEvent();
+
         return mView;
     }
 
-    private void initData(){
-        new ArticlePresenter(this);
-        
-//        mHandler = new UIHandler(this);
-        
-        mArticles = new ArrayList<>();
-        
+    private void initView() {
         mRecyclerView = mView.findViewById(R.id.recycler_view);
+        mSwipeRefresh = mView.findViewById(R.id.swipe_refresh);
     }
-    
-    private void initEvent(){
+
+    private void initData() {
+        new ArticlePresenter(this);
+
+//        mHandler = new UIHandler(this);
+
+        //为RecyclerView设置数据
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(manager);
+        mAdapter = new ArticleAdapter(mArticles);
+        mAdapter.setListener(this);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mSwipeRefresh.setColorSchemeResources(R.color.green);
     }
-    
+
+    private void initEvent() {
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mRefresh = true;
+                mPresenter.getArticles();
+            }
+        });
+    }
+
+
     @Override
     public void onResume() {
         super.onResume();
-        if(mPresenter != null && mFirstLoad){
+        if (mPresenter != null && mFirstLoad) {
             mPresenter.start();
             mFirstLoad = false;
         }
@@ -96,7 +123,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 //        Message msg = Message.obtain();
 //        msg.what = SUCCESS;
 //        mHandler.sendMessage(msg);
-        HandlerUtil.post(new UIRunnable(this,SUCCESS));
+        HandlerUtil.post(new UIRunnable(this, SUCCESS));
     }
 
     @Override
@@ -121,8 +148,8 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Override
     public void onClick(Article article) {
-        if(getContext() != null){
-            ((MainActivity)getContext()).showArticleDetail(article.getTitle(),article.getLink());
+        if (getContext() != null) {
+            ((MainActivity) getContext()).showArticleDetail(article.getTitle(), article.getLink());
         }
     }
 
@@ -132,12 +159,12 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 //    public interface OnArticleListener{
 //        void showArticleDetail(String title,String url);
 //    }
-    
-    private static class UIRunnable implements Runnable{
+
+    private static class UIRunnable implements Runnable {
 
         private WeakReference<ArticleFragment> mWeak;
         private int mType;
-        
+
         UIRunnable(ArticleFragment fragment, int type) {
             mWeak = new WeakReference<>(fragment);
             mType = type;
@@ -145,14 +172,17 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
         @Override
         public void run() {
-            switch(mType){
+            switch (mType) {
                 case SUCCESS:
-                    if(mWeak.get() != null){
-                        RecyclerView.LayoutManager manager = new LinearLayoutManager(mWeak.get().getContext());
-                        mWeak.get().mRecyclerView.setLayoutManager(manager);
-                        ArticleAdapter adapter = new ArticleAdapter(mWeak.get().mArticles);
-                        adapter.setListener(mWeak.get());
-                        mWeak.get().mRecyclerView.setAdapter(adapter);
+                    if (mWeak.get() != null) {
+                        mWeak.get().mAdapter.notifyDataSetChanged();
+                    
+                        //如果是下拉刷新
+                        if(mWeak.get().mRefresh){
+                            mWeak.get().mRefresh = false;
+                            //关闭刷新圈圈
+                            mWeak.get().mSwipeRefresh.setRefreshing(false);
+                        }
                     }
                     break;
                 default:
