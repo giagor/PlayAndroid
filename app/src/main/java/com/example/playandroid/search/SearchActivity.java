@@ -48,7 +48,6 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
     private SearchContract.Presenter mPresenter;
     private List<HotWord> mHotWords = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private SearchView mSearchView;
 
     /**
      * 展示搜索内容的适配器.
@@ -148,7 +147,6 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         MenuItem menuItem = menu.findItem(R.id.search_view);
         if (menuItem != null) {
             final SearchView searchView = (SearchView) menuItem.getActionView();
-            mSearchView = searchView;
             searchView.setIconifiedByDefault(false);
 
             //为SearchView设置监听
@@ -248,7 +246,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
                         for (int i = 0; i < mWeak.get().mHotWords.size(); i++) {
                             HotWord hotWord = mWeak.get().mHotWords.get(i);
                             //获得流式布局的子view
-                            View view = RadioFlowLayout.createChildView(mWeak.get(),
+                            View view = RadioFlowLayout.createChildView(
                                     (int)mWeak.get().mRadioFlowLayout.getItemHeight(),
                                     hotWord,R.layout.radiobutton);
                             //设置点击监听

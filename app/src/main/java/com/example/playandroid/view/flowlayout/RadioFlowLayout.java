@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.playandroid.R;
 import com.example.playandroid.entity.FlowLayoutBean;
+import com.example.playandroid.util.ApplicationContext;
 
 /**
  * 单选流式布局.
@@ -141,10 +142,10 @@ public class RadioFlowLayout extends RadioGroup{
      * @param bean 子项View对应的实体类
      * @param layoutId 子view的布局
      */
-    public static  <T extends TextView> View createChildView(Context context,int itemHeight, 
-                                                             FlowLayoutBean bean, int layoutId) {
+    public static  <T extends TextView> View createChildView(int itemHeight, FlowLayoutBean bean, 
+                                                             int layoutId) {
         //为子view加载布局
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(ApplicationContext.getContext());
         T view = (T) inflater.inflate(layoutId, null);
         //设置RadioButton的参数
         RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
