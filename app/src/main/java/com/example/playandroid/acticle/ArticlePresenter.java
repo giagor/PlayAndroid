@@ -19,7 +19,6 @@ public class ArticlePresenter implements ArticleContract.Presenter, ArticleModel
 
     @Override
     public void start() {
-        getArticles();    
     }
 
     @Override
@@ -33,7 +32,19 @@ public class ArticlePresenter implements ArticleContract.Presenter, ArticleModel
     }
 
     @Override
-    public void getArticles() {
-        mArticleModel.getArticles(this);
+    public void onLoadMoreSuccess(List<Article> articles) {
+        
     }
+
+    @Override
+    public void onLoadMoreFailure(Exception e) {
+        
+    }
+
+    @Override
+    public void getArticles(int pageIndex) {
+        mArticleModel.getArticles(this,pageIndex);
+    }
+
+   
 }

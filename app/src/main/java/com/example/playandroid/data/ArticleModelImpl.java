@@ -18,9 +18,9 @@ public class ArticleModelImpl implements ArticleModel{
     private List<Article> mArticles = new ArrayList<>();
     
     @Override
-    public void getArticles(final OnListener onListener) {
+    public void getArticles(final OnListener onListener,int pageIndex) {
         Request request = new Request.Builder()
-                .url(URLConstant.ARTICLE_URL)
+                .url(String.format(URLConstant.ARTICLE_URL,pageIndex))
                 .build();
         HttpClient httpClient = new HttpClient();
         Call call = httpClient.newCall(request);

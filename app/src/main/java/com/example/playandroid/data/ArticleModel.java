@@ -8,7 +8,7 @@ import java.util.List;
  * 获得首页文章列表的数据.
  */
 public interface ArticleModel {
-    void getArticles(OnListener onListener);
+    void getArticles(OnListener onListener, int pageIndex);
 
     interface OnListener {
         /**
@@ -20,5 +20,15 @@ public interface ArticleModel {
          * 没能得到文章列表
          */
         void onGetArticlesFailure(Exception e);
+
+        /**
+         * 加载更多成功.
+         */
+        void onLoadMoreSuccess(List<Article> articles);
+
+        /**
+         * 加载更多失败.
+         */
+        void onLoadMoreFailure(Exception e);
     }
 }

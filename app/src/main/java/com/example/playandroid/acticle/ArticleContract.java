@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface ArticleContract {
     interface Presenter extends BasePresenter {
-        void getArticles();
+        void getArticles(int pageIndex);
     }
     
     interface OnView extends BaseView<Presenter> {
         void onSuccess(List<Article> articles);
         void onFail(Exception e);
+        void onLoadMoreSuccess(List<Article> articles);
+        void onLoadMoreFailure(Exception e);
     }
 }

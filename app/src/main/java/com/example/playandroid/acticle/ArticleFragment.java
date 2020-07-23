@@ -52,6 +52,11 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
      */
     private boolean mRefresh = false;
     
+    /**
+     * 标记当前的Page.
+     * */
+    private int mCurPage = 0;
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -89,7 +94,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
             @Override
             public void onRefresh() {
                 mRefresh = true;
-                mPresenter.getArticles();
+                mPresenter.getArticles(0);
             }
         });
 
@@ -119,7 +124,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     public void onResume() {
         super.onResume();
         if (mPresenter != null && mFirstLoad) {
-            mPresenter.start();
+            mPresenter.getArticles(mCurPage);
             mFirstLoad = false;
         }
     }
@@ -152,6 +157,16 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     }
 
     @Override
+    public void onLoadMoreSuccess(List<Article> articles) {
+        
+    }
+
+    @Override
+    public void onLoadMoreFailure(Exception e) {
+
+    }
+
+    @Override
     public void onClick(Article article) {
         if (getContext() != null) {
             ((MainActivity) getContext()).showArticleDetail(article.getTitle(), article.getLink());
@@ -174,9 +189,11 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                 case SUCCESS:
                     if (mWeak.get() != null) {
                         mWeak.get().mAdapter.notifyDataSetChanged();
-
+                        mWeak.get().mCurPage++;
+                        
                         //如果是下拉刷新
                         if (mWeak.get().mRefresh) {
+                            mWeak.get().mCurPage = 0;
                             mWeak.get().mRefresh = false;
                             //关闭刷新圈圈
                             mWeak.get().mSwipeRefresh.setRefreshing(false);
