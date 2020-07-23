@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -17,9 +18,9 @@ import com.example.playandroid.entity.FlowLayoutBean;
 import com.example.playandroid.util.ApplicationContext;
 
 /**
- * 单选流式布局.
+ * 自定义流式布局.
  */
-public class RadioFlowLayout extends RadioGroup{
+public class FlowLayout extends LinearLayout {
     /**
      * item项的高.
      */
@@ -35,11 +36,11 @@ public class RadioFlowLayout extends RadioGroup{
      */
     private float mDividerHeight;
     
-    public RadioFlowLayout(Context context) {
+    public FlowLayout(Context context) {
         super(context);
     }
 
-    public RadioFlowLayout(Context context, AttributeSet attrs) {
+    public FlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         //获取xml布局中的属性值
@@ -149,7 +150,7 @@ public class RadioFlowLayout extends RadioGroup{
         LayoutInflater inflater = LayoutInflater.from(ApplicationContext.getContext());
         T view = (T) inflater.inflate(layoutId, null);
         //设置RadioButton的参数
-        RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         lp.height = itemHeight;

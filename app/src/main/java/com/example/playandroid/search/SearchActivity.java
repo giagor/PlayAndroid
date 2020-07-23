@@ -11,26 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.example.playandroid.R;
 import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.adapter.ArticleAdapter;
 import com.example.playandroid.entity.Article;
-import com.example.playandroid.entity.FlowLayoutBean;
 import com.example.playandroid.entity.HotWord;
 import com.example.playandroid.util.HandlerUtil;
 import com.example.playandroid.view.flowlayout.TagModel;
-import com.example.playandroid.view.flowlayout.RadioFlowLayout;
+import com.example.playandroid.view.flowlayout.FlowLayout;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -44,7 +37,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         ArticleAdapter.OnItemClickListener, View.OnClickListener {
     private static final String TAG = "SearchActivity";
     private Toolbar mToolbar;
-    private RadioFlowLayout mRadioFlowLayout;
+    private FlowLayout mFlowLayout;
     private SearchContract.Presenter mPresenter;
     private List<HotWord> mHotWords = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -91,7 +84,7 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
 
     private void initView() {
         mToolbar = findViewById(R.id.toolbar);
-        mRadioFlowLayout = findViewById(R.id.radioFlowLayout);
+        mFlowLayout = findViewById(R.id.flow_layout);
         mSearchHintLayout = findViewById(R.id.search_hint_layout);
         mRecyclerView = findViewById(R.id.search_content);
     }
@@ -246,14 +239,14 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
                         for (int i = 0; i < mWeak.get().mHotWords.size(); i++) {
                             HotWord hotWord = mWeak.get().mHotWords.get(i);
                             //获得流式布局的子view
-                            View view = RadioFlowLayout.createChildView(
-                                    (int)mWeak.get().mRadioFlowLayout.getItemHeight(),
-                                    hotWord,R.layout.radiobutton);
+                            View view = FlowLayout.createChildView(
+                                    (int)mWeak.get().mFlowLayout.getItemHeight(),
+                                    hotWord,R.layout.textview);
                             view.setBackgroundResource(R.color.deepGreen);
                             //设置点击监听
                             view.setOnClickListener(mWeak.get());
                             //添加子View
-                            mWeak.get().mRadioFlowLayout.addView(view);
+                            mWeak.get().mFlowLayout.addView(view);
                         }
                     }
                     break;

@@ -1,5 +1,6 @@
 package com.example.playandroid.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,8 @@ import android.widget.TextView;
 import com.example.playandroid.R;
 import com.example.playandroid.entity.Frame;
 import com.example.playandroid.entity.FrameChild;
-import com.example.playandroid.view.flowlayout.RadioFlowLayout;
+import com.example.playandroid.view.flowlayout.FlowLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -34,7 +34,7 @@ public class FrameAdapter extends RecyclerView.Adapter<FrameAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Frame frame = mFrames.get(position);
+        final Frame frame = mFrames.get(position);
         List<FrameChild> frameChildren = frame.getFrameChildren();
         holder.mFrameName.setText(frame.getName());
 
@@ -45,13 +45,14 @@ public class FrameAdapter extends RecyclerView.Adapter<FrameAdapter.ViewHolder>{
         for(int i = 0;i<frameChildren.size();i++){
             FrameChild frameChild = frameChildren.get(i);
             //获得子View
-            View view = RadioFlowLayout.createChildView((int) holder.mFlowLayout.getItemHeight(),
-                    frameChild, R.layout.radiobutton);
-            //让子View无法被选中
-            view.setClickable(false);
+            View view = FlowLayout.createChildView((int) holder.mFlowLayout.getItemHeight(),
+                    frameChild, R.layout.textview);
+     
             //子View的添加
             holder.mFlowLayout.addView(view);
+            
         }
+        
     }
 
     @Override
@@ -60,11 +61,13 @@ public class FrameAdapter extends RecyclerView.Adapter<FrameAdapter.ViewHolder>{
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
+        View mView;
         TextView mFrameName;
-        RadioFlowLayout mFlowLayout;
+        FlowLayout mFlowLayout;
         
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            mView = itemView;
             mFrameName = itemView.findViewById(R.id.frame_name);
             mFlowLayout = itemView.findViewById(R.id.flow_layout);
         }

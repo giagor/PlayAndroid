@@ -22,8 +22,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"/>
 
-        <com.example.playandroid.view.flowlayout.RadioFlowLayout
-            android:id="@+id/radioFlowLayout"
+        <com.example.playandroid.view.flowlayout.FlowLayout
+            android:id="@+id/flow_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:itemHeight="35dp"
