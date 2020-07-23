@@ -1,11 +1,12 @@
 package com.example.playandroid.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 知识体系(一级).
  */
-public class Frame{
+public class Frame implements Serializable {
     private long id;
     private String name;
     private List<FrameChild> frameChildren;

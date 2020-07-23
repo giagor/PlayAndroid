@@ -1,11 +1,12 @@
 package com.example.playandroid.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 子体系(二级体系).
  */
-public class FrameChild extends FlowLayoutBean{
+public class FrameChild extends FlowLayoutBean implements Serializable {
     private long id;
     private String name;
 

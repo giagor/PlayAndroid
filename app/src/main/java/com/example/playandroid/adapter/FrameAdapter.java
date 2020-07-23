@@ -1,6 +1,5 @@
 package com.example.playandroid.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,8 @@ public class FrameAdapter extends RecyclerView.Adapter<FrameAdapter.ViewHolder>{
 
     private List<Frame> mFrames;
 
+    private OnItemClickListener mListener;
+    
     public FrameAdapter(List<Frame> frames) {
         mFrames = frames;
     }
@@ -53,6 +54,17 @@ public class FrameAdapter extends RecyclerView.Adapter<FrameAdapter.ViewHolder>{
             
         }
         
+        //设置监听
+        if(mListener != null){
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClick(frame);
+                }
+            });
+        }
+        
+        
     }
 
     @Override
@@ -71,5 +83,13 @@ public class FrameAdapter extends RecyclerView.Adapter<FrameAdapter.ViewHolder>{
             mFrameName = itemView.findViewById(R.id.frame_name);
             mFlowLayout = itemView.findViewById(R.id.flow_layout);
         }
+    }
+
+    public void setListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onClick(Frame frame);
     }
 }

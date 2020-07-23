@@ -15,6 +15,7 @@ import com.example.playandroid.R;
 import com.example.playandroid.adapter.FrameAdapter;
 import com.example.playandroid.entity.Frame;
 import com.example.playandroid.entity.FrameChild;
+import com.example.playandroid.frame.frame_child.FrameChildActivity;
 import com.example.playandroid.util.HandlerUtil;
 
 import java.lang.ref.WeakReference;
@@ -23,7 +24,8 @@ import java.util.List;
 
 import static com.example.playandroid.util.Constants.FrameConstant.FRAME_SUCCESS;
 
-public class FrameFragment extends Fragment implements FrameContract.OnView {
+public class FrameFragment extends Fragment implements FrameContract.OnView,
+        FrameAdapter.OnItemClickListener {
 
     private static final String TAG = "FrameFragment";
     private FrameContract.Presenter mPresenter;
@@ -72,6 +74,7 @@ public class FrameFragment extends Fragment implements FrameContract.OnView {
         //为RecyclerView设置布局方式和适配器
         mAdapter = new FrameAdapter(mFrames);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        mAdapter.setListener(this);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -99,7 +102,14 @@ public class FrameFragment extends Fragment implements FrameContract.OnView {
     public void setPresenter(FrameContract.Presenter presenter) {
         mPresenter = presenter;
     }
-    
+
+    @Override
+    public void onClick(Frame frame) {
+        if(getContext() != null){
+            FrameChildActivity.actionStart(getContext(),frame);
+        }
+    }
+
     static class UIRunnable implements Runnable{
 
         private int mType;

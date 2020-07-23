@@ -66,4 +66,12 @@ public class Constants {
         //成功拿到知识体系(一级)的内容
         public static final int FRAME_SUCCESS = 0;
     }
+    
+    /**
+     * 子体系的活动所对应的常量值.
+     * */
+    public static class FrameChildConstant{
+        //启动活动时，传入的对应的键值
+        public static final String FRAME = "frame";
+    }
 }
