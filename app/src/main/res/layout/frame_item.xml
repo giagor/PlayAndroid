@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="8dp">
-    
-    <TextView
-        android:id="@+id/frame_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:textSize="18sp"
-        android:textColor="@color/green"
-        android:textStyle="bold"/>
-    
-    <com.example.playandroid.view.flowlayout.RadioFlowLayout
-        android:id="@+id/flow_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:itemHeight="20dp"
-        app:itemSpace="5dp"
-        app:dividerHeight="8dp"/>
+    android:layout_margin="13dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="5dp">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/frame_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="18sp"
+            android:textColor="@color/green"
+            android:textStyle="bold"/>
+
+        <com.example.playandroid.view.flowlayout.RadioFlowLayout
+            android:id="@+id/flow_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemHeight="20dp"
+            app:itemSpace="5dp"
+            app:dividerHeight="8dp"/>
+
+    </LinearLayout>
+    
+</androidx.cardview.widget.CardView>
+
