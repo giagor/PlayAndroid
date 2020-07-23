@@ -37,7 +37,6 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     private ArticleContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private View mView;
-    //    private Handler mHandler;
     private List<Article> mArticles = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefresh;
     private ArticleAdapter mAdapter;
@@ -52,17 +51,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
      * 标记是否下拉刷新.
      */
     private boolean mRefresh = false;
-
-    /**
-     * 碎片和活动通信的接口引用.
-     */
-//    private OnArticleListener mCallback;
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-//        mCallback = (OnArticleListener) context;
-    }
-
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -84,9 +73,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     private void initData() {
         new ArticlePresenter(this);
-
-//        mHandler = new UIHandler(this);
-
+        
         //为RecyclerView设置数据
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
@@ -155,9 +142,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     public void onSuccess(List<Article> articles) {
         mArticles.clear();
         mArticles.addAll(articles);
-//        Message msg = Message.obtain();
-//        msg.what = SUCCESS;
-//        mHandler.sendMessage(msg);
+
         HandlerUtil.post(new UIRunnable(this, SUCCESS));
     }
 
@@ -166,35 +151,13 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     }
 
-//    @Override
-//    public void handlerMessage(@NonNull Message msg) {
-//        switch (msg.what){
-//            case SUCCESS:
-//                RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
-//                mRecyclerView.setLayoutManager(manager);
-//                ArticleAdapter adapter = new ArticleAdapter(mArticles);
-//                adapter.setListener(this);
-//                mRecyclerView.setAdapter(adapter);
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-
     @Override
     public void onClick(Article article) {
         if (getContext() != null) {
             ((MainActivity) getContext()).showArticleDetail(article.getTitle(), article.getLink());
         }
     }
-
-//    /**
-//     * 回调接口，主活动实现，用于打开文章的主界面.
-//     * */
-//    public interface OnArticleListener{
-//        void showArticleDetail(String title,String url);
-//    }
-
+    
     private static class UIRunnable implements Runnable {
 
         private WeakReference<ArticleFragment> mWeak;
