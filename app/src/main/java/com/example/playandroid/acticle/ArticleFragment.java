@@ -116,6 +116,15 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         mPresenter = presenter;
     }
 
+    /**
+     * 为RecyclerView添加Footer.
+     * */
+    private void setFooterView(RecyclerView recyclerView){
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.footer_view,recyclerView,
+                false);
+        mAdapter.setFooterView(view);
+    }
+    
     @Override
     public void onSuccess(List<Article> articles) {
         mArticles.clear();

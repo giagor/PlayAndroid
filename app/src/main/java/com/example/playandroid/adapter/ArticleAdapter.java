@@ -17,16 +17,39 @@ import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.Request;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
+
+    /**
+     * 表示是item的type.
+     */
+    private static final int TYPE_NORMAL = 0;
+    private static final int TYPE_FOOTER = 1;
+
     private List<Article> mArticles;
     private OnItemClickListener mListener;
+    private View mFooterView;
 
     public ArticleAdapter(List<Article> articles) {
         mArticles = articles;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if(mFooterView != null && position == getItemCount() - 1){
+            return TYPE_FOOTER;
+        }else{
+            return TYPE_NORMAL;
+        }
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //有FooterView时
+        if(mFooterView != null && viewType == TYPE_FOOTER){
+            return new ViewHolder(mFooterView);
+        }
+        
+        //正常情况
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.article_item, parent, false);
         return new ViewHolder(view);
@@ -34,6 +57,12 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        //如果是FooterView，则不绑定数据
+        if(getItemViewType(position) == TYPE_FOOTER){
+            return ;
+        }
+        
+        //不是FooterView,则绑定数据
         Article article = mArticles.get(position);
         holder.mTitle.setText(article.getTitle());
         holder.mAuthor.setText(article.getAuthor());
@@ -50,9 +79,17 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         }
     }
 
+    /**
+     * 此处返回的是View的数量，包括FooterView.
+     * */
     @Override
     public int getItemCount() {
-        return mArticles.size();
+        return mFooterView == null ? mArticles.size() : mArticles.size() + 1;
+    }
+
+    public void setFooterView(View footerView) {
+        mFooterView = footerView;
+        notifyItemInserted(getItemCount());
     }
 
     public void setListener(OnItemClickListener listener) {
@@ -73,7 +110,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             mTime = itemView.findViewById(R.id.time);
         }
     }
-    
+
     public interface OnItemClickListener {
         void onClick(Article article);
     }
