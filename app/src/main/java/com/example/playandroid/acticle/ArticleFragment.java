@@ -42,9 +42,8 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     private List<Article> mArticles = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefresh;
     private ArticleAdapter mAdapter;
-
     private DatabaseHelper mHelper;
-
+    
     /**
      * 对数据库进行CRUD.
      */
@@ -99,9 +98,10 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         new ArticlePresenter(this);
 
         //获取数据库的帮助类
-        mHelper = new DatabaseHelper(getContext(), ARTICLE_DB_NAME, null, CURRENT_VERSION);
+        mHelper = new DatabaseHelper(getContext(), ARTICLE_DB_NAME, null,
+                CURRENT_VERSION);
         mDatabase = mHelper.getWritableDatabase();
-
+        
         //从数据库中获取已经缓存好的列表数据
         mPresenter.getAllArticles(mDatabase);
         
@@ -223,6 +223,12 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         if (getContext() != null) {
             ((MainActivity) getContext()).showArticleDetail(article.getTitle(), article.getLink());
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        mHelper.close();
+        super.onDestroy();
     }
 
     private static class UIRunnable implements Runnable {
