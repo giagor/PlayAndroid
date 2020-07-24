@@ -17,6 +17,7 @@ import com.example.playandroid.util.HandlerUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -212,6 +213,8 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
      */
     @Override
     public void getArticlesFromDaoSuccess(List<Article> articles) {
+        //因为数据库读取顺序的原因，这里要做个倒序操作.
+        Collections.reverse(articles);
         mArticles.addAll(articles);
     }
 
