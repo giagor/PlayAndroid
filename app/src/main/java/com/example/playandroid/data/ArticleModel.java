@@ -8,7 +8,15 @@ import java.util.List;
  * 获得首页文章列表的数据.
  */
 public interface ArticleModel {
-    void getArticles(OnListener onListener, int pageIndex);
+    /**
+     * 刚进入页面时获取文章或加载更多文章.
+     * */
+    void getOrLoadMoreArticles(OnListener onListener, int pageIndex);
+    
+    /**
+     * 刷新文章.
+     * */
+    void refreshArticles(OnListener onListener, int pageIndex);
 
     interface OnListener {
         /**
@@ -30,5 +38,15 @@ public interface ArticleModel {
          * 加载更多失败.
          */
         void onLoadMoreFailure(Exception e);
+
+        /**
+         * 刷新成功.
+         * */
+        void onRefreshSuccess(int pageCount,List<Article> articles);
+        
+        /**
+         * 刷新失败.
+         * */
+        void onRefreshFailure(Exception e);
     }
 }

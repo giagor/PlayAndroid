@@ -2,7 +2,6 @@ package com.example.playandroid.acticle;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import com.example.playandroid.dao.DatabaseHelper;
 import com.example.playandroid.entity.Article;
 import com.example.playandroid.main.MainActivity;
 import com.example.playandroid.util.HandlerUtil;
+import com.example.playandroid.util.network.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -28,7 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static com.example.playandroid.util.Constants.ArticleConstant.GET_ARTICLES_SUCCESS;
-import static com.example.playandroid.util.Constants.ArticleConstant.LOAD_MORE_FAILURE;
+import static com.example.playandroid.util.Constants.ArticleConstant.REFRESH_FAILURE;
+import static com.example.playandroid.util.Constants.ArticleConstant.REFRESH_SUCCESS;
 import static com.example.playandroid.util.Constants.ArticleConstant.LOAD_MORE_SUCCESS;
 import static com.example.playandroid.util.Constants.DatabaseConstant.ARTICLE_DB_NAME;
 import static com.example.playandroid.util.Constants.DatabaseConstant.CURRENT_VERSION;
@@ -122,7 +123,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
             @Override
             public void onRefresh() {
                 mRefresh = true;
-                mPresenter.getArticles(0);
+                mPresenter.refreshArticles(0);
             }
         });
 
@@ -194,7 +195,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Override
     public void onFail(Exception e) {
-        Log.d(TAG, "onLoadMoreFailure: " + e.getMessage());
+        LogUtil.d(TAG, "onLoadMoreFailure: " + e.getMessage());
     }
 
     @Override
@@ -206,13 +207,20 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Override
     public void onLoadMoreFailure(Exception e) {
-//        HandlerUtil.post(new UIRunnable(this,LOAD_MORE_FAILURE));
-//        Log.d(TAG, "onLoadMoreFailure: " + e.getMessage());
-//        if(mRefresh){
-//            mRefresh = false;
-//            mSwipeRefresh.setRefreshing(false);
-////            Toast.makeText(getContext(),"刷新失败",Toast.LENGTH_SHORT).show();
-//        }
+    }
+
+    @Override
+    public void onRefreshSuccess(int pageCount, List<Article> articles) {
+        mArticles.clear();
+        mArticles.addAll(articles);
+        mPageCount = pageCount;
+        
+        HandlerUtil.post(new UIRunnable(this,REFRESH_SUCCESS));
+    }
+
+    @Override
+    public void onRefreshFailure(Exception e) {
+        HandlerUtil.post(new UIRunnable(this,REFRESH_FAILURE));
     }
 
     /**
@@ -256,21 +264,12 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                     if (mWeak.get() != null) {
                         mWeak.get().mAdapter.notifyDataSetChanged();
                         mWeak.get().mCurPage++;
-
-                        //如果是下拉刷新
-                        if (mWeak.get().mRefresh) {
-                            mWeak.get().mCurPage = 1;
-                            mWeak.get().mRefresh = false;
-                            //关闭刷新圈圈
-                            mWeak.get().mSwipeRefresh.setRefreshing(false);
-                        } else {
-                            //表明这是刚进入页面时从网络获取的数据.
-                            //先删除表中的数据
-                            mWeak.get().mPresenter.deleteAllArticles(mWeak.get().mDatabase);
-                            //再放入新的缓存好的数据
-                            mWeak.get().mPresenter.insertArticles(mWeak.get().mDatabase,
-                                    mWeak.get().mArticles);
-                        }
+                        
+                        //操作数据库，先删除表中的数据
+                        mWeak.get().mPresenter.deleteAllArticles(mWeak.get().mDatabase);
+                        //再放入新的缓存好的数据
+                        mWeak.get().mPresenter.insertArticles(mWeak.get().mDatabase,
+                                mWeak.get().mArticles);
                     }
                     break;
                 case LOAD_MORE_SUCCESS:
@@ -285,16 +284,25 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                         mWeak.get().removeFooterView();
 
                     }
-                case LOAD_MORE_FAILURE:
-//                    if (mWeak.get() != null) {
-//                        if (mWeak.get().mRefresh) {
-//                            mWeak.get().mRefresh = false;
-//                            mWeak.get().mSwipeRefresh.setRefreshing(false);
-//                            Toast.makeText(mWeak.get().getContext(), "刷新失败",
-//                                    Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
+                case REFRESH_SUCCESS:
+                    if (mWeak.get() != null) {
+                        mWeak.get().mAdapter.notifyDataSetChanged();
+
+                        mWeak.get().mCurPage = 1;
+                        mWeak.get().mRefresh = false;
+                        //关闭刷新圈圈
+                        mWeak.get().mSwipeRefresh.setRefreshing(false);
+                    }
                     break;
+                case REFRESH_FAILURE:
+                    if (mWeak.get() != null) {
+                        if (mWeak.get().mRefresh) {
+                            mWeak.get().mRefresh = false;
+                            mWeak.get().mSwipeRefresh.setRefreshing(false);
+                            Toast.makeText(mWeak.get().getContext(), "刷新失败",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 default:
                     break;
             }

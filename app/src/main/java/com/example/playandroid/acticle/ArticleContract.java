@@ -13,6 +13,7 @@ public interface ArticleContract {
     interface Presenter extends BasePresenter {
         //网络获取
         void getArticles(int pageIndex);
+        void refreshArticles(int pageIndex);
 
         //dao操作
         void insertArticles(SQLiteDatabase db, List<Article> articles);
@@ -26,6 +27,8 @@ public interface ArticleContract {
         void onFail(Exception e);
         void onLoadMoreSuccess(List<Article> articles);
         void onLoadMoreFailure(Exception e);
+        void onRefreshSuccess(int pageCount,List<Article> articles);
+        void onRefreshFailure(Exception e);
 
         //从dao获取
         void getArticlesFromDaoSuccess(List<Article> articles);

@@ -16,7 +16,7 @@ public class ArticlePresenter implements ArticleContract.Presenter, ArticleModel
     private ArticleContract.OnView mArticleView;
     private ArticleDao mDao;
 
-    public ArticlePresenter(ArticleContract.OnView articleView) {
+    ArticlePresenter(ArticleContract.OnView articleView) {
         mArticleView = articleView;
         articleView.setPresenter(this);
         mArticleModel = new ArticleModelImpl();
@@ -44,12 +44,27 @@ public class ArticlePresenter implements ArticleContract.Presenter, ArticleModel
 
     @Override
     public void onLoadMoreFailure(Exception e) {
-        
+        mArticleView.onLoadMoreFailure(e);
+    }
+
+    @Override
+    public void onRefreshSuccess(int pageCount, List<Article> articles) {
+        mArticleView.onRefreshSuccess(pageCount,articles);
+    }
+
+    @Override
+    public void onRefreshFailure(Exception e) {
+        mArticleView.onRefreshFailure(e);
     }
 
     @Override
     public void getArticles(int pageIndex) {
-        mArticleModel.getArticles(this,pageIndex);
+        mArticleModel.getOrLoadMoreArticles(this,pageIndex);
+    }
+
+    @Override
+    public void refreshArticles(int pageIndex) {
+        mArticleModel.refreshArticles(this,pageIndex);
     }
 
     @Override
