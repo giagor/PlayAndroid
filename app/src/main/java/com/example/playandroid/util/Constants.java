@@ -24,6 +24,7 @@ public class Constants {
         public static final int GET_ARTICLES_FAILURE = 1;
 
         public static final int LOAD_MORE_SUCCESS = 10;
+        public static final int LOAD_MORE_FAILURE = 11;
         
         public static final int REFRESH_SUCCESS = 20;
         public static final int REFRESH_FAILURE = 21;

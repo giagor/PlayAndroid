@@ -2,6 +2,7 @@ package com.example.playandroid.acticle;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static com.example.playandroid.util.Constants.ArticleConstant.GET_ARTICLES_FAILURE;
 import static com.example.playandroid.util.Constants.ArticleConstant.GET_ARTICLES_SUCCESS;
+import static com.example.playandroid.util.Constants.ArticleConstant.LOAD_MORE_FAILURE;
 import static com.example.playandroid.util.Constants.ArticleConstant.REFRESH_FAILURE;
 import static com.example.playandroid.util.Constants.ArticleConstant.REFRESH_SUCCESS;
 import static com.example.playandroid.util.Constants.ArticleConstant.LOAD_MORE_SUCCESS;
@@ -209,6 +211,9 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Override
     public void onLoadMoreFailure(Exception e) {
+        LogUtil.d(TAG,e.getMessage());
+        
+        HandlerUtil.post(new UIRunnable(this,LOAD_MORE_FAILURE));
     }
 
     @Override
@@ -222,6 +227,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Override
     public void onRefreshFailure(Exception e) {
+        LogUtil.d(TAG,e.getMessage());
         HandlerUtil.post(new UIRunnable(this,REFRESH_FAILURE));
     }
 
@@ -294,6 +300,18 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                         mWeak.get().removeFooterView();
 
                     }
+                    break;
+                case LOAD_MORE_FAILURE:
+                    if(mWeak.get() != null){
+                        Toast.makeText(mWeak.get().getContext(),"加载失败",Toast.LENGTH_SHORT).show();
+                        
+                        //加载更多已结束
+                        mWeak.get().mLoadFinish = true;
+
+                        //移除FooterView
+                        mWeak.get().removeFooterView();
+                    }
+                    break;
                 case REFRESH_SUCCESS:
                     if (mWeak.get() != null) {
                         mWeak.get().mAdapter.notifyDataSetChanged();
