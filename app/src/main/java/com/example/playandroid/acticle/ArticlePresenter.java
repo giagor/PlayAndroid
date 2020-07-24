@@ -29,12 +29,12 @@ public class ArticlePresenter implements ArticleContract.Presenter, ArticleModel
 
     @Override
     public void onGetArticlesSuccess(int pageCount,List<Article> articles) {
-        mArticleView.onSuccess(pageCount,articles);
+        mArticleView.onGetArticlesSuccess(pageCount,articles);
     }
 
     @Override
     public void onGetArticlesFailure(Exception e) {
-        mArticleView.onFail(e);
+        mArticleView.onGetArticlesFailure(e);
     }
 
     @Override

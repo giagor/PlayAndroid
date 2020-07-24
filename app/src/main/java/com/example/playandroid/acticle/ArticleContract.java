@@ -23,8 +23,8 @@ public interface ArticleContract {
     
     interface OnView extends BaseView<Presenter> {
         //从网络获取
-        void onSuccess(int pageCount,List<Article> articles);
-        void onFail(Exception e);
+        void onGetArticlesSuccess(int pageCount, List<Article> articles);
+        void onGetArticlesFailure(Exception e);
         void onLoadMoreSuccess(List<Article> articles);
         void onLoadMoreFailure(Exception e);
         void onRefreshSuccess(int pageCount,List<Article> articles);

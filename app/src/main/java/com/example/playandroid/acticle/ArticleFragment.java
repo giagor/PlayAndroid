@@ -22,11 +22,13 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuWrapperICS;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import static com.example.playandroid.util.Constants.ArticleConstant.GET_ARTICLES_FAILURE;
 import static com.example.playandroid.util.Constants.ArticleConstant.GET_ARTICLES_SUCCESS;
 import static com.example.playandroid.util.Constants.ArticleConstant.REFRESH_FAILURE;
 import static com.example.playandroid.util.Constants.ArticleConstant.REFRESH_SUCCESS;
@@ -162,7 +164,6 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         super.onResume();
         if (mPresenter != null && mFirstLoad) {
             mPresenter.getArticles(mCurPage);
-            mFirstLoad = false;
         }
     }
 
@@ -185,7 +186,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     }
 
     @Override
-    public void onSuccess(int pageCount, List<Article> articles) {
+    public void onGetArticlesSuccess(int pageCount, List<Article> articles) {
         mArticles.clear();
         mArticles.addAll(articles);
         mPageCount = pageCount;
@@ -194,8 +195,9 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     }
 
     @Override
-    public void onFail(Exception e) {
+    public void onGetArticlesFailure(Exception e) {
         LogUtil.d(TAG, "onLoadMoreFailure: " + e.getMessage());
+        HandlerUtil.post(new UIRunnable(this, GET_ARTICLES_FAILURE));
     }
 
     @Override
@@ -260,8 +262,10 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         public void run() {
             switch (mType) {
                 case GET_ARTICLES_SUCCESS:
-                    //第一次加载数据或者下拉刷新得到数据
+                    //第一次加载数据
                     if (mWeak.get() != null) {
+                        //标记已经从网络中加载过一次数据
+                        mWeak.get().mFirstLoad = false;
                         mWeak.get().mAdapter.notifyDataSetChanged();
                         mWeak.get().mCurPage++;
                         
@@ -271,6 +275,12 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                         mWeak.get().mPresenter.insertArticles(mWeak.get().mDatabase,
                                 mWeak.get().mArticles);
                     }
+                    break;
+                case GET_ARTICLES_FAILURE:
+//                    if(mWeak.get() != null){
+//                        //若进入页面时加载失败，则标记上
+//                        mWeak.get().mFirstLoad = false;
+//                    }
                     break;
                 case LOAD_MORE_SUCCESS:
                     if (mWeak.get() != null) {
