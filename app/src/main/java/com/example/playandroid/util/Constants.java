@@ -20,7 +20,9 @@ public class Constants {
      */
     public static class ArticleConstant {
         //网络请求对应的状态值
-        public static final int SUCCESS = 0;
+        public static final int GET_ARTICLES_SUCCESS = 0;
+        
+        public static final int LOAD_MORE_SUCCESS = 10;
     }
 
     /**

@@ -33,7 +33,7 @@ public class ArticlePresenter implements ArticleContract.Presenter, ArticleModel
 
     @Override
     public void onLoadMoreSuccess(List<Article> articles) {
-        
+        mArticleView.onLoadMoreSuccess(articles);
     }
 
     @Override

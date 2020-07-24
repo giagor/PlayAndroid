@@ -92,6 +92,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         notifyItemInserted(getItemCount());
     }
 
+    public void removeFooterView(){
+        
+    }
+    
     public void setListener(OnItemClickListener listener) {
         mListener = listener;
     }

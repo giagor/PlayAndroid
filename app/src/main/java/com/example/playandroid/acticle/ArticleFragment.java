@@ -1,21 +1,15 @@
 package com.example.playandroid.acticle;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.example.playandroid.R;
 import com.example.playandroid.adapter.ArticleAdapter;
 import com.example.playandroid.entity.Article;
 import com.example.playandroid.main.MainActivity;
 import com.example.playandroid.util.HandlerUtil;
-import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -28,7 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import static com.example.playandroid.util.Constants.ArticleConstant.SUCCESS;
+import static com.example.playandroid.util.Constants.ArticleConstant.GET_ARTICLES_SUCCESS;
+import static com.example.playandroid.util.Constants.ArticleConstant.LOAD_MORE_SUCCESS;
 
 public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         ArticleAdapter.OnItemClickListener {
@@ -51,12 +46,17 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
      * 标记是否下拉刷新.
      */
     private boolean mRefresh = false;
-    
+
     /**
      * 标记当前的Page.
-     * */
+     */
     private int mCurPage = 0;
-    
+
+    /**
+     * 标记"加载更多"是否已经结束，防止重复加载.
+     */
+    private boolean mLoadFinish = true;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -78,7 +78,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     private void initData() {
         new ArticlePresenter(this);
-        
+
         //为RecyclerView设置数据
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
@@ -90,6 +90,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     }
 
     private void initEvent() {
+        //下拉刷新的监听.
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -112,7 +113,11 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                     int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
                     int totalItemCount = manager.getItemCount();
                     if (lastVisibleItem == totalItemCount - 1) {
-                        
+                        //如果之前的加载更多已结束
+                        if(mLoadFinish){
+                            setFooterView(mRecyclerView);
+                            mPresenter.getArticles(mCurPage);
+                        }
                     }
                 }
             }
@@ -148,7 +153,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         mArticles.clear();
         mArticles.addAll(articles);
 
-        HandlerUtil.post(new UIRunnable(this, SUCCESS));
+        HandlerUtil.post(new UIRunnable(this, GET_ARTICLES_SUCCESS));
     }
 
     @Override
@@ -158,7 +163,9 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Override
     public void onLoadMoreSuccess(List<Article> articles) {
+        mArticles.addAll(articles);
         
+        HandlerUtil.post(new UIRunnable(this,LOAD_MORE_SUCCESS));
     }
 
     @Override
@@ -172,7 +179,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
             ((MainActivity) getContext()).showArticleDetail(article.getTitle(), article.getLink());
         }
     }
-    
+
     private static class UIRunnable implements Runnable {
 
         private WeakReference<ArticleFragment> mWeak;
@@ -186,18 +193,29 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         @Override
         public void run() {
             switch (mType) {
-                case SUCCESS:
+                case GET_ARTICLES_SUCCESS:
                     if (mWeak.get() != null) {
                         mWeak.get().mAdapter.notifyDataSetChanged();
                         mWeak.get().mCurPage++;
-                        
+
                         //如果是下拉刷新
                         if (mWeak.get().mRefresh) {
-                            mWeak.get().mCurPage = 0;
+                            mWeak.get().mCurPage = 1;
                             mWeak.get().mRefresh = false;
                             //关闭刷新圈圈
                             mWeak.get().mSwipeRefresh.setRefreshing(false);
                         }
+                    }
+                    break;
+                case LOAD_MORE_SUCCESS:
+                    if(mWeak.get() != null){
+                        mWeak.get().mAdapter.notifyDataSetChanged();
+                        mWeak.get().mCurPage++;
+                        
+                        //加载更多已结束
+                        mWeak.get().mLoadFinish = true;
+ 
+ 
                     }
                     break;
                 default:

@@ -18,7 +18,7 @@ public class ArticleModelImpl implements ArticleModel{
     private List<Article> mArticles = new ArrayList<>();
     
     @Override
-    public void getArticles(final OnListener onListener,int pageIndex) {
+    public void getArticles(final OnListener onListener, final int pageIndex) {
         Request request = new Request.Builder()
                 .url(String.format(URLConstant.ARTICLE_URL,pageIndex))
                 .build();
@@ -37,7 +37,13 @@ public class ArticleModelImpl implements ArticleModel{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                onListener.onGetArticlesSuccess(mArticles);
+                
+                if(pageIndex == 0){
+                    onListener.onGetArticlesSuccess(mArticles);
+                }else if(pageIndex > 0){
+                    onListener.onLoadMoreSuccess(mArticles);
+                }
+                
             }
         });
     }
