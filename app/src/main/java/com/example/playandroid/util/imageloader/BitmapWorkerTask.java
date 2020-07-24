@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.widget.ImageView;
 
 import com.example.playandroid.util.ApplicationContext;
-import com.example.playandroid.util.DiskLruCache;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

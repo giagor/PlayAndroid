@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.playandroid.util;
+package com.example.playandroid.util.imageloader;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;

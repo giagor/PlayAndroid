@@ -23,6 +23,7 @@ public class Constants {
         public static final int GET_ARTICLES_SUCCESS = 0;
 
         public static final int LOAD_MORE_SUCCESS = 10;
+        public static final int LOAD_MORE_FAILURE = 11;
     }
 
     /**

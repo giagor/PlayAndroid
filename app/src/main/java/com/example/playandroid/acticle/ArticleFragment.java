@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static com.example.playandroid.util.Constants.ArticleConstant.GET_ARTICLES_SUCCESS;
+import static com.example.playandroid.util.Constants.ArticleConstant.LOAD_MORE_FAILURE;
 import static com.example.playandroid.util.Constants.ArticleConstant.LOAD_MORE_SUCCESS;
 import static com.example.playandroid.util.Constants.DatabaseConstant.ARTICLE_DB_NAME;
 import static com.example.playandroid.util.Constants.DatabaseConstant.CURRENT_VERSION;
@@ -43,7 +44,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     private SwipeRefreshLayout mSwipeRefresh;
     private ArticleAdapter mAdapter;
     private DatabaseHelper mHelper;
-    
+
     /**
      * 对数据库进行CRUD.
      */
@@ -101,10 +102,10 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         mHelper = new DatabaseHelper(getContext(), ARTICLE_DB_NAME, null,
                 CURRENT_VERSION);
         mDatabase = mHelper.getWritableDatabase();
-        
+
         //从数据库中获取已经缓存好的列表数据
         mPresenter.getAllArticles(mDatabase);
-        
+
         //为RecyclerView设置数据
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
@@ -193,7 +194,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Override
     public void onFail(Exception e) {
-
+        Log.d(TAG, "onLoadMoreFailure: " + e.getMessage());
     }
 
     @Override
@@ -205,7 +206,13 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     @Override
     public void onLoadMoreFailure(Exception e) {
-
+//        HandlerUtil.post(new UIRunnable(this,LOAD_MORE_FAILURE));
+//        Log.d(TAG, "onLoadMoreFailure: " + e.getMessage());
+//        if(mRefresh){
+//            mRefresh = false;
+//            mSwipeRefresh.setRefreshing(false);
+////            Toast.makeText(getContext(),"刷新失败",Toast.LENGTH_SHORT).show();
+//        }
     }
 
     /**
@@ -256,7 +263,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                             mWeak.get().mRefresh = false;
                             //关闭刷新圈圈
                             mWeak.get().mSwipeRefresh.setRefreshing(false);
-                        }else{
+                        } else {
                             //表明这是刚进入页面时从网络获取的数据.
                             //先删除表中的数据
                             mWeak.get().mPresenter.deleteAllArticles(mWeak.get().mDatabase);
@@ -278,6 +285,15 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                         mWeak.get().removeFooterView();
 
                     }
+                case LOAD_MORE_FAILURE:
+//                    if (mWeak.get() != null) {
+//                        if (mWeak.get().mRefresh) {
+//                            mWeak.get().mRefresh = false;
+//                            mWeak.get().mSwipeRefresh.setRefreshing(false);
+//                            Toast.makeText(mWeak.get().getContext(), "刷新失败",
+//                                    Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
                     break;
                 default:
                     break;
