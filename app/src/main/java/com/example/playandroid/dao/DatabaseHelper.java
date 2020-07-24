@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     
-    private static final String CREATE_ARTICLE = "create table Article(" +
-            "id integer primary key,"
+    private static final String CREATE_ARTICLE = "create table Article(" 
+            + "id integer primary key,"
             + "title text," 
             + "author text,"
             + "link text," 

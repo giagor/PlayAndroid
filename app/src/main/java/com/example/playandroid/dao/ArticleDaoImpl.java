@@ -9,7 +9,7 @@ import com.example.playandroid.entity.Article;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.playandroid.util.Constants.DatabaseConstant.ARTICLE_DB_NAME;
+import static com.example.playandroid.util.Constants.DatabaseConstant.ARTICLE_TABLE;
 
 public class ArticleDaoImpl implements ArticleDao {
 
@@ -25,7 +25,7 @@ public class ArticleDaoImpl implements ArticleDao {
             values.put("author", article.getAuthor());
             values.put("link", article.getLink());
             values.put("time", article.getTime());
-            db.insert(ARTICLE_DB_NAME, null, values);
+            db.insert(ARTICLE_TABLE, null, values);
             values.clear();
         }
     }
@@ -35,7 +35,7 @@ public class ArticleDaoImpl implements ArticleDao {
      */
     @Override
     public void deleteAllArticles(SQLiteDatabase db) {
-        db.delete(ARTICLE_DB_NAME, null, null);
+        db.delete(ARTICLE_TABLE, null, null);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ArticleDaoImpl implements ArticleDao {
      */
     @Override
     public void getAllArticles(SQLiteDatabase db,OnListener listener) {
-        Cursor cursor = db.query(ARTICLE_DB_NAME,null,null,null,
+        Cursor cursor = db.query(ARTICLE_TABLE,null,null,null,
                 null,null,null);
         List<Article> articles = new ArrayList<>();
         //遍历获取数据

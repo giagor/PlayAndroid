@@ -41,14 +41,14 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     private List<Article> mArticles = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefresh;
     private ArticleAdapter mAdapter;
-    
+
     private DatabaseHelper mHelper;
 
     /**
      * 对数据库进行CRUD.
-     * */
+     */
     private SQLiteDatabase mDatabase;
-    
+
     /**
      * 标记是否第一次请求数据.
      */
@@ -69,7 +69,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
      * 标记"加载更多"是否已经结束，防止重复加载.
      */
     private boolean mLoadFinish = true;
-    
+
     /**
      * 记录文章的总页数.
      */
@@ -96,11 +96,14 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     private void initData() {
         new ArticlePresenter(this);
-        
+
         //获取数据库的帮助类
-        mHelper = new DatabaseHelper(getContext(),ARTICLE_DB_NAME,null,CURRENT_VERSION);
+        mHelper = new DatabaseHelper(getContext(), ARTICLE_DB_NAME, null, CURRENT_VERSION);
         mDatabase = mHelper.getWritableDatabase();
 
+        //从数据库中获取已经缓存好的列表数据
+        mPresenter.getAllArticles(mDatabase);
+        
         //为RecyclerView设置数据
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
@@ -204,6 +207,14 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     }
 
+    /**
+     * 从dao获取数据成功.
+     */
+    @Override
+    public void getArticlesFromDaoSuccess(List<Article> articles) {
+        mArticles.addAll(articles);
+    }
+
     @Override
     public void onClick(Article article) {
         if (getContext() != null) {
@@ -236,6 +247,13 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                             mWeak.get().mRefresh = false;
                             //关闭刷新圈圈
                             mWeak.get().mSwipeRefresh.setRefreshing(false);
+                        }else{
+                            //表明这是刚进入页面时从网络获取的数据.
+                            //先删除表中的数据
+                            mWeak.get().mPresenter.deleteAllArticles(mWeak.get().mDatabase);
+                            //再放入新的缓存好的数据
+                            mWeak.get().mPresenter.insertArticles(mWeak.get().mDatabase,
+                                    mWeak.get().mArticles);
                         }
                     }
                     break;

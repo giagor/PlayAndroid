@@ -86,7 +86,8 @@ public class Constants {
     public static class DatabaseConstant{
         //数据库的名字
         public static final String ARTICLE_DB_NAME = "Article.db";
-        
+        //“文章”的表的名字
+        public static final String ARTICLE_TABLE = "Article";
         //当前版本
         public static final int CURRENT_VERSION = 1;
     }
