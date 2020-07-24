@@ -93,7 +93,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     }
 
     public void removeFooterView(){
-        
+        notifyItemRemoved(getItemCount() - 1);
+        mFooterView = null;
     }
     
     public void setListener(OnItemClickListener listener) {

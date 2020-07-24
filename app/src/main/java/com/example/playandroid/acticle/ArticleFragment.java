@@ -50,7 +50,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     /**
      * 标记当前的Page.
      */
-    private int mCurPage = 0;
+    private int mCurPage = 444;
 
     /**
      * 标记"加载更多"是否已经结束，防止重复加载.
@@ -148,6 +148,10 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         mAdapter.setFooterView(view);
     }
 
+    private void removeFooterView(){
+        mAdapter.removeFooterView();
+    }
+    
     @Override
     public void onSuccess(List<Article> articles) {
         mArticles.clear();
@@ -214,8 +218,10 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                         
                         //加载更多已结束
                         mWeak.get().mLoadFinish = true;
- 
- 
+                        
+                        //移除FooterView
+                        mWeak.get().removeFooterView();
+                        
                     }
                     break;
                 default:
