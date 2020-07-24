@@ -12,7 +12,7 @@ public interface ArticleContract {
     }
     
     interface OnView extends BaseView<Presenter> {
-        void onSuccess(List<Article> articles);
+        void onSuccess(int pageCount,List<Article> articles);
         void onFail(Exception e);
         void onLoadMoreSuccess(List<Article> articles);
         void onLoadMoreFailure(Exception e);

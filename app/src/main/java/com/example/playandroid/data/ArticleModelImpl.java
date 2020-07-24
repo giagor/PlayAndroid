@@ -1,5 +1,7 @@
 package com.example.playandroid.data;
 
+import android.util.Log;
+
 import com.example.playandroid.entity.Article;
 import com.example.playandroid.util.URLConstant;
 import com.example.playandroid.util.network.Call;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleModelImpl implements ArticleModel{
+    private static final String TAG = "ArticleModelImpl";
     private List<Article> mArticles = new ArrayList<>();
     
     @Override
@@ -39,7 +42,14 @@ public class ArticleModelImpl implements ArticleModel{
                 }
                 
                 if(pageIndex == 0){
-                    onListener.onGetArticlesSuccess(mArticles);
+                    int pageCount = 0;
+                    try {
+                        //获得文章的总页数
+                        pageCount = handlePageCount(response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    onListener.onGetArticlesSuccess(pageCount,mArticles);
                 }else if(pageIndex > 0){
                     onListener.onLoadMoreSuccess(mArticles);
                 }
@@ -68,5 +78,12 @@ public class ArticleModelImpl implements ArticleModel{
             Article article = new Article(id,title,author,link,time);
             mArticles.add(article);
         }
+    }
+    
+    private int handlePageCount(String response) throws JSONException{
+        JSONObject jsonObject = new JSONObject(response);
+
+        JSONObject data = jsonObject.getJSONObject("data");
+        return data.getInt("pageCount");
     }
 }

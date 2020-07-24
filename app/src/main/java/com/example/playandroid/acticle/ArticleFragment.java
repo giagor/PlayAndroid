@@ -1,9 +1,11 @@
 package com.example.playandroid.acticle;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.playandroid.R;
 import com.example.playandroid.adapter.ArticleAdapter;
@@ -48,14 +50,19 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     private boolean mRefresh = false;
 
     /**
-     * 标记当前的Page.
+     * 标记当前的Page,初始时为0
      */
-    private int mCurPage = 444;
+    private int mCurPage = 0;
 
     /**
      * 标记"加载更多"是否已经结束，防止重复加载.
      */
     private boolean mLoadFinish = true;
+
+    /**
+     * 记录文章的总页数.
+     */
+    private int mPageCount;
 
     @Nullable
     @Override
@@ -113,8 +120,12 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                     int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
                     int totalItemCount = manager.getItemCount();
                     if (lastVisibleItem == totalItemCount - 1) {
+                        if(mCurPage >= mPageCount){
+                            Toast.makeText(getContext(),"已全部加载完毕",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         //如果之前的加载更多已结束
-                        if(mLoadFinish){
+                        if (mLoadFinish) {
                             setFooterView(mRecyclerView);
                             mPresenter.getArticles(mCurPage);
                         }
@@ -148,14 +159,15 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         mAdapter.setFooterView(view);
     }
 
-    private void removeFooterView(){
+    private void removeFooterView() {
         mAdapter.removeFooterView();
     }
-    
+
     @Override
-    public void onSuccess(List<Article> articles) {
+    public void onSuccess(int pageCount, List<Article> articles) {
         mArticles.clear();
         mArticles.addAll(articles);
+        mPageCount = pageCount;
 
         HandlerUtil.post(new UIRunnable(this, GET_ARTICLES_SUCCESS));
     }
@@ -168,8 +180,8 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     @Override
     public void onLoadMoreSuccess(List<Article> articles) {
         mArticles.addAll(articles);
-        
-        HandlerUtil.post(new UIRunnable(this,LOAD_MORE_SUCCESS));
+
+        HandlerUtil.post(new UIRunnable(this, LOAD_MORE_SUCCESS));
     }
 
     @Override
@@ -212,16 +224,16 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                     }
                     break;
                 case LOAD_MORE_SUCCESS:
-                    if(mWeak.get() != null){
+                    if (mWeak.get() != null) {
                         mWeak.get().mAdapter.notifyDataSetChanged();
                         mWeak.get().mCurPage++;
-                        
+
                         //加载更多已结束
                         mWeak.get().mLoadFinish = true;
-                        
+
                         //移除FooterView
                         mWeak.get().removeFooterView();
-                        
+
                     }
                     break;
                 default:

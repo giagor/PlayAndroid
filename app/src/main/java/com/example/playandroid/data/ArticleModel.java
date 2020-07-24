@@ -14,7 +14,7 @@ public interface ArticleModel {
         /**
          * 成功得到文章列表
          */
-        void onGetArticlesSuccess(List<Article> articles);
+        void onGetArticlesSuccess(int pageCount,List<Article> articles);
 
         /**
          * 没能得到文章列表
