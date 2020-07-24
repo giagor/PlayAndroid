@@ -21,7 +21,7 @@ public class Constants {
     public static class ArticleConstant {
         //网络请求对应的状态值
         public static final int GET_ARTICLES_SUCCESS = 0;
-        
+
         public static final int LOAD_MORE_SUCCESS = 10;
     }
 
@@ -63,20 +63,31 @@ public class Constants {
 
     /**
      * 知识体系模块对应的常量值.
-     * */
-    public static class FrameConstant{
+     */
+    public static class FrameConstant {
         //成功拿到知识体系(一级)的内容
         public static final int FRAME_SUCCESS = 0;
     }
-    
+
     /**
      * 子体系的活动所对应的常量值.
-     * */
-    public static class FrameChildConstant{
+     */
+    public static class FrameChildConstant {
         //启动活动时，传入的对应的键值
         public static final String FRAME = "frame";
-        
+
         //成功拿到知识体系下的文章
         public static final int SUCCESS = 0;
+    }
+
+    /**
+     * 数据库类的常量.
+     * */
+    public static class DatabaseConstant{
+        //数据库的名字
+        public static final String ARTICLE_DB_NAME = "Article.db";
+        
+        //当前版本
+        public static final int CURRENT_VERSION = 1;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.playandroid.acticle;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.playandroid.R;
 import com.example.playandroid.adapter.ArticleAdapter;
+import com.example.playandroid.dao.DatabaseHelper;
 import com.example.playandroid.entity.Article;
 import com.example.playandroid.main.MainActivity;
 import com.example.playandroid.util.HandlerUtil;
@@ -26,6 +28,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static com.example.playandroid.util.Constants.ArticleConstant.GET_ARTICLES_SUCCESS;
 import static com.example.playandroid.util.Constants.ArticleConstant.LOAD_MORE_SUCCESS;
+import static com.example.playandroid.util.Constants.DatabaseConstant.ARTICLE_DB_NAME;
+import static com.example.playandroid.util.Constants.DatabaseConstant.CURRENT_VERSION;
 
 public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         ArticleAdapter.OnItemClickListener {
@@ -37,7 +41,14 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     private List<Article> mArticles = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefresh;
     private ArticleAdapter mAdapter;
+    
+    private DatabaseHelper mHelper;
 
+    /**
+     * 对数据库进行CRUD.
+     * */
+    private SQLiteDatabase mDatabase;
+    
     /**
      * 标记是否第一次请求数据.
      */
@@ -58,7 +69,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
      * 标记"加载更多"是否已经结束，防止重复加载.
      */
     private boolean mLoadFinish = true;
-
+    
     /**
      * 记录文章的总页数.
      */
@@ -85,6 +96,10 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
 
     private void initData() {
         new ArticlePresenter(this);
+        
+        //获取数据库的帮助类
+        mHelper = new DatabaseHelper(getContext(),ARTICLE_DB_NAME,null,CURRENT_VERSION);
+        mDatabase = mHelper.getWritableDatabase();
 
         //为RecyclerView设置数据
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -120,8 +135,8 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                     int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
                     int totalItemCount = manager.getItemCount();
                     if (lastVisibleItem == totalItemCount - 1) {
-                        if(mCurPage >= mPageCount){
-                            Toast.makeText(getContext(),"已全部加载完毕",Toast.LENGTH_SHORT).show();
+                        if (mCurPage >= mPageCount) {
+                            Toast.makeText(getContext(), "已全部加载完毕", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         //如果之前的加载更多已结束
@@ -210,6 +225,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         public void run() {
             switch (mType) {
                 case GET_ARTICLES_SUCCESS:
+                    //第一次加载数据或者下拉刷新得到数据
                     if (mWeak.get() != null) {
                         mWeak.get().mAdapter.notifyDataSetChanged();
                         mWeak.get().mCurPage++;
