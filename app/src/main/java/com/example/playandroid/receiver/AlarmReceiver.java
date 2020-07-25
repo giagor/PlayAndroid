@@ -3,13 +3,17 @@ package com.example.playandroid.receiver;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
 import com.example.playandroid.R;
+import com.example.playandroid.acticle.ArticleDetailActivity;
 
+import static com.example.playandroid.util.Constants.ArticleDetailConstant.TITLE;
+import static com.example.playandroid.util.Constants.ArticleDetailConstant.URL;
 import static com.example.playandroid.util.Constants.NotificationConstant.CHANNEL_ID;
 import static com.example.playandroid.util.Constants.NotificationConstant.CHANNEL_NAME;
 
@@ -45,6 +49,12 @@ public class AlarmReceiver extends BroadcastReceiver {
             builder = new Notification.Builder(context);
             builder.setPriority(Notification.PRIORITY_LOW);
         }
+        Intent detailIntent = new Intent(context, ArticleDetailActivity.class);
+        detailIntent.putExtra(TITLE,"LiveData 数据倒灌：别问，问就是不可预期");
+        detailIntent.putExtra(URL,"https://juejin.im/post/5f0e7932e51d4534c36d9c01");
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,detailIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
         builder.setContentTitle("测试");
         builder.setContentText("这是一条测试的通知");
         builder.setSmallIcon(R.mipmap.ic_launcher);
