@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+//        startAlarmManager();
     }
 
     /**
@@ -204,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startAlarmManager(){
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Long secondsToNextMorning = TimeUtil.getNextTime(15,30);
+        Long secondsToNextMorning = TimeUtil.getNextTime(15,24);
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.setAction("CLOCK_IN");
         //获取pendingIntent
