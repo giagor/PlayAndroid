@@ -49,15 +49,18 @@ public class AlarmReceiver extends BroadcastReceiver {
             builder = new Notification.Builder(context);
             builder.setPriority(Notification.PRIORITY_LOW);
         }
+        String title = intent.getStringExtra(TITLE);
+        String url = intent.getStringExtra(URL);
         Intent detailIntent = new Intent(context, ArticleDetailActivity.class);
-        detailIntent.putExtra(TITLE,"LiveData 数据倒灌：别问，问就是不可预期");
-        detailIntent.putExtra(URL,"https://juejin.im/post/5f0e7932e51d4534c36d9c01");
+        detailIntent.putExtra(TITLE,title);
+        detailIntent.putExtra(URL,url);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0,detailIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
-        builder.setContentTitle("测试");
-        builder.setContentText("这是一条测试的通知");
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setContentTitle("每日一篇推送");
+        builder.setContentText(title);
+        builder.setSmallIcon(R.mipmap.ic_android);
+        builder.setAutoCancel(true);//点击后自动取消
         mManager.notify(1, builder.build());
         
     }

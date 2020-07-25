@@ -28,13 +28,15 @@ import com.example.playandroid.receiver.AlarmReceiver;
 import com.example.playandroid.search.SearchActivity;
 import com.example.playandroid.util.TimeUtil;
 
+import static com.example.playandroid.util.Constants.ArticleDetailConstant.TITLE;
+import static com.example.playandroid.util.Constants.ArticleDetailConstant.URL;
 import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
 import static com.example.playandroid.util.Constants.MainConstant.FRAME;
 import static com.example.playandroid.util.Constants.MainConstant.PROJECT;
 
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,ArticleFragment.OnListener{
     private Toolbar mToolbar;
     
     /**
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        startAlarmManager();
+//        startAlarmManager();
     }
 
     /**
@@ -203,10 +205,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTv_project.setText("");
     }
 
-    private void startAlarmManager(){
+    @Override
+    public void startAlarmManager(String title,String url){
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Long secondsToNextMorning = TimeUtil.getNextTime(21,41);
+        Long secondsToNextMorning = TimeUtil.getNextTime(9,30);
         Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra(TITLE,title);
+        intent.putExtra(URL,url);
         //获取pendingIntent
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);

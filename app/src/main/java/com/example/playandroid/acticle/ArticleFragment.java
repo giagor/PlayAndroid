@@ -1,5 +1,6 @@
 package com.example.playandroid.acticle;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,6 +50,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
     private SwipeRefreshLayout mSwipeRefresh;
     private ArticleAdapter mAdapter;
     private DatabaseHelper mHelper;
+    private OnListener mListener;
 
     /**
      * 对数据库进行CRUD.
@@ -80,6 +82,12 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
      * 记录文章的总页数.
      */
     private int mPageCount;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mListener = (OnListener) context;
+    }
 
     @Nullable
     @Override
@@ -278,6 +286,11 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                         //再放入新的缓存好的数据
                         mWeak.get().mPresenter.insertArticles(mWeak.get().mDatabase,
                                 mWeak.get().mArticles);
+                    
+                        if(mWeak.get().mListener != null){
+                            Article article = mWeak.get().mArticles.get(0);
+                            mWeak.get().mListener.startAlarmManager(article.getTitle(),article.getLink());
+                        }
                     }
                     break;
                 case GET_ARTICLES_FAILURE:
@@ -333,5 +346,14 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
                     break;
             }
         }
+    }
+    
+    public interface OnListener{
+        /**
+         * 开启定时任务.
+         * @param title 推送的文章的标题
+         * @param url 推送的文章的url
+         * */
+        void startAlarmManager(String title,String url);
     }
 }
