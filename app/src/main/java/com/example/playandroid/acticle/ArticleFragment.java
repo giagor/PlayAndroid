@@ -236,8 +236,6 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
      */
     @Override
     public void getArticlesFromDaoSuccess(List<Article> articles) {
-        //因为数据库读取顺序的原因，这里要做个倒序操作.
-        Collections.reverse(articles);
         mArticles.addAll(articles);
     }
 
