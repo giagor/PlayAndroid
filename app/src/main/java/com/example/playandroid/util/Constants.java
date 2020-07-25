@@ -25,7 +25,7 @@ public class Constants {
 
         public static final int LOAD_MORE_SUCCESS = 10;
         public static final int LOAD_MORE_FAILURE = 11;
-        
+
         public static final int REFRESH_SUCCESS = 20;
         public static final int REFRESH_FAILURE = 21;
     }
@@ -87,13 +87,22 @@ public class Constants {
 
     /**
      * 数据库类的常量.
-     * */
-    public static class DatabaseConstant{
+     */
+    public static class DatabaseConstant {
         //数据库的名字
         public static final String ARTICLE_DB_NAME = "Article.db";
         //“文章”的表的名字
         public static final String ARTICLE_TABLE = "Article";
         //当前版本
         public static final int CURRENT_VERSION = 1;
+    }
+
+    /**
+     * 通知的常量值.
+     * */
+    public static class NotificationConstant{
+        public static final String CHANNEL_ID = "10";
+        
+        public static final String CHANNEL_NAME = "定时推送";
     }
 }

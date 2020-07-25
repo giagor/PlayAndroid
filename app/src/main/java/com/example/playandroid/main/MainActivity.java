@@ -28,6 +28,8 @@ import com.example.playandroid.search.SearchActivity;
 import com.example.playandroid.util.network.Request;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
 import static com.example.playandroid.util.Constants.MainConstant.FRAME;
