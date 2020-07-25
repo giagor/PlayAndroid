@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-//        startAlarmManager();
+        startAlarmManager();
     }
 
     /**
@@ -205,15 +205,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startAlarmManager(){
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Long secondsToNextMorning = TimeUtil.getNextTime(15,24);
+        Long secondsToNextMorning = TimeUtil.getNextTime(16,19);
         Intent intent = new Intent(this, AlarmReceiver.class);
-        intent.setAction("CLOCK_IN");
         //获取pendingIntent
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         if(manager != null){
-            manager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+secondsToNextMorning,
-                    pendingIntent);
+            manager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+
+                            secondsToNextMorning, 24*60*60*1000,pendingIntent);
         }
     }
     
