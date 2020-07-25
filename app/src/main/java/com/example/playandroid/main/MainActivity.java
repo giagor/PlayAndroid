@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +24,9 @@ import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.acticle.ArticleFragment;
 import com.example.playandroid.frame.FrameFragment;
 import com.example.playandroid.project.ProjectFragment;
+import com.example.playandroid.receiver.AlarmReceiver;
 import com.example.playandroid.search.SearchActivity;
+import com.example.playandroid.util.TimeUtil;
 
 import static com.example.playandroid.util.Constants.MainConstant.ARTICLE;
 import static com.example.playandroid.util.Constants.MainConstant.FRAME;
@@ -70,7 +75,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initEvent();
         initFragment(ARTICLE);
     }
-    
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     /**
      * 设置顶部标题栏的信息.
      * */
@@ -192,6 +202,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTv_project.setText("");
     }
 
+    private void startAlarmManager(){
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Long secondsToNextMorning = TimeUtil.getNextTime(15,30);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.setAction("CLOCK_IN");
+        //获取pendingIntent
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        if(manager != null){
+            manager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+secondsToNextMorning,
+                    pendingIntent);
+        }
+    }
+    
     /**
      * 在toolbar加载菜单项
      * */

@@ -36,18 +36,21 @@ public class AlarmReceiver extends BroadcastReceiver {
     
     @Override
     public void onReceive(Context context, Intent intent) {
-        channelHelper(context);
-        Notification.Builder builder;
-        //若安卓版本大于8.0
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            builder = new Notification.Builder(context,CHANNEL_ID);
-        }else{
-            builder = new Notification.Builder(context);
-            builder.setPriority(Notification.PRIORITY_LOW);
+        if(intent.getAction() != null && intent.getAction().equals("CLOCK_IN")){
+            channelHelper(context);
+            Notification.Builder builder;
+            //若安卓版本大于8.0
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                builder = new Notification.Builder(context,CHANNEL_ID);
+            }else{
+                builder = new Notification.Builder(context);
+                builder.setPriority(Notification.PRIORITY_LOW);
+            }
+            builder.setContentTitle("测试");
+            builder.setContentText("这是一条测试的通知");
+            builder.setSmallIcon(R.mipmap.ic_launcher);
+            mManager.notify(1,builder.build());
         }
-        builder.setContentTitle("测试");
-        builder.setContentText("这是一条测试的通知");
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        mManager.notify(1,builder.build());
+        
     }
 }
