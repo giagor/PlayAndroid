@@ -49,18 +49,22 @@ public class AlarmReceiver extends BroadcastReceiver {
             builder = new Notification.Builder(context);
             builder.setPriority(Notification.PRIORITY_LOW);
         }
+        //获取推送的文章的标题和url
         String title = intent.getStringExtra(TITLE);
         String url = intent.getStringExtra(URL);
+        //创建 意图，传入信息
         Intent detailIntent = new Intent(context, ArticleDetailActivity.class);
         detailIntent.putExtra(TITLE,title);
         detailIntent.putExtra(URL,url);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0,detailIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pendingIntent);
-        builder.setContentTitle("每日一篇推送");
-        builder.setContentText(title);
-        builder.setSmallIcon(R.mipmap.ic_android);
-        builder.setAutoCancel(true);//点击后自动取消
+        builder.setContentIntent(pendingIntent)
+            .setContentTitle("每日一篇推送")
+            .setContentText(title)
+            .setSmallIcon(R.mipmap.ic_android)
+            .setAutoCancel(true)//点击后自动取消
+            .setWhen(System.currentTimeMillis())
+            .setShowWhen(true);
         mManager.notify(1, builder.build());
         
     }
