@@ -98,6 +98,8 @@ public class Constants {
         public static final String ARTICLE_DB_NAME = "Article.db";
         //“文章”的表的名字
         public static final String ARTICLE_TABLE = "Article";
+        //历史搜索的表的名字
+        public static final String SEARCH_HISTORY_TABLE = "SearchHistory";
         //当前版本
         public static final int CURRENT_VERSION = 2;
     }
