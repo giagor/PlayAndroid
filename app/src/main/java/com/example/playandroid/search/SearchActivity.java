@@ -59,7 +59,12 @@ public class SearchActivity extends AppCompatActivity {
     }
     
     private void initData(){
-        replaceFragment(new SearchHintFragment());
+//        replaceFragment(new SearchHintFragment());
+        //初始化搜索热词界面的碎片
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fragment_layout,new SearchHintFragment());
+        transaction.commit();
     }
     
     /**
@@ -75,7 +80,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     /**
-     * 替换碎片.
+     * 替换碎片，并且添加到返回栈.
      * */
     private void replaceFragment(Fragment fragment){
         FragmentManager manager = getSupportFragmentManager();
@@ -122,6 +127,7 @@ public class SearchActivity extends AppCompatActivity {
                 public boolean onQueryTextSubmit(String query) {
 //                    //搜索文章
 //                    mPresenter.searchContents(query);
+                    replaceFragment(new SearchContentFragment());
                     //提交后失去焦点，即收起软键盘
                     searchView.clearFocus();
                     return false;
