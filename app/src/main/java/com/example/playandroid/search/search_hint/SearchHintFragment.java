@@ -75,6 +75,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         //获取数据库的帮助类
         mHelper = new DatabaseHelper(getContext(), ARTICLE_DB_NAME, null,
                 CURRENT_VERSION);
@@ -133,6 +134,9 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
     private void initData() {
         new SearchHintPresenter(this);
+        
+        //从数据库中获取历史搜索.
+        mPresenter.getAllHistories(mDatabase);
     }
 
     /**
@@ -175,6 +179,23 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
         return mShowing;
     }
 
+    /**
+     * 每当用户进行搜索时，把该历史搜索添加到流式布局和数据库中.
+     * */
+    public void addHistoryView(String query){
+//        boolean contain = false;
+//        for(SearchHistory history : mHistories){
+//            if(history.getName().equals(query)){
+//                contain = true;
+//                break;
+//            }
+//        }
+//        
+//        if(!contain){
+//            View view = FlowLayout.createChildView(mHistoryFlowLayout.getItemHeight(),)
+//        }
+    }
+    
     @Override
     public void onGetHotWordsSuccess(List<HotWord> hotWords) {
         mHotWords.clear();
