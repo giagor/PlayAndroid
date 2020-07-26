@@ -145,7 +145,7 @@ public class SearchActivity extends AppCompatActivity {
                     
                     //提交后失去焦点，即收起软键盘
                     searchView.clearFocus();
-                    return false;
+                    return true;
                 }
 
                 @Override

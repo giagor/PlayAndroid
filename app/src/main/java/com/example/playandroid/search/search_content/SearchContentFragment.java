@@ -76,6 +76,7 @@ public class SearchContentFragment extends Fragment implements SearchContentCont
         new SearchContentPresenter(this);
 
         //为RecyclerView设置数据
+        mArticles.clear();
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
         mAdapter = new ArticleAdapter(mArticles);
