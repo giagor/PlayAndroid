@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.example.playandroid.R;
 import com.example.playandroid.dao.DatabaseHelper;
+import com.example.playandroid.entity.FlowLayoutBean;
 import com.example.playandroid.entity.HotWord;
 import com.example.playandroid.entity.SearchHistory;
 import com.example.playandroid.util.HandlerUtil;
@@ -99,12 +100,16 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
         if (mFirstLoad) {
             mFirstLoad = false;
+            //从数据库中获取历史搜索.
+            mPresenter.getAllHistories(mDatabase);
+            
             mPresenter.start();
         }
-
+        
         //恢复搜索热词的子View
         if (mShouldAddViewAgain) {
             addViewToHotWordLayout();
+            addViewToSearchHistoryLayout();
             mShouldAddViewAgain = false;
         }
     }
@@ -129,14 +134,11 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
     private void initView() {
         mHotWordFlowLayout = mView.findViewById(R.id.hotword_flow_layout);
-        mHistoryFlowLayout = mView.findViewById(R.id.hitsory_flow_layout);
+        mHistoryFlowLayout = mView.findViewById(R.id.history_flow_layout);
     }
 
     private void initData() {
         new SearchHintPresenter(this);
-        
-        //从数据库中获取历史搜索.
-        mPresenter.getAllHistories(mDatabase);
     }
 
     /**
@@ -183,17 +185,25 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
      * 每当用户进行搜索时，把该历史搜索添加到流式布局和数据库中.
      * */
     public void addHistoryView(String query){
-//        boolean contain = false;
-//        for(SearchHistory history : mHistories){
-//            if(history.getName().equals(query)){
-//                contain = true;
-//                break;
-//            }
-//        }
-//        
-//        if(!contain){
-//            View view = FlowLayout.createChildView(mHistoryFlowLayout.getItemHeight(),)
-//        }
+        boolean contain = false;
+        for(SearchHistory history : mHistories){
+            if(history.getName().equals(query)){
+                contain = true;
+                break;
+            }
+        }
+
+        if(!contain){
+            //为了方便，这里给的id不是真正的id(后面会修改)
+            SearchHistory history = new SearchHistory(1,query);
+            mHistories.add(history);
+            View view = FlowLayout.createChildView((int) mHistoryFlowLayout.getItemHeight(),
+                    history,R.layout.textview);
+            //往历史搜索的流式布局中添加子View
+            mHistoryFlowLayout.addView(view);
+            //向数据库中保存内容
+            mPresenter.insertHistory(mDatabase,query);
+        }
     }
     
     @Override
@@ -224,8 +234,10 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
     @Override
     public void onClick(View v) {
-        if (mListener != null) {
-            mListener.onClickQuery(((HotWord) (((TagModel) (v.getTag())).getT())).getName());
+        String query;
+        if(mListener != null){
+            query = ((FlowLayoutBean) (((TagModel)(v.getTag())).getT())).getName();
+            mListener.onClickQuery(query);
         }
     }
 

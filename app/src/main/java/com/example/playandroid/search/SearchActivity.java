@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.example.playandroid.R;
@@ -41,7 +42,6 @@ public class SearchActivity extends AppCompatActivity implements SearchHintFragm
     }
     
     private void initData(){
-//        replaceFragment(new SearchHintFragment());
         //初始化搜索热词界面的碎片
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -108,7 +108,6 @@ public class SearchActivity extends AppCompatActivity implements SearchHintFragm
                 //当点击搜索按钮时，回调该方法.
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    
                     if(mSearchContentFragment == null){
                         mSearchContentFragment = new SearchContentFragment();
                     }
@@ -125,6 +124,9 @@ public class SearchActivity extends AppCompatActivity implements SearchHintFragm
                     
                     //提交后失去焦点，即收起软键盘
                     mSearchView.clearFocus();
+                    
+                    mSearchHintFragment.addHistoryView(query);
+                    
                     return true;
                 }
 
