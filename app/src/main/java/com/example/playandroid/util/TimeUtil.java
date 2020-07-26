@@ -25,7 +25,6 @@ public class TimeUtil {
             selectTime = calendar.getTimeInMillis();
         }
         //计算设定的时间到现在时间的时间差
-
         return selectTime - systemTime;
     }
 }
