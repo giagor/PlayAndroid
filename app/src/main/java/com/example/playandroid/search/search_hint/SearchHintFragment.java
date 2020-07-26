@@ -61,6 +61,20 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
         new SearchHintPresenter(this);
     }
     
+    private void addViewToFlowLayout(){
+        for (int i = 0; i <mHotWords.size(); i++) {
+            HotWord hotWord = mHotWords.get(i);
+            //获得流式布局的子view
+            View view = FlowLayout.createChildView((int)mFlowLayout.getItemHeight(), hotWord,
+                    R.layout.textview);
+            view.setBackgroundResource(R.color.deepGreen);
+            //设置点击监听
+//                            view.setOnClickListener(mWeak.get());
+            //添加子View
+            mFlowLayout.addView(view);
+        }
+    }
+    
     @Override
     public void onGetHotWordsSuccess(List<HotWord> hotWords) {
         mHotWords.clear();
@@ -94,18 +108,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
             switch (mType){
                 case HOT_WORD_SUCCESS:
                     if (mWeak.get() != null) {
-                        for (int i = 0; i < mWeak.get().mHotWords.size(); i++) {
-                            HotWord hotWord = mWeak.get().mHotWords.get(i);
-                            //获得流式布局的子view
-                            View view = FlowLayout.createChildView(
-                                    (int)mWeak.get().mFlowLayout.getItemHeight(),
-                                    hotWord,R.layout.textview);
-                            view.setBackgroundResource(R.color.deepGreen);
-                            //设置点击监听
-//                            view.setOnClickListener(mWeak.get());
-                            //添加子View
-                            mWeak.get().mFlowLayout.addView(view);
-                        }
+                        mWeak.get().addViewToFlowLayout();
                     }
                     break;
                 default:
