@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.playandroid.entity.SearchHistory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +26,15 @@ public class SearchHistoryDaoImpl implements SearchHistoryDao {
 
     @Override
     public void getAllHistories(SQLiteDatabase db, OnListener listener) {
-        List<String> histories = new ArrayList<>();
+        List<SearchHistory> histories = new ArrayList<>();
         Cursor cursor = db.query(SEARCH_HISTORY_TABLE,null,null,null
                 ,null,null,null);
         if(cursor.moveToFirst()){
             do{
-                String str = cursor.getString(cursor.getColumnIndex("query_content"));
-                histories.add(str);
+                long id = cursor.getLong(cursor.getColumnIndex("id"));
+                String name = cursor.getString(cursor.getColumnIndex("query_content"));
+                SearchHistory history = new SearchHistory(id,name);
+                histories.add(history);
             }while (cursor.moveToNext());
         }
         cursor.close();

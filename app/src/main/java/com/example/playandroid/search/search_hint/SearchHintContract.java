@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.playandroid.base.BasePresenter;
 import com.example.playandroid.base.BaseView;
 import com.example.playandroid.entity.HotWord;
+import com.example.playandroid.entity.SearchHistory;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface SearchHintContract {
         void onGetHotWordsFailure(Exception e);
         
         //dao操作
-        void getHistoriesFromDaoSuccess(List<String> histories);
+        void getHistoriesFromDaoSuccess(List<SearchHistory> histories);
     }
     
     interface Presenter extends BasePresenter{

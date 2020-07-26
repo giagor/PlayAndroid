@@ -2,6 +2,8 @@ package com.example.playandroid.dao;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.playandroid.entity.SearchHistory;
+
 import java.util.List;
 
 public interface SearchHistoryDao {
@@ -24,6 +26,6 @@ public interface SearchHistoryDao {
         /**
          * 从数据库中获取历史搜索记录.
          */
-        void getHistoriesFromDaoSuccess(List<String> histories);
+        void getHistoriesFromDaoSuccess(List<SearchHistory> histories);
     }
 }

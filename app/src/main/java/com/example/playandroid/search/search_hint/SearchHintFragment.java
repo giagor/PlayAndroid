@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.playandroid.R;
 import com.example.playandroid.entity.HotWord;
+import com.example.playandroid.entity.SearchHistory;
 import com.example.playandroid.util.HandlerUtil;
 import com.example.playandroid.util.network.LogUtil;
 import com.example.playandroid.view.flowlayout.FlowLayout;
@@ -41,7 +42,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     /**
      * 用于保存历史搜索记录.
      */
-    private List<String> mHistories = new ArrayList<>();
+    private List<SearchHistory> mHistories = new ArrayList<>();
 
     /**
      * 标记是否需要恢复界面的View.
@@ -134,9 +135,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
      * 向流式布局中添加历史搜索.
      * */
     private void addViewToSearchHistoryLayout(){
-        for(String str : mHistories){
-            
-        }
+        
     }
     
     /**
@@ -160,9 +159,8 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     }
 
     @Override
-    public void getHistoriesFromDaoSuccess(List<String> histories) {
-       mHistories.clear();
-       mHistories.addAll(histories);
+    public void getHistoriesFromDaoSuccess(List<SearchHistory> histories) {
+       
     }
 
     @Override

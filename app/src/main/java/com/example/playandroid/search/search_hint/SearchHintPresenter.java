@@ -7,6 +7,7 @@ import com.example.playandroid.dao.SearchHistoryDaoImpl;
 import com.example.playandroid.data.HotWordModel;
 import com.example.playandroid.data.HotWordModelImpl;
 import com.example.playandroid.entity.HotWord;
+import com.example.playandroid.entity.SearchHistory;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class SearchHintPresenter implements SearchHintContract.Presenter,HotWord
     }
 
     @Override
-    public void getHistoriesFromDaoSuccess(List<String> histories) {
+    public void getHistoriesFromDaoSuccess(List<SearchHistory> histories) {
         mView.getHistoriesFromDaoSuccess(histories);
     }
 }
