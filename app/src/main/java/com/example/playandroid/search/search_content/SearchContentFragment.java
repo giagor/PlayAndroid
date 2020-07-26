@@ -83,7 +83,14 @@ public class SearchContentFragment extends Fragment implements SearchContentCont
     public void onSearchContentFailure(Exception e) {
         LogUtil.d(TAG,e.getMessage());
     }
-
+    
+    /**
+     * 搜索内容的方法，供外部调用.
+     * */
+    public void searchContent(String keyword){
+        mPresenter.searchContents(keyword);
+    }
+    
     @Override
     public void setPresenter(SearchContentContract.Presenter presenter) {
         mPresenter = presenter;
