@@ -1,9 +1,11 @@
 package com.example.playandroid.search.search_hint;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.playandroid.R;
+import com.example.playandroid.dao.DatabaseHelper;
 import com.example.playandroid.entity.HotWord;
 import com.example.playandroid.entity.SearchHistory;
 import com.example.playandroid.util.HandlerUtil;
@@ -22,6 +25,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.playandroid.util.Constants.DatabaseConstant.ARTICLE_DB_NAME;
+import static com.example.playandroid.util.Constants.DatabaseConstant.CURRENT_VERSION;
 import static com.example.playandroid.util.Constants.SearchHintConstant.HOT_WORD_SUCCESS;
 
 /**
@@ -38,6 +43,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     private View mView;
     private OnListener mListener;
     private FlowLayout mHistoryFlowLayout;
+    private DatabaseHelper mHelper;
     
     /**
      * 用于保存历史搜索记录.
@@ -54,10 +60,25 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
      */
     private boolean mShowing = false;
 
+    /**
+     * 对数据库进行CRUD.
+     */
+    private SQLiteDatabase mDatabase;
+
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mListener = (OnListener) context;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //获取数据库的帮助类
+        mHelper = new DatabaseHelper(getContext(), ARTICLE_DB_NAME, null,
+                CURRENT_VERSION);
+        mDatabase = mHelper.getWritableDatabase();
     }
 
     @Override
@@ -135,7 +156,16 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
      * 向流式布局中添加历史搜索.
      * */
     private void addViewToSearchHistoryLayout(){
-        
+        for(SearchHistory history : mHistories){
+            //获得流式布局的子View
+            View view = FlowLayout.createChildView((int)mHistoryFlowLayout.getItemHeight(),history,
+                    R.layout.textview);
+            view.setBackgroundResource(R.color.deepGreen);
+            //设置点击监听
+            view.setOnClickListener(this);
+            //添加子View
+            mHistoryFlowLayout.addView(view);
+        }
     }
     
     /**
@@ -160,7 +190,10 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
     @Override
     public void getHistoriesFromDaoSuccess(List<SearchHistory> histories) {
+       mHistories.clear();
+       mHistories.addAll(histories);
        
+       addViewToSearchHistoryLayout();
     }
 
     @Override
@@ -175,6 +208,12 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
         }
     }
 
+    @Override
+    public void onDestroy() {
+        mHelper.close();
+        super.onDestroy();
+    }
+    
     private static class UIRunnable implements Runnable {
 
         private WeakReference<SearchHintFragment> mWeak;

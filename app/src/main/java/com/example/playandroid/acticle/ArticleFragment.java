@@ -88,7 +88,7 @@ public class ArticleFragment extends Fragment implements ArticleContract.OnView,
         super.onAttach(context);
         mListener = (OnListener) context;
     }
-
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
