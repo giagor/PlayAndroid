@@ -66,6 +66,11 @@ public class Constants {
         public static final int SEARCH_SUCCESS = 10;
     }
 
+    public static class SEARCH_HINT_CONSTANT{
+        //网络请求搜索热词的状态值
+        public static final int HOT_WORD_SUCCESS = 0;
+    }
+    
     /**
      * 知识体系模块对应的常量值.
      */
