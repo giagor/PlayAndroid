@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.playandroid.R;
 import com.example.playandroid.dao.DatabaseHelper;
@@ -45,6 +46,8 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     private OnListener mListener;
     private FlowLayout mHistoryFlowLayout;
     private DatabaseHelper mHelper;
+    
+    private ImageButton mRemoveAll;
     
     /**
      * 用于保存历史搜索记录.
@@ -90,6 +93,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
         initView();
         initData();
+        initEvent();
 
         return mView;
     }
@@ -133,6 +137,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     }
 
     private void initView() {
+        mRemoveAll = mView.findViewById(R.id.remove_all);
         mHotWordFlowLayout = mView.findViewById(R.id.hotword_flow_layout);
         mHistoryFlowLayout = mView.findViewById(R.id.history_flow_layout);
     }
@@ -141,6 +146,17 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
         new SearchHintPresenter(this);
     }
 
+    private void initEvent(){
+        mRemoveAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHistoryFlowLayout.removeAllViews();
+                mPresenter.deleteAllHistories(mDatabase);
+                mHistories.clear();
+            }
+        });
+    }
+    
     /**
      * 向流式布局中添加搜索热词.
      * */
@@ -197,10 +213,6 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
             //为了方便，这里给的id不是真正的id(后面会修改)
             SearchHistory history = new SearchHistory(1,query);
             mHistories.add(history);
-            View view = FlowLayout.createChildView((int) mHistoryFlowLayout.getItemHeight(),
-                    history,R.layout.textview);
-            //往历史搜索的流式布局中添加子View
-            mHistoryFlowLayout.addView(view);
             //向数据库中保存内容
             mPresenter.insertHistory(mDatabase,query);
         }

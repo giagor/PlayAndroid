@@ -23,14 +23,29 @@
         app:itemHeight="35dp"
         app:itemSpace="20dp" />
     
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/search_history"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_history"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        
+        <ImageButton
+            android:id="@+id/remove_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/remove_all"/>
+        
+    </LinearLayout>
+    
+    
     
     <com.example.playandroid.view.flowlayout.FlowLayout
         android:id="@+id/history_flow_layout"
