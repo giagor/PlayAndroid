@@ -5,6 +5,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +24,7 @@ import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.adapter.ArticleAdapter;
 import com.example.playandroid.entity.Article;
 import com.example.playandroid.entity.HotWord;
+import com.example.playandroid.search.search_hint.SearchHintFragment;
 import com.example.playandroid.util.HandlerUtil;
 import com.example.playandroid.view.flowlayout.TagModel;
 import com.example.playandroid.view.flowlayout.FlowLayout;
@@ -33,34 +37,10 @@ import static android.view.View.GONE;
 import static com.example.playandroid.util.Constants.SearchConstant.HOT_WORD_SUCCESS;
 import static com.example.playandroid.util.Constants.SearchConstant.SEARCH_SUCCESS;
 
-public class SearchActivity extends AppCompatActivity implements SearchContract.OnView,
-        ArticleAdapter.OnItemClickListener, View.OnClickListener {
+public class SearchActivity extends AppCompatActivity {
+
     private static final String TAG = "SearchActivity";
     private Toolbar mToolbar;
-    private FlowLayout mFlowLayout;
-    private SearchContract.Presenter mPresenter;
-    private List<HotWord> mHotWords = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-
-    /**
-     * 展示搜索内容的适配器.
-     */
-    private ArticleAdapter mAdapter;
-
-    /**
-     * 搜索热词的负父布局.
-     */
-    private LinearLayout mSearchHintLayout;
-
-    /**
-     * 标志是不是第一次加载数据.
-     */
-    private boolean mFirstLoad = true;
-
-    /**
-     * 搜索得到的文章列表.
-     */
-    private List<Article> mArticles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,36 +50,17 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         initView();
         setActionBar();
         initData();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (mFirstLoad) {
-            mPresenter.start();
-            mFirstLoad = false;
-        }
-    }
-
-    private void initView() {
-        mToolbar = findViewById(R.id.toolbar);
-        mFlowLayout = findViewById(R.id.flow_layout);
-        mSearchHintLayout = findViewById(R.id.search_hint_layout);
-        mRecyclerView = findViewById(R.id.search_content);
+        
     }
     
-    private void initData() {
-        new SearchPresenter(this);
-
-        //为RecyclerView设置数据
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(manager);
-        mAdapter = new ArticleAdapter(mArticles);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setListener(this);
+    private void initView() {
+        mToolbar = findViewById(R.id.toolbar);
     }
-
+    
+    private void initData(){
+        replaceFragment(new SearchHintFragment());
+    }
+    
     /**
      * 设置顶部标题栏的信息.
      */
@@ -112,6 +73,17 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         }
     }
 
+    /**
+     * 替换碎片.
+     * */
+    private void replaceFragment(Fragment fragment){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fragment_layout,fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+    
     /**
      * 启动该活动.
      */
@@ -147,8 +119,8 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
                 //当点击搜索按钮时，回调该方法.
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    //搜索文章
-                    mPresenter.searchContents(query);
+//                    //搜索文章
+//                    mPresenter.searchContents(query);
                     //提交后失去焦点，即收起软键盘
                     searchView.clearFocus();
                     return false;
@@ -161,108 +133,6 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
             });
         }
         return true;
-    }
-
-    /**
-     * 成功拿到搜索热词.
-     */
-    @Override
-    public void onGetHotWordsSuccess(List<HotWord> hotWords) {
-        mHotWords.clear();
-        mHotWords.addAll(hotWords);
-
-        HandlerUtil.post(new UIRunnable(this, HOT_WORD_SUCCESS));
-    }
-
-    /**
-     * 没有拿到搜索热词.
-     */
-    @Override
-    public void onGetHotWordsFailure(Exception e) {
-    }
-
-    /**
-     * 搜索成功.
-     */
-    @Override
-    public void onSearchContentSuccess(List<Article> articles) {
-        mArticles.clear();
-        mArticles.addAll(articles);
-
-        HandlerUtil.post(new UIRunnable(this, SEARCH_SUCCESS));
-    }
-
-    /**
-     * 搜索失败.
-     */
-    @Override
-    public void onSearchContentFailure(Exception e) {
-    }
-
-    @Override
-    public void setPresenter(SearchContract.Presenter presenter) {
-        mPresenter = presenter;
-    }
-
-    /**
-     * 当搜索内容被点击时，回调该方法打开文章详情界面.
-     */
-    @Override
-    public void onClick(Article article) {
-        ArticleDetailActivity.actionStart(this, article.getTitle(), article.getLink());
-    }
-
-    /**
-     * View(热词)被点击后回调.
-     */
-    @Override
-    public void onClick(View v) {
-        String keyword = ((HotWord)(((TagModel)(v.getTag())).getT())).getName();
-        mPresenter.searchContents(keyword);
-    }
-    
-    private static class UIRunnable implements Runnable {
-
-        WeakReference<SearchActivity> mWeak;
-        int mType;
-
-        UIRunnable(SearchActivity activity, int type) {
-            mWeak = new WeakReference<>(activity);
-            mType = type;
-        }
-
-        @Override
-        public void run() {
-            switch (mType) {
-                case HOT_WORD_SUCCESS:
-                    if (mWeak.get() != null) {
-                        for (int i = 0; i < mWeak.get().mHotWords.size(); i++) {
-                            HotWord hotWord = mWeak.get().mHotWords.get(i);
-                            //获得流式布局的子view
-                            View view = FlowLayout.createChildView(
-                                    (int)mWeak.get().mFlowLayout.getItemHeight(),
-                                    hotWord,R.layout.textview);
-                            view.setBackgroundResource(R.color.deepGreen);
-                            //设置点击监听
-                            view.setOnClickListener(mWeak.get());
-                            //添加子View
-                            mWeak.get().mFlowLayout.addView(view);
-                        }
-                    }
-                    break;
-                case SEARCH_SUCCESS:
-                    if (mWeak.get() != null) {
-                        //将搜索热词的内容隐藏
-                        mWeak.get().mSearchHintLayout.setVisibility(GONE);
-                        //展示搜索内容
-                        mWeak.get().mRecyclerView.setVisibility(View.VISIBLE);
-                        mWeak.get().mAdapter.notifyDataSetChanged();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 }
 

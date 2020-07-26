@@ -1,46 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     
     <include layout="@layout/toolbar"/>
     
-    <LinearLayout
-        android:id="@+id/search_hint_layout"
+    <FrameLayout
+        android:id="@+id/fragment_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/HotWords"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="20dp"/>
-
-        <com.example.playandroid.view.flowlayout.FlowLayout
-            android:id="@+id/flow_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:itemHeight="35dp"
-            app:itemSpace="20dp"
-            app:dividerHeight="10dp"
-            android:padding="15dp"/>
-        
-    </LinearLayout>
-    
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_content"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:foreground="?android:selectableItemBackground"
-        android:visibility="gone"/>
-    
+        android:layout_height="match_parent"/>
     
     
 </LinearLayout>
