@@ -27,7 +27,8 @@ import static com.example.playandroid.util.Constants.SearchHintConstant.HOT_WORD
 /**
  * 展示搜索热词以及搜索历史的碎片.
  */
-public class SearchHintFragment extends Fragment implements SearchHintContract.OnView, View.OnClickListener {
+public class SearchHintFragment extends Fragment implements SearchHintContract.OnView, 
+        View.OnClickListener {
 
     private static final String TAG = "SearchHintFragment";
     private SearchHintContract.Presenter mPresenter;
@@ -138,6 +139,11 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     @Override
     public void onGetHotWordsFailure(Exception e) {
         LogUtil.d(TAG, e.getMessage());
+    }
+
+    @Override
+    public void getHistoriesFromDaoSuccess(List<String> histories) {
+        
     }
 
     @Override
