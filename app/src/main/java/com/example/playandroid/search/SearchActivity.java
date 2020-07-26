@@ -24,6 +24,7 @@ import com.example.playandroid.acticle.ArticleDetailActivity;
 import com.example.playandroid.adapter.ArticleAdapter;
 import com.example.playandroid.entity.Article;
 import com.example.playandroid.entity.HotWord;
+import com.example.playandroid.search.search_content.SearchContentFragment;
 import com.example.playandroid.search.search_hint.SearchHintFragment;
 import com.example.playandroid.util.HandlerUtil;
 import com.example.playandroid.view.flowlayout.TagModel;

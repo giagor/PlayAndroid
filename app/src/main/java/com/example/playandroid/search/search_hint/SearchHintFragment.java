@@ -51,6 +51,11 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
             mFirstLoad = false;
             mPresenter.start();
         }
+        
+        //恢复搜索热词的子View
+        if(mHotWords != null && mHotWords.size() != 0){
+            addViewToFlowLayout();
+        }
     }
 
     private void initView(){
@@ -98,7 +103,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
         private WeakReference<SearchHintFragment> mWeak;
         private int mType;
 
-        public UIRunnable(SearchHintFragment fragment, int type) {
+        UIRunnable(SearchHintFragment fragment, int type) {
             mWeak = new WeakReference<>(fragment);
             mType = type;
         }
