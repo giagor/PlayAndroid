@@ -8,35 +8,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
-
 import com.example.playandroid.R;
-import com.example.playandroid.acticle.ArticleDetailActivity;
-import com.example.playandroid.adapter.ArticleAdapter;
-import com.example.playandroid.entity.Article;
-import com.example.playandroid.entity.HotWord;
 import com.example.playandroid.search.search_content.SearchContentFragment;
 import com.example.playandroid.search.search_hint.SearchHintFragment;
-import com.example.playandroid.util.HandlerUtil;
-import com.example.playandroid.view.flowlayout.TagModel;
-import com.example.playandroid.view.flowlayout.FlowLayout;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.view.View.GONE;
-import static com.example.playandroid.util.Constants.SearchConstant.HOT_WORD_SUCCESS;
-import static com.example.playandroid.util.Constants.SearchConstant.SEARCH_SUCCESS;
 
 public class SearchActivity extends AppCompatActivity implements SearchHintFragment.OnListener {
 

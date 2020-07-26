@@ -54,18 +54,7 @@ public class Constants {
         //网络请求对应的状态值
         public static final int SUCCESS = 0;
     }
-
-    /**
-     * 搜索界面所对应的常量值.
-     */
-    public static class SearchConstant {
-        //网络请求搜索热词的状态值
-        public static final int HOT_WORD_SUCCESS = 0;
-
-        //搜索成功
-        public static final int SEARCH_SUCCESS = 10;
-    }
-
+    
     /**
      * 搜索热词以及搜索历史界面所对应的常量.
      */
