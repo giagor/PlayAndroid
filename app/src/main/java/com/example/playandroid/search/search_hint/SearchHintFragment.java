@@ -60,7 +60,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
         initView();
         initData();
-
+        
         return mView;
     }
 

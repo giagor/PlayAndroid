@@ -99,7 +99,7 @@ public class Constants {
         //“文章”的表的名字
         public static final String ARTICLE_TABLE = "Article";
         //当前版本
-        public static final int CURRENT_VERSION = 1;
+        public static final int CURRENT_VERSION = 2;
     }
 
     /**
