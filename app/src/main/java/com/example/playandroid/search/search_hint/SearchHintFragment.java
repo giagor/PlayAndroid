@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +26,22 @@ import static com.example.playandroid.util.Constants.SearchHintConstant.HOT_WORD
 /**
  * 展示搜索热词以及搜索历史的碎片.
  */
-public class SearchHintFragment extends Fragment implements SearchHintContract.OnView, 
+public class SearchHintFragment extends Fragment implements SearchHintContract.OnView,
         View.OnClickListener {
 
     private static final String TAG = "SearchHintFragment";
     private SearchHintContract.Presenter mPresenter;
     private boolean mFirstLoad = true;
-    private FlowLayout mFlowLayout;
+    private FlowLayout mHotWordFlowLayout;
     private List<HotWord> mHotWords = new ArrayList<>();
     private View mView;
     private OnListener mListener;
+    private FlowLayout mHistoryFlowLayout;
+    
+    /**
+     * 用于保存历史搜索记录.
+     */
+    private List<String> mHistories = new ArrayList<>();
 
     /**
      * 标记是否需要恢复界面的View.
@@ -61,7 +66,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
         initView();
         initData();
-        
+
         return mView;
     }
 
@@ -76,7 +81,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
         //恢复搜索热词的子View
         if (mShouldAddViewAgain) {
-            addViewToFlowLayout();
+            addViewToHotWordLayout();
             mShouldAddViewAgain = false;
         }
     }
@@ -100,27 +105,40 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     }
 
     private void initView() {
-        mFlowLayout = mView.findViewById(R.id.flow_layout);
+        mHotWordFlowLayout = mView.findViewById(R.id.hotword_flow_layout);
+        mHistoryFlowLayout = mView.findViewById(R.id.hitsory_flow_layout);
     }
 
     private void initData() {
         new SearchHintPresenter(this);
     }
 
-    private void addViewToFlowLayout() {
+    /**
+     * 向流式布局中添加搜索热词.
+     * */
+    private void addViewToHotWordLayout() {
         for (int i = 0; i < mHotWords.size(); i++) {
             HotWord hotWord = mHotWords.get(i);
             //获得流式布局的子view
-            View view = FlowLayout.createChildView((int) mFlowLayout.getItemHeight(), hotWord,
+            View view = FlowLayout.createChildView((int) mHotWordFlowLayout.getItemHeight(), hotWord,
                     R.layout.textview);
             view.setBackgroundResource(R.color.deepGreen);
             //设置点击监听
             view.setOnClickListener(this);
             //添加子View
-            mFlowLayout.addView(view);
+            mHotWordFlowLayout.addView(view);
         }
     }
 
+    /**
+     * 向流式布局中添加历史搜索.
+     * */
+    private void addViewToSearchHistoryLayout(){
+        for(String str : mHistories){
+            
+        }
+    }
+    
     /**
      * 获得搜索热词页面的显示情况.
      */
@@ -143,7 +161,8 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
     @Override
     public void getHistoriesFromDaoSuccess(List<String> histories) {
-        
+       mHistories.clear();
+       mHistories.addAll(histories);
     }
 
     @Override
@@ -153,8 +172,8 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
     @Override
     public void onClick(View v) {
-        if(mListener != null){
-            mListener.onClickQuery(((HotWord)(((TagModel)(v.getTag())).getT())).getName());
+        if (mListener != null) {
+            mListener.onClickQuery(((HotWord) (((TagModel) (v.getTag())).getT())).getName());
         }
     }
 
@@ -173,7 +192,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
             switch (mType) {
                 case HOT_WORD_SUCCESS:
                     if (mWeak.get() != null) {
-                        mWeak.get().addViewToFlowLayout();
+                        mWeak.get().addViewToHotWordLayout();
                     }
                     break;
                 default:
@@ -181,11 +200,11 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
             }
         }
     }
-    
-    public interface OnListener{
+
+    public interface OnListener {
         /**
          * 点击搜索热词时，直接回调活动中的方法，进行搜索.
-         * */
+         */
         void onClickQuery(String query);
     }
 }

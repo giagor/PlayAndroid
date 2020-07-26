@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     
-    <LinearLayout
-        android:id="@+id/search_hint_layout"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/HotWords"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/HotWords"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="20dp"/>
-
-        <com.example.playandroid.view.flowlayout.FlowLayout
-            android:id="@+id/flow_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:itemHeight="35dp"
-            app:itemSpace="20dp"
-            app:dividerHeight="10dp"
-            android:padding="15dp"/>
-
-    </LinearLayout>
-</FrameLayout>
+    <com.example.playandroid.view.flowlayout.FlowLayout
+        android:id="@+id/hotword_flow_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        app:dividerHeight="10dp"
+        app:itemHeight="35dp"
+        app:itemSpace="20dp" />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/search_history"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    
+    <com.example.playandroid.view.flowlayout.FlowLayout
+        android:id="@+id/hitsory_flow_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        app:dividerHeight="10dp"
+        app:itemHeight="35dp"
+        app:itemSpace="20dp" />
+    
+</LinearLayout>

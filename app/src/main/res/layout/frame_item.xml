@@ -24,7 +24,7 @@
             android:textStyle="bold"/>
 
         <com.example.playandroid.view.flowlayout.FlowLayout
-            android:id="@+id/flow_layout"
+            android:id="@+id/hotword_flow_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:itemHeight="20dp"

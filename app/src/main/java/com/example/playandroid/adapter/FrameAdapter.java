@@ -81,7 +81,7 @@ public class FrameAdapter extends RecyclerView.Adapter<FrameAdapter.ViewHolder>{
             super(itemView);
             mView = itemView;
             mFrameName = itemView.findViewById(R.id.frame_name);
-            mFlowLayout = itemView.findViewById(R.id.flow_layout);
+            mFlowLayout = itemView.findViewById(R.id.hotword_flow_layout);
         }
     }
 
