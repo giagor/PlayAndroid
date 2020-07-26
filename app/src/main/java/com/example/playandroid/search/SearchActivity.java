@@ -38,12 +38,13 @@ import static android.view.View.GONE;
 import static com.example.playandroid.util.Constants.SearchConstant.HOT_WORD_SUCCESS;
 import static com.example.playandroid.util.Constants.SearchConstant.SEARCH_SUCCESS;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements SearchHintFragment.OnListener {
 
     private static final String TAG = "SearchActivity";
     private Toolbar mToolbar;
     private SearchHintFragment mSearchHintFragment;
     private SearchContentFragment mSearchContentFragment;
+    private SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,11 +121,11 @@ public class SearchActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_search, menu);
         MenuItem menuItem = menu.findItem(R.id.search_view);
         if (menuItem != null) {
-            final SearchView searchView = (SearchView) menuItem.getActionView();
-            searchView.setIconifiedByDefault(false);
+            mSearchView = (SearchView) menuItem.getActionView();
+            mSearchView.setIconifiedByDefault(false);
 
             //为SearchView设置监听
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 //当点击搜索按钮时，回调该方法.
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -144,7 +145,7 @@ public class SearchActivity extends AppCompatActivity {
                     }
                     
                     //提交后失去焦点，即收起软键盘
-                    searchView.clearFocus();
+                    mSearchView.clearFocus();
                     return true;
                 }
 
@@ -155,6 +156,11 @@ public class SearchActivity extends AppCompatActivity {
             });
         }
         return true;
+    }
+    
+    @Override
+    public void onClickQuery(String query) {
+        mSearchView.setQuery(query,true);
     }
 }
 

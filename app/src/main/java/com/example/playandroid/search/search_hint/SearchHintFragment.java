@@ -1,9 +1,12 @@
 package com.example.playandroid.search.search_hint;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import com.example.playandroid.entity.HotWord;
 import com.example.playandroid.util.HandlerUtil;
 import com.example.playandroid.util.network.LogUtil;
 import com.example.playandroid.view.flowlayout.FlowLayout;
+import com.example.playandroid.view.flowlayout.TagModel;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -23,7 +27,7 @@ import static com.example.playandroid.util.Constants.SearchHintConstant.HOT_WORD
 /**
  * 展示搜索热词以及搜索历史的碎片.
  */
-public class SearchHintFragment extends Fragment implements SearchHintContract.OnView {
+public class SearchHintFragment extends Fragment implements SearchHintContract.OnView, View.OnClickListener {
 
     private static final String TAG = "SearchHintFragment";
     private SearchHintContract.Presenter mPresenter;
@@ -31,16 +35,23 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     private FlowLayout mFlowLayout;
     private List<HotWord> mHotWords = new ArrayList<>();
     private View mView;
-    
+    private OnListener mListener;
+
     /**
      * 标记是否需要恢复界面的View.
-     * */
+     */
     private boolean mShouldAddViewAgain = false;
 
     /**
      * 标记当前页面是否正在显示.
      */
     private boolean mShowing = false;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mListener = (OnListener) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,7 +114,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
                     R.layout.textview);
             view.setBackgroundResource(R.color.deepGreen);
             //设置点击监听
-//                            view.setOnClickListener(mWeak.get());
+            view.setOnClickListener(this);
             //添加子View
             mFlowLayout.addView(view);
         }
@@ -134,6 +145,13 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
         mPresenter = presenter;
     }
 
+    @Override
+    public void onClick(View v) {
+        if(mListener != null){
+            mListener.onClickQuery(((HotWord)(((TagModel)(v.getTag())).getT())).getName());
+        }
+    }
+
     private static class UIRunnable implements Runnable {
 
         private WeakReference<SearchHintFragment> mWeak;
@@ -156,5 +174,12 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
                     break;
             }
         }
+    }
+    
+    public interface OnListener{
+        /**
+         * 点击搜索热词时，直接回调活动中的方法，进行搜索.
+         * */
+        void onClickQuery(String query);
     }
 }
