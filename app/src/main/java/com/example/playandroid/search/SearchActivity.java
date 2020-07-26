@@ -137,6 +137,7 @@ public class SearchActivity extends AppCompatActivity {
                         //如果搜索热词的界面正在显示
                         mSearchContentFragment.setKeyWord(query);
                         replaceFragment(mSearchContentFragment);
+                        mSearchHintFragment.setShouldAddViewAgain(true);
                     }else{
                         //如果正在显示的界面时搜索内容的界面
                         mSearchContentFragment.searchContent(query);

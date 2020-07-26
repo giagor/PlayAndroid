@@ -31,6 +31,11 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
     private FlowLayout mFlowLayout;
     private List<HotWord> mHotWords = new ArrayList<>();
     private View mView;
+    
+    /**
+     * 标记是否需要恢复界面的View.
+     * */
+    private boolean mShouldAddViewAgain = false;
 
     /**
      * 标记当前页面是否正在显示.
@@ -58,8 +63,9 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
         }
 
         //恢复搜索热词的子View
-        if (mHotWords != null && mHotWords.size() != 0) {
+        if (mShouldAddViewAgain) {
             addViewToFlowLayout();
+            mShouldAddViewAgain = false;
         }
     }
 
@@ -75,6 +81,10 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
         super.onStop();
         //当前页面没有在显示
         mShowing = false;
+    }
+
+    public void setShouldAddViewAgain(boolean shouldAddViewAgain) {
+        mShouldAddViewAgain = shouldAddViewAgain;
     }
 
     private void initView() {
