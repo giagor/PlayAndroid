@@ -139,7 +139,7 @@ public class SearchActivity extends AppCompatActivity {
                         replaceFragment(mSearchContentFragment);
                         mSearchHintFragment.setShouldAddViewAgain(true);
                     }else{
-                        //如果正在显示的界面时搜索内容的界面
+                        //如果正在显示的界面是搜索内容的界面
                         mSearchContentFragment.searchContent(query);
                     }
                     
