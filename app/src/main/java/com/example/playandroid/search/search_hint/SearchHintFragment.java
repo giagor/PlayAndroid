@@ -23,54 +23,73 @@ import static com.example.playandroid.util.Constants.SearchHintConstant.HOT_WORD
 /**
  * 展示搜索热词以及搜索历史的碎片.
  */
-public class SearchHintFragment extends Fragment implements SearchHintContract.OnView{
-    
+public class SearchHintFragment extends Fragment implements SearchHintContract.OnView {
+
     private static final String TAG = "SearchHintFragment";
     private SearchHintContract.Presenter mPresenter;
     private boolean mFirstLoad = true;
     private FlowLayout mFlowLayout;
     private List<HotWord> mHotWords = new ArrayList<>();
     private View mView;
-    
+
+    /**
+     * 标记当前页面是否正在显示.
+     */
+    private boolean mShowing = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_search_hint, container, false);
-        
+
         initView();
         initData();
-        
+
         return mView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        
-        if(mFirstLoad){
+
+        if (mFirstLoad) {
             mFirstLoad = false;
             mPresenter.start();
         }
-        
+
         //恢复搜索热词的子View
-        if(mHotWords != null && mHotWords.size() != 0){
+        if (mHotWords != null && mHotWords.size() != 0) {
             addViewToFlowLayout();
         }
     }
 
-    private void initView(){
+    @Override
+    public void onStart() {
+        super.onStart();
+        //当前页面正在显示.
+        mShowing = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //当前页面没有在显示
+        mShowing = false;
+    }
+
+    private void initView() {
         mFlowLayout = mView.findViewById(R.id.flow_layout);
     }
-    
-    private void initData(){
+
+    private void initData() {
         new SearchHintPresenter(this);
     }
-    
-    private void addViewToFlowLayout(){
-        for (int i = 0; i <mHotWords.size(); i++) {
+
+    private void addViewToFlowLayout() {
+        for (int i = 0; i < mHotWords.size(); i++) {
             HotWord hotWord = mHotWords.get(i);
             //获得流式布局的子view
-            View view = FlowLayout.createChildView((int)mFlowLayout.getItemHeight(), hotWord,
+            View view = FlowLayout.createChildView((int) mFlowLayout.getItemHeight(), hotWord,
                     R.layout.textview);
             view.setBackgroundResource(R.color.deepGreen);
             //设置点击监听
@@ -79,7 +98,14 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
             mFlowLayout.addView(view);
         }
     }
-    
+
+    /**
+     * 获得搜索热词页面的显示情况.
+     */
+    public boolean isShowing() {
+        return mShowing;
+    }
+
     @Override
     public void onGetHotWordsSuccess(List<HotWord> hotWords) {
         mHotWords.clear();
@@ -90,14 +116,14 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
     @Override
     public void onGetHotWordsFailure(Exception e) {
-        LogUtil.d(TAG,e.getMessage());
+        LogUtil.d(TAG, e.getMessage());
     }
 
     @Override
     public void setPresenter(SearchHintContract.Presenter presenter) {
         mPresenter = presenter;
     }
-    
+
     private static class UIRunnable implements Runnable {
 
         private WeakReference<SearchHintFragment> mWeak;
@@ -110,7 +136,7 @@ public class SearchHintFragment extends Fragment implements SearchHintContract.O
 
         @Override
         public void run() {
-            switch (mType){
+            switch (mType) {
                 case HOT_WORD_SUCCESS:
                     if (mWeak.get() != null) {
                         mWeak.get().addViewToFlowLayout();

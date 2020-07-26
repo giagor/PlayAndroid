@@ -34,6 +34,7 @@ public class SearchContentFragment extends Fragment implements SearchContentCont
     private View mView;
     private SearchContentContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
+    private String mKeyWord = null;
 
     /**
      * 展示搜索内容的适配器.
@@ -55,7 +56,18 @@ public class SearchContentFragment extends Fragment implements SearchContentCont
         
         return mView;
     }
-    
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        
+        //判断当前碎片所带有的keyWord是否为空，不为空则去搜索内容
+        if(mKeyWord != null){
+            mPresenter.searchContents(mKeyWord);
+            mKeyWord = null;
+        }
+    }
+
     private void initView(){
         mRecyclerView = mView.findViewById(R.id.search_content);
     }
@@ -75,7 +87,7 @@ public class SearchContentFragment extends Fragment implements SearchContentCont
     public void onSearchContentSuccess(List<Article> articles) {
         mArticles.clear();
         mArticles.addAll(articles);
-
+        
         HandlerUtil.post(new UIRunnable(this, SEARCH_SUCCESS));
     }
 
@@ -94,6 +106,10 @@ public class SearchContentFragment extends Fragment implements SearchContentCont
     @Override
     public void setPresenter(SearchContentContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    public void setKeyWord(String keyWord) {
+        mKeyWord = keyWord;
     }
 
     @Override

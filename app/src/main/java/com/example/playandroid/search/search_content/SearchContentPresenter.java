@@ -1,5 +1,7 @@
 package com.example.playandroid.search.search_content;
 
+import android.util.Log;
+
 import com.example.playandroid.data.SearchContentModel;
 import com.example.playandroid.data.SearchContentModelImpl;
 import com.example.playandroid.entity.Article;
@@ -9,6 +11,7 @@ import java.util.List;
 public class SearchContentPresenter implements SearchContentContract.Presenter,
         SearchContentModel.OnListener {
    
+    private static final String TAG = "SearchContentPresenter";
     private SearchContentContract.OnView mView;
     private SearchContentModel mModel;
 

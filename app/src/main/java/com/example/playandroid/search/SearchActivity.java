@@ -42,6 +42,8 @@ public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";
     private Toolbar mToolbar;
+    private SearchHintFragment mSearchHintFragment;
+    private SearchContentFragment mSearchContentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,8 @@ public class SearchActivity extends AppCompatActivity {
         //初始化搜索热词界面的碎片
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragment_layout,new SearchHintFragment());
+        mSearchHintFragment = new SearchHintFragment();
+        transaction.replace(R.id.fragment_layout,mSearchHintFragment);
         transaction.commit();
     }
     
@@ -125,9 +128,20 @@ public class SearchActivity extends AppCompatActivity {
                 //当点击搜索按钮时，回调该方法.
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-//                    //搜索文章
-//                    mPresenter.searchContents(query);
-                    replaceFragment(new SearchContentFragment());
+                    
+                    if(mSearchContentFragment == null){
+                        mSearchContentFragment = new SearchContentFragment();
+                    }
+                    
+                    if(mSearchHintFragment.isShowing()){
+                        //如果搜索热词的界面正在显示
+                        mSearchContentFragment.setKeyWord(query);
+                        replaceFragment(mSearchContentFragment);
+                    }else{
+                        //如果正在显示的界面时搜索内容的界面
+                        mSearchContentFragment.searchContent(query);
+                    }
+                    
                     //提交后失去焦点，即收起软键盘
                     searchView.clearFocus();
                     return false;
