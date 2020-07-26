@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.playandroid.util.Constants.SEARCH_HINT_CONSTANT.HOT_WORD_SUCCESS;
+import static com.example.playandroid.util.Constants.SearchHintConstant.HOT_WORD_SUCCESS;
 
 /**
  * 展示搜索热词以及搜索历史的碎片.

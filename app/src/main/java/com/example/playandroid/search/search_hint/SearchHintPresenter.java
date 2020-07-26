@@ -11,7 +11,7 @@ public class SearchHintPresenter implements SearchHintContract.Presenter,HotWord
     private SearchHintContract.OnView mView;
     private HotWordModel mModel;
 
-    public SearchHintPresenter(SearchHintContract.OnView view) {
+    SearchHintPresenter(SearchHintContract.OnView view) {
         mView = view;
         mView.setPresenter(this);
         mModel = new HotWordModelImpl();

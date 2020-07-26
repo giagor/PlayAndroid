@@ -66,11 +66,22 @@ public class Constants {
         public static final int SEARCH_SUCCESS = 10;
     }
 
-    public static class SEARCH_HINT_CONSTANT{
+    /**
+     * 搜索热词以及搜索历史界面所对应的常量.
+     */
+    public static class SearchHintConstant {
         //网络请求搜索热词的状态值
         public static final int HOT_WORD_SUCCESS = 0;
     }
-    
+
+    /**
+     * 搜索内容界面所对应的常量值.
+     * */
+    public static class SearchContentConstant{
+        //搜索成功
+        public static final int SEARCH_SUCCESS = 0;
+    }
+
     /**
      * 知识体系模块对应的常量值.
      */
@@ -104,10 +115,10 @@ public class Constants {
 
     /**
      * 通知的常量值.
-     * */
-    public static class NotificationConstant{
+     */
+    public static class NotificationConstant {
         public static final String CHANNEL_ID = "10";
-        
+
         public static final String CHANNEL_NAME = "定时推送";
     }
 }
