@@ -35,12 +35,13 @@ public class ProjectChildFragment extends Fragment implements ProjectChildContra
     private ProjectChildContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private List<ProjectChild> mProjectChildren = new ArrayList<>();
+    private ProjectChildAdapter mAdapter;
 
     /**
      * 标记是否已经请求过了数据，是否是第一次加载.
      */
     private boolean mFirstLoad = true;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,18 +71,24 @@ public class ProjectChildFragment extends Fragment implements ProjectChildContra
 
     private void initData() {
         new ProjectChildPresenter(this);
-        
+
         mRecyclerView = mView.findViewById(R.id.recycler_view);
+        //为RecyclerView设置数据
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(manager);
+        mAdapter = new ProjectChildAdapter(mProjectChildren);
+        mAdapter.setListener(this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
      * 用于数据的保存.
-     * */
+     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
-    
+
     public void setProject(Project project) {
         mProject = project;
     }
@@ -91,7 +98,7 @@ public class ProjectChildFragment extends Fragment implements ProjectChildContra
         mProjectChildren.clear();
         mProjectChildren.addAll(projectChildren);
 
-        HandlerUtil.post(new UIRunnable(this,SUCCESS));
+        HandlerUtil.post(new UIRunnable(this, SUCCESS));
     }
 
     @Override
@@ -106,12 +113,12 @@ public class ProjectChildFragment extends Fragment implements ProjectChildContra
 
     @Override
     public void onClick(ProjectChild projectChild) {
-        if(getContext() != null){
-            ((MainActivity)getContext()).showArticleDetail(projectChild.getTitle(),projectChild.getLink());
+        if (getContext() != null) {
+            ((MainActivity) getContext()).showArticleDetail(projectChild.getTitle(), projectChild.getLink());
         }
     }
 
-    private static class UIRunnable implements Runnable{
+    private static class UIRunnable implements Runnable {
 
         private WeakReference<ProjectChildFragment> mWeak;
         private int mType;
@@ -123,18 +130,10 @@ public class ProjectChildFragment extends Fragment implements ProjectChildContra
 
         @Override
         public void run() {
-            switch(mType){
-                case SUCCESS:
-                    if(mWeak.get() != null){
-                        RecyclerView.LayoutManager manager = new LinearLayoutManager(mWeak.get().getContext());
-                        mWeak.get().mRecyclerView.setLayoutManager(manager);
-                        ProjectChildAdapter adapter = new ProjectChildAdapter(mWeak.get().mProjectChildren);
-                        adapter.setListener(mWeak.get());
-                        mWeak.get().mRecyclerView.setAdapter(adapter);
-                    }
-                    break;
-                default:
-                    break;
+            if (mType == SUCCESS) {
+                if (mWeak.get() != null) {
+                    mWeak.get().mAdapter.notifyDataSetChanged();
+                }
             }
         }
     }
