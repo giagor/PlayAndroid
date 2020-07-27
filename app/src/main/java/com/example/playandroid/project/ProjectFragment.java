@@ -140,6 +140,11 @@ public class ProjectFragment extends Fragment implements ProjectContract.OnView{
                         return mWeak.get().mFragments.size();
                     }
 
+                    @Override
+                    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+//                        super.destroyItem(container, position, object);
+                    }
+
                     @Nullable
                     @Override
                     public CharSequence getPageTitle(int position) {
