@@ -1,6 +1,7 @@
 package com.example.playandroid.acticle;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.BitmapDrawable;
 
 import com.example.playandroid.base.BasePresenter;
 import com.example.playandroid.base.BaseView;

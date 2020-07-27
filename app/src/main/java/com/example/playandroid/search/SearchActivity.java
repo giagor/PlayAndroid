@@ -11,6 +11,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +37,6 @@ public class SearchActivity extends AppCompatActivity implements SearchHintFragm
         initView();
         setActionBar();
         initData();
-        
     }
     
     private void initView() {
